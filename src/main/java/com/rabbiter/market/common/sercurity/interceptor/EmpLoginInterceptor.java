@@ -7,7 +7,7 @@ import com.rabbiter.market.common.redis.service.RedisTemplateService;
 import com.rabbiter.market.common.sercurity.annotation.HasPermisson;
 import com.rabbiter.market.common.sercurity.annotation.NoRequireLogin;
 import com.rabbiter.market.common.web.response.JsonResult;
-import com.rabbiter.market.domain.personnel_management.employee.Employee;
+import com.rabbiter.market.person.domain.Employee;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;

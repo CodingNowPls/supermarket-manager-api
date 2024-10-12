@@ -2,7 +2,7 @@ package com.rabbiter.market.common.sercurity.resolver;
 
 
 import com.rabbiter.market.common.redis.service.RedisTemplateService;
-import com.rabbiter.market.domain.personnel_management.employee.Employee;
+import com.rabbiter.market.person.domain.Employee;
 import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;

@@ -1,14 +1,29 @@
 package com.rabbiter.market.sale.vo;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
  * 仓库存储情况
  */
+@Data
 public class DetailStorageSituationVo implements Serializable {
+    /**
+     *
+     */
     private Long goodsId;
+    /**
+     *
+     */
     private String goodsName;
+    /**
+     *
+     */
     private Long residueNum; //商品数量
+    /**
+     *
+     */
     private Long percentage = 0L;
 
     public void setPercentage(Long total) {
@@ -22,31 +37,4 @@ public class DetailStorageSituationVo implements Serializable {
 
     }
 
-    public Long getGoodsId() {
-        return goodsId;
-    }
-
-    public void setGoodsId(Long goodsId) {
-        this.goodsId = goodsId;
-    }
-
-    public String getGoodsName() {
-        return goodsName;
-    }
-
-    public void setGoodsName(String goodsName) {
-        this.goodsName = goodsName;
-    }
-
-    public Long getResidueNum() {
-        return residueNum;
-    }
-
-    public void setResidueNum(Long residueNum) {
-        this.residueNum = residueNum;
-    }
-
-    public Long getPercentage() {
-        return percentage;
-    }
 }

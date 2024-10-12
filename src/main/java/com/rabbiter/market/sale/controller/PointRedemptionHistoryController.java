@@ -3,7 +3,7 @@ package com.rabbiter.market.sale.controller;
 import com.rabbiter.market.common.sercurity.annotation.HasPermisson;
 import com.rabbiter.market.common.web.response.JsonResult;
 import com.rabbiter.market.goods.doamin.PointProducts;
-import com.rabbiter.market.sale.domain.ExchangePointProducts;
+import com.rabbiter.market.sale.domain.PointRedemptionHistory;
 import com.rabbiter.market.inventory.qo.QueryExchangePointProductsRecords;
 import com.rabbiter.market.sale.service.IExchangePointProductsService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -18,10 +18,13 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 积分兑换历史
+ */
 @RestController
 @Validated
 @RequestMapping("/sale_management/exchange_point_products_records")
-public class ExchangePointProductsRecordsController {
+public class PointRedemptionHistoryController {
     @Autowired
     private IExchangePointProductsService exchangePointProductsService;
 
@@ -46,8 +49,8 @@ public class ExchangePointProductsRecordsController {
     }
 
     @PostMapping("/saveExchangePointProductRecords")
-    public JsonResult saveExchangePointProductRecords(ExchangePointProducts exchangePointProducts, HttpServletRequest request) {
-        exchangePointProductsService.saveExchangePointProductRecords(exchangePointProducts, (String) request.getHeader("token"));
+    public JsonResult saveExchangePointProductRecords(PointRedemptionHistory pointRedemptionHistory, HttpServletRequest request) {
+        exchangePointProductsService.saveExchangePointProductRecords(pointRedemptionHistory, (String) request.getHeader("token"));
         return JsonResult.success();
     }
 
@@ -66,7 +69,7 @@ public class ExchangePointProductsRecordsController {
     @HasPermisson("sale_management:exchange_point_products_records:list")
     @PostMapping("/queryPageByQoExchangePointProducts")
     public JsonResult queryPageByQoExchangePointProducts(QueryExchangePointProductsRecords qo) {
-        Page<ExchangePointProducts> page = exchangePointProductsService.queryPageByQoExchangePointProducts(qo);
+        Page<PointRedemptionHistory> page = exchangePointProductsService.queryPageByQoExchangePointProducts(qo);
 
         return JsonResult.success(page);
     }

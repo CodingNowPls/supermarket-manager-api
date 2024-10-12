@@ -9,7 +9,6 @@ import java.util.Map;
 
 public interface IGoodsStoreService extends IService<GoodsStore> {
 
-
     Long storeUsed(Long id);
 
     Long getResidueNumByGoodsId(Long id);

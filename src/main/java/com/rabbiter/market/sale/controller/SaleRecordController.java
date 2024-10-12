@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 销售记录
+ */
 @RestController
 @Validated
 @RequestMapping("/sale_management/sale_record")

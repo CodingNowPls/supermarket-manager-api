@@ -24,9 +24,13 @@ import org.springframework.util.StringUtils;
 
 import java.util.*;
 
+/**
+ *
+ */
 @Service
 @Transactional
 public class GoodsStoreServiceImpl extends ServiceImpl<GoodsStoreMapper, GoodsStore> implements IGoodsStoreService {
+
     @Autowired
     private GoodsStoreMapper goodsStoreMapper;
     @Autowired
@@ -47,35 +51,6 @@ public class GoodsStoreServiceImpl extends ServiceImpl<GoodsStoreMapper, GoodsSt
     public Long getResidueNumByGoodsId(Long id) {
         return goodsStoreMapper.getResidueNumByGoodsId(id);
     }
-
-//    @Override
-//    public void downGoodsByGid(Long gid, String token) {
-//        Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
-//        QueryWrapper<GoodsStore> wrapper = new QueryWrapper<GoodsStore>()
-//                .eq("goods_id", gid);
-//        List<GoodsStore> list = super.list(wrapper);
-//        if (list != null && list.size() > 0) {
-//            DetailStoreGoods detailStoreGoods = new DetailStoreGoods();
-//            detailStoreGoods.setCn(IdWorker.getIdStr());
-//            detailStoreGoods.setCreateby(employee.getNickName());
-//            detailStoreGoods.setCreateid(employee.getId());
-//            detailStoreGoods.setCreateTime(new Date());
-//            detailStoreGoods.setGoodsId(gid);
-//            Goods goods = goodsService.getById(gid);
-//            detailStoreGoods.setGoodsName(goods.getName());
-//            detailStoreGoods.setGoodsPrice(goods.getPurchashPrice());
-//            detailStoreGoods.setInfo("下架商品处理");
-//            detailStoreGoods.setGoodsNum(goods.getResidueNum());
-//            detailStoreGoods.setState(DetailStoreGoods.STATE_DOWN);
-//            detailStoreGoods.setState1(DetailStoreGoods.STATE1_NORMAL);
-//            detailStoreGoods.setType(DetailStoreGoods.TYPE_OUT);
-//            detailStoreGoodsService.goodsDown(detailStoreGoods);
-//            UpdateWrapper<GoodsStore> wrapper1 = new UpdateWrapper<>();
-//            wrapper1.eq("goods_id", gid);
-//            wrapper1.set("residue_num", 0);
-//            super.update(wrapper1);
-//        }
-//    }
 
     @Override
     public void goodsInStore(Long goodsId, Long goodsNum, Long storeId) {

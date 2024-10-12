@@ -10,7 +10,6 @@ import java.util.Map;
 
 public interface ISupplierService extends IService<Supplier> {
 
-
     void deactivate(Long cn);
 
     Page<Supplier> queryPageByQo(QuerySupplier qo);

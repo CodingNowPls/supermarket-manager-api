@@ -13,7 +13,6 @@ import java.util.Map;
 
 public interface IDetailStoreGoodsService extends IService<DetailStoreGoods> {
 
-
     void saveIn(DetailStoreGoods detailStoreGoods, String token);
 
     Page<DetailStoreGoodsVo> queryPageByQoIn(QueryDetailStoreGoods qo);

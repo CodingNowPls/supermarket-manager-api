@@ -1,7 +1,12 @@
 package com.rabbiter.market.common.web.response;
 
 import com.rabbiter.market.common.constants.HttpStatus;
+import lombok.Data;
 
+/**
+ *
+ */
+@Data
 public class JsonResult<T> {
     public static final int CODE_SUCCESS = HttpStatus.CODE_SUCCESS;
     public static final String MSG_SUCCESS = "操作成功";
@@ -21,32 +26,6 @@ public class JsonResult<T> {
         this.data = data;
     }
 
-    public JsonResult() {
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
 
     public static <T> JsonResult success(T data) {
         return new JsonResult(CODE_SUCCESS, MSG_SUCCESS, data);

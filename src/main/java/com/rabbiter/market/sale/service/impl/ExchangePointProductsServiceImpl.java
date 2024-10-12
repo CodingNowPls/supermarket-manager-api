@@ -5,7 +5,7 @@ import com.rabbiter.market.goods.doamin.Goods;
 import com.rabbiter.market.goods.doamin.PointProducts;
 import com.rabbiter.market.member.domain.Member;
 import com.rabbiter.market.person.domain.Employee;
-import com.rabbiter.market.sale.domain.ExchangePointProducts;
+import com.rabbiter.market.sale.domain.PointRedemptionHistory;
 import com.rabbiter.market.sale.mapper.ExchangePointProductsMapper;
 import com.rabbiter.market.inventory.qo.QueryExchangePointProductsRecords;
 import com.rabbiter.market.goods.service.IGoodsService;
@@ -25,7 +25,7 @@ import org.springframework.util.StringUtils;
 import java.util.*;
 
 @Service
-public class ExchangePointProductsServiceImpl extends ServiceImpl<ExchangePointProductsMapper, ExchangePointProducts> implements IExchangePointProductsService {
+public class ExchangePointProductsServiceImpl extends ServiceImpl<ExchangePointProductsMapper, PointRedemptionHistory> implements IExchangePointProductsService {
     @Autowired
     private IMemberService memberService;
     @Autowired
@@ -64,31 +64,31 @@ public class ExchangePointProductsServiceImpl extends ServiceImpl<ExchangePointP
     }
 
     @Override
-    public void saveExchangePointProductRecords(ExchangePointProducts exchangePointProducts, String token) {
+    public void saveExchangePointProductRecords(PointRedemptionHistory pointRedemptionHistory, String token) {
         Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
-        exchangePointProducts.setCn(IdWorker.getIdStr());//生成订单号
-        exchangePointProducts.setUpdateby(employee.getNickName());
-        exchangePointProducts.setUpdateId(employee.getId());
-        exchangePointProducts.setUpdateTime(new Date());
-        exchangePointProducts.setState(ExchangePointProducts.STATE_NORMAL);
+        pointRedemptionHistory.setCn(IdWorker.getIdStr());//生成订单号
+        pointRedemptionHistory.setUpdateby(employee.getNickName());
+        pointRedemptionHistory.setUpdateId(employee.getId());
+        pointRedemptionHistory.setUpdateTime(new Date());
+        pointRedemptionHistory.setState(PointRedemptionHistory.STATE_NORMAL);
         /*修改会员的积分*/
-        Member member = memberService.getById(exchangePointProducts.getMemberId());
-        member.setIntegral(member.getIntegral() - exchangePointProducts.getIntegral());
+        Member member = memberService.getById(pointRedemptionHistory.getMemberId());
+        member.setIntegral(member.getIntegral() - pointRedemptionHistory.getIntegral());
         memberService.updateById(member);
-        super.save(exchangePointProducts);
+        super.save(pointRedemptionHistory);
 
     }
 
     @Override
     public List<Map<String, Object>> queryOptionsMemberPhone() {
-        QueryWrapper<ExchangePointProducts> wrapper = new QueryWrapper<ExchangePointProducts>()
+        QueryWrapper<PointRedemptionHistory> wrapper = new QueryWrapper<PointRedemptionHistory>()
                 .select("member_id")
-                .eq("state", ExchangePointProducts.STATE_NORMAL)
+                .eq("state", PointRedemptionHistory.STATE_NORMAL)
                 .groupBy("member_id");
-        List<ExchangePointProducts> list = super.list(wrapper);
+        List<PointRedemptionHistory> list = super.list(wrapper);
         List<Long> memberIds = new ArrayList<>();
-        for (ExchangePointProducts exchangePointProducts : list) {
-            memberIds.add(exchangePointProducts.getMemberId());
+        for (PointRedemptionHistory pointRedemptionHistory : list) {
+            memberIds.add(pointRedemptionHistory.getMemberId());
         }
         if (memberIds == null || memberIds.size() <= 0) {
             return null;
@@ -107,23 +107,23 @@ public class ExchangePointProductsServiceImpl extends ServiceImpl<ExchangePointP
 
     @Override
     public void delExchangePointProducts(String cn) {
-        UpdateWrapper<ExchangePointProducts> wrapper = new UpdateWrapper<ExchangePointProducts>()
-                .set("state", ExchangePointProducts.STATE_DEL)
+        UpdateWrapper<PointRedemptionHistory> wrapper = new UpdateWrapper<PointRedemptionHistory>()
+                .set("state", PointRedemptionHistory.STATE_DEL)
                 .eq("cn", cn);
         super.update(wrapper);
     }
 
     @Override
-    public Page<ExchangePointProducts> queryPageByQoExchangePointProducts(QueryExchangePointProductsRecords qo) {
-        Page<ExchangePointProducts> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        QueryWrapper<ExchangePointProducts> queryWrapper = new QueryWrapper<ExchangePointProducts>()
-                .eq("state", ExchangePointProducts.STATE_NORMAL)
+    public Page<PointRedemptionHistory> queryPageByQoExchangePointProducts(QueryExchangePointProductsRecords qo) {
+        Page<PointRedemptionHistory> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
+        QueryWrapper<PointRedemptionHistory> queryWrapper = new QueryWrapper<PointRedemptionHistory>()
+                .eq("state", PointRedemptionHistory.STATE_NORMAL)
                 .eq(qo.getMemberId() != null, "member_id", qo.getMemberId())
                 .ge(StringUtils.hasText(qo.getStartTime()), "update_time", qo.getStartTime())
                 .le(StringUtils.hasText(qo.getEndTime()), "update_time", qo.getEndTime())
                 .likeRight(StringUtils.hasText(qo.getCn()), "cn", qo.getCn());
         super.page(page, queryWrapper);
-        for (ExchangePointProducts record : page.getRecords()) {
+        for (PointRedemptionHistory record : page.getRecords()) {
             Member member = memberService.getById(record.getMemberId());
             record.setMemberPhone(member.getPhone());
             Goods goods = goodsService.getById(record.getGoodsId());

@@ -1,15 +1,33 @@
 package com.rabbiter.market.sale.vo;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
  * 单个商品销售信息
  */
+@Data
 public class SaleGoodsVo implements Serializable {
+    /**
+     *
+     */
     private Long goodsId;
+    /**
+     *
+     */
     private String goodsName;
+    /**
+     *
+     */
     private String coverUrl;
+    /**
+     *
+     */
     private Long salesVolume;//销量
+    /**
+     *
+     */
     private Long percentage = 0L;
 
     public void setPercentage(Long total) {
@@ -26,39 +44,4 @@ public class SaleGoodsVo implements Serializable {
 
     }
 
-    public Long getGoodsId() {
-        return goodsId;
-    }
-
-    public void setGoodsId(Long goodsId) {
-        this.goodsId = goodsId;
-    }
-
-    public String getGoodsName() {
-        return goodsName;
-    }
-
-    public void setGoodsName(String goodsName) {
-        this.goodsName = goodsName;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
-
-    public Long getSalesVolume() {
-        return salesVolume;
-    }
-
-    public void setSalesVolume(Long salesVolume) {
-        this.salesVolume = salesVolume;
-    }
-
-    public Long getPercentage() {
-        return percentage;
-    }
 }

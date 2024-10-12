@@ -33,6 +33,7 @@ import java.util.*;
 
 @Service
 public class DetailStoreGoodsServiceImpl extends ServiceImpl<DetailStoreGoodsMapper, DetailStoreGoods> implements IDetailStoreGoodsService {
+
     @Autowired
     private RedisTemplateService redisTemplateService;
     @Autowired

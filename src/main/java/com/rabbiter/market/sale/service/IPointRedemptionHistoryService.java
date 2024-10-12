@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
 import java.util.Map;
 
-public interface IExchangePointProductsService extends IService<PointRedemptionHistory> {
+public interface IPointRedemptionHistoryService extends IService<PointRedemptionHistory> {
     List<Map<String, Object>> queryPointProductBymemberId(Long memberId);
 
     PointProducts queryPointProductByGoodsId(Long goodsId);

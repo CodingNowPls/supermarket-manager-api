@@ -5,5 +5,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface ExchangePointProductsMapper extends BaseMapper<PointRedemptionHistory> {
+public interface PointRedemptionHistoryMapper extends BaseMapper<PointRedemptionHistory> {
 }

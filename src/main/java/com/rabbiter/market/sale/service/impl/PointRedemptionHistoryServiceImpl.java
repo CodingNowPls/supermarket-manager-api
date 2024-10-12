@@ -6,12 +6,12 @@ import com.rabbiter.market.goods.doamin.PointProducts;
 import com.rabbiter.market.member.domain.Member;
 import com.rabbiter.market.person.domain.Employee;
 import com.rabbiter.market.sale.domain.PointRedemptionHistory;
-import com.rabbiter.market.sale.mapper.ExchangePointProductsMapper;
+import com.rabbiter.market.sale.mapper.PointRedemptionHistoryMapper;
 import com.rabbiter.market.inventory.qo.QueryExchangePointProductsRecords;
 import com.rabbiter.market.goods.service.IGoodsService;
 import com.rabbiter.market.goods.service.IPointProductsService;
 import com.rabbiter.market.member.service.IMemberService;
-import com.rabbiter.market.sale.service.IExchangePointProductsService;
+import com.rabbiter.market.sale.service.IPointRedemptionHistoryService;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -25,7 +25,7 @@ import org.springframework.util.StringUtils;
 import java.util.*;
 
 @Service
-public class ExchangePointProductsServiceImpl extends ServiceImpl<ExchangePointProductsMapper, PointRedemptionHistory> implements IExchangePointProductsService {
+public class PointRedemptionHistoryServiceImpl extends ServiceImpl<PointRedemptionHistoryMapper, PointRedemptionHistory> implements IPointRedemptionHistoryService {
     @Autowired
     private IMemberService memberService;
     @Autowired

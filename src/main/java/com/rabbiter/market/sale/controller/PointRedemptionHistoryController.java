@@ -5,7 +5,7 @@ import com.rabbiter.market.common.web.response.JsonResult;
 import com.rabbiter.market.goods.doamin.PointProducts;
 import com.rabbiter.market.sale.domain.PointRedemptionHistory;
 import com.rabbiter.market.inventory.qo.QueryExchangePointProductsRecords;
-import com.rabbiter.market.sale.service.IExchangePointProductsService;
+import com.rabbiter.market.sale.service.IPointRedemptionHistoryService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -26,7 +26,7 @@ import java.util.Map;
 @RequestMapping("/sale_management/exchange_point_products_records")
 public class PointRedemptionHistoryController {
     @Autowired
-    private IExchangePointProductsService exchangePointProductsService;
+    private IPointRedemptionHistoryService exchangePointProductsService;
 
 
     @GetMapping("/queryPointProductBymemberId")

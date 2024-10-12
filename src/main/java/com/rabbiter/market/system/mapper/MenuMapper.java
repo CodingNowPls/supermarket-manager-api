@@ -3,6 +3,7 @@ package com.rabbiter.market.system.mapper;
 import com.rabbiter.market.system.domain.Menu;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Set;
@@ -17,7 +18,7 @@ public interface MenuMapper extends BaseMapper<Menu> {
      * @param rids
      * @return
      */
-    List<Menu> queryByRids(Set<Long> rids);
+    List<Menu> queryByRids(@Param("rids") Set<Long> rids);
 
 
 }

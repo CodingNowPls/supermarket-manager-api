@@ -149,17 +149,17 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         ArrayList<Long> btnIds = new ArrayList<>();
         QueryWrapper<Menu> wrapper = new QueryWrapper<Menu>().in("id", ids);
         List<Menu> list = super.list(wrapper);
-        if (list==null){
+        if (list == null) {
             return parentIds;
         }
         for (Menu menu : list) {
-           if (Menu.TYPE_MENU.equals(menu.getType())){
+            if (Menu.TYPE_MENU.equals(menu.getType())) {
                 //菜单
-               parentIds.add(menu.getParentId());
-            }else {
+                parentIds.add(menu.getParentId());
+            } else {
                 //按钮
-               parentIds.add(menu.getParentId());
-               btnIds.add(menu.getId());
+                parentIds.add(menu.getParentId());
+                btnIds.add(menu.getId());
             }
         }
         return parentIds;

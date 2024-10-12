@@ -7,12 +7,14 @@ public interface IStoreService extends IService<Store> {
 
     /**
      * 更改仓库信息的业务
+     *
      * @param store
      */
     void updateStore(Store store);
 
     /**
      * 停用仓库业务
+     *
      * @param sid
      */
     void deactivate(Long sid);

@@ -26,7 +26,7 @@ public class GoodsCategoryController {
     /*保存信息接口*/
     @HasPermisson("goods_management:goods_category:save")
     @PostMapping("/save")
-    public JsonResult saveGoodsCategory(GoodsCategory category){
+    public JsonResult saveGoodsCategory(GoodsCategory category) {
         goodsCategoryService.saveGoodsCategory(category);
         return JsonResult.success();
     }
@@ -34,17 +34,19 @@ public class GoodsCategoryController {
     /*修改接口*/
     @HasPermisson("goods_management:goods_category:update")
     @PostMapping("/update")
-    public JsonResult updateGoodsCategory(GoodsCategory category){
+    public JsonResult updateGoodsCategory(GoodsCategory category) {
         goodsCategoryService.updateGoodsCategory(category);
         return JsonResult.success();
     }
+
     /*停用*/
     @HasPermisson("goods_management:goods_category:deactivate")
     @PostMapping("/deactivate")
-    public JsonResult deactivate(Long cid){
+    public JsonResult deactivate(Long cid) {
         goodsCategoryService.deactivate(cid);
         return JsonResult.success();
     }
+
     /*查询信息*/
     @HasPermisson("goods_management:goods_category:list")
     @PostMapping("/queryPageByQo")
@@ -52,9 +54,10 @@ public class GoodsCategoryController {
         Page<GoodsCategory> page = goodsCategoryService.queryPageByQo(qo);
         return JsonResult.success(page);
     }
+
     @GetMapping("/normalCategoryAll")
-    public JsonResult getNormalCategoryAll(){
-        List<Map<String ,Object>> list=goodsCategoryService.getNormalCategoryAll();
+    public JsonResult getNormalCategoryAll() {
+        List<Map<String, Object>> list = goodsCategoryService.getNormalCategoryAll();
         return JsonResult.success(list);
     }
 }

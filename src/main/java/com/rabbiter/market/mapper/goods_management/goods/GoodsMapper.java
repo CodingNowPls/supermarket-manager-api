@@ -19,5 +19,6 @@ public interface GoodsMapper extends BaseMapper<Goods> {
     int getNoticeOutShelvesTotalCount(Map<String, Object> map);
 
     List<NoticeOut> getNoticeShelvesPageList(Map<String, Object> map);
+
     Long queryPageStatisticSaleByQo(String name);
 }

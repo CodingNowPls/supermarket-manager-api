@@ -12,9 +12,9 @@ import java.io.Serializable;
 @TableName("department")
 public class Dept implements Serializable {
     //正常
-    public static final String STATE_NORMAL="0";
+    public static final String STATE_NORMAL = "0";
     //禁用
-    public static final String STATE_BAN="-1";
+    public static final String STATE_BAN = "-1";
     @TableId(type = IdType.AUTO)
     private Long id;
     private String name;

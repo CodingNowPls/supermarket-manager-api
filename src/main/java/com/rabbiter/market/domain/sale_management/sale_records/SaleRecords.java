@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,15 +13,15 @@ import java.util.List;
 
 @TableName("t_sale_records")
 public class SaleRecords implements Serializable {
-    public static final String STATE_NORMAL="0";
-    public static final String STATE_DEL="1";
-    private static final String  TYPE_MEMBER="1";
-    private static final String TYPE_NOMEMBER="0";
-    private static final String SELLWAY_ALIPAY="0";
-    private static final String SELLWAY_WECHAT="1";
-    private static final String SELLWAY_CASH="2";
-    private static final String SELLWAY_CREDIT="3";
-    private static final Double DISCOUNT=0.9;
+    public static final String STATE_NORMAL = "0";
+    public static final String STATE_DEL = "1";
+    private static final String TYPE_MEMBER = "1";
+    private static final String TYPE_NOMEMBER = "0";
+    private static final String SELLWAY_ALIPAY = "0";
+    private static final String SELLWAY_WECHAT = "1";
+    private static final String SELLWAY_CASH = "2";
+    private static final String SELLWAY_CREDIT = "3";
+    private static final Double DISCOUNT = 0.9;
     @TableField("cn")
     private String cn;
     private Long eid;
@@ -38,7 +39,7 @@ public class SaleRecords implements Serializable {
     private Double sellTotalmoney;
     private String type;
     @TableField(exist = false)
-    private List<DetailSaleRecords> detailSaleRecords=new ArrayList<>();
+    private List<DetailSaleRecords> detailSaleRecords = new ArrayList<>();
     @TableField("member_phone")
     private String memberPhone;//会员账号
 

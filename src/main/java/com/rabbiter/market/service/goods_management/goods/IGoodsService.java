@@ -22,6 +22,7 @@ import java.util.Map;
 public interface IGoodsService extends IService<Goods> {
     /**
      * 分页查询出数据
+     *
      * @param qo
      * @return
      */
@@ -29,7 +30,7 @@ public interface IGoodsService extends IService<Goods> {
 
     void saveGoods(Goods goods, String token);
 
-    void upOrdown(Long gid, String state,String token);
+    void upOrdown(Long gid, String state, String token);
 
     void updateGoods(Goods goods, String token);
 
@@ -50,7 +51,7 @@ public interface IGoodsService extends IService<Goods> {
 
     Page<NoticeOut> queryPageNoticeOut_shelves(QueryNoticeOut qo);
 
-    void saveOut_shelves(DetailStoreGoods detailStoreGoods,String token);
+    void saveOut_shelves(DetailStoreGoods detailStoreGoods, String token);
 
     SalesStatisticsVo queryPageStatisticSaleByQo(QueryStatisticSale qo);
 

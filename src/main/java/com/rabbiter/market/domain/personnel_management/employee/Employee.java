@@ -22,7 +22,7 @@ public class Employee implements Serializable {
     public static final String DEFAULT_PWD = "123456";
     public static final String SEX_MEN = "1";
     public static final String SEX_WOWEN = "0";
-    public static final String DEFAULT_HEAD_IMG="/files/1694434162457_07.jpg";
+    public static final String DEFAULT_HEAD_IMG = "/files/1694434162457_07.jpg";
     @TableId(type = IdType.AUTO)
     private Long id;
     private String sex;
@@ -34,7 +34,7 @@ public class Employee implements Serializable {
     private String nickName;
     private String password;
     @TableField("head_img")
-    private String headImg=DEFAULT_HEAD_IMG;
+    private String headImg = DEFAULT_HEAD_IMG;
     private String state = STATE_NORMAL;
     private String info;
     private String createby;
@@ -50,7 +50,7 @@ public class Employee implements Serializable {
     @TableField("deptId")
     private Long deptId;
 
-    @TableField(value = "dept_name",exist = false)
+    @TableField(value = "dept_name", exist = false)
     private String deptName;
     //角色集合
     @TableField(exist = false)
@@ -261,7 +261,7 @@ public class Employee implements Serializable {
 
     public void setMenus(List<Menu> menus) {
         this.menus = menus;
-        if (menus!=null) {
+        if (menus != null) {
             this.flags = getFlags(this.menus);
         }
     }

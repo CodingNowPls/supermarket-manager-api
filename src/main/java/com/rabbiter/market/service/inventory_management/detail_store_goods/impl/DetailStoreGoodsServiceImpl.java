@@ -212,11 +212,11 @@ public class DetailStoreGoodsServiceImpl extends ServiceImpl<DetailStoreGoodsMap
     @Override
     public DetailStoreGoodsOutVo queryOutGoods(Long goodsId, Long storeId) {
         QueryWrapper<GoodsStore> wrapper = new QueryWrapper<>();
-        wrapper.eq("goods_id",goodsId);
-        wrapper.eq("store_id",storeId);
+        wrapper.eq("goods_id", goodsId);
+        wrapper.eq("store_id", storeId);
         GoodsStore goodsStore = goodsStoreService.getOne(wrapper);
         DetailStoreGoodsOutVo vo = new DetailStoreGoodsOutVo();
-        BeanUtils.copyProperties(goodsStore,vo);
+        BeanUtils.copyProperties(goodsStore, vo);
         vo.setGoodsNum(goodsStore.getResidueNum());
         Goods goods = goodsService.getById(goodsId);
         vo.setGoodsName(goods.getName());
@@ -243,27 +243,27 @@ public class DetailStoreGoodsServiceImpl extends ServiceImpl<DetailStoreGoodsMap
         UpdateWrapper<GoodsStore> goodsStoreUpdateWrapper = new UpdateWrapper<GoodsStore>()
                 .eq("goods_id", detailStoreGoods.getGoodsId())
                 .eq("store_id", detailStoreGoods.getStoreId());
-        if (DetailStoreGoods.STATE_EXPIRY.equals(detailStoreGoods.getState())){
+        if (DetailStoreGoods.STATE_EXPIRY.equals(detailStoreGoods.getState())) {
             //过期处理
             detailStoreGoods.setState(DetailStoreGoods.STATE_EXPIRY);
-            if (num>=0){
-                goodsStoreUpdateWrapper.set("residue_num",num);
+            if (num >= 0) {
+                goodsStoreUpdateWrapper.set("residue_num", num);
 
-            }else {
-                goodsStoreUpdateWrapper.set("residue_num",0L);
+            } else {
+                goodsStoreUpdateWrapper.set("residue_num", 0L);
                 detailStoreGoods.setGoodsNum(goodsStore.getResidueNum());
             }
-        }else {
+        } else {
             //出库到货架上
             detailStoreGoods.setState(DetailStoreGoods.STATE_NORMAL);
             Goods goods = goodsService.getById(detailStoreGoods.getGoodsId());
             UpdateWrapper<Goods> goodsUpdateWrapper = new UpdateWrapper<Goods>().eq("id", goods.getId());
-            if (num>=0){
-                goodsStoreUpdateWrapper.set("residue_num",num);
-                goodsUpdateWrapper.set("residue_num",goods.getResidueNum()==null?detailStoreGoods.getGoodsNum():goods.getResidueNum()+detailStoreGoods.getGoodsNum());
-            }else {
-                goodsStoreUpdateWrapper.set("residue_num",0L);
-                goodsUpdateWrapper.set("residue_num",goods.getResidueNum()==null?goodsStore.getResidueNum():goods.getResidueNum()+goodsStore.getResidueNum());
+            if (num >= 0) {
+                goodsStoreUpdateWrapper.set("residue_num", num);
+                goodsUpdateWrapper.set("residue_num", goods.getResidueNum() == null ? detailStoreGoods.getGoodsNum() : goods.getResidueNum() + detailStoreGoods.getGoodsNum());
+            } else {
+                goodsStoreUpdateWrapper.set("residue_num", 0L);
+                goodsUpdateWrapper.set("residue_num", goods.getResidueNum() == null ? goodsStore.getResidueNum() : goods.getResidueNum() + goodsStore.getResidueNum());
                 detailStoreGoods.setGoodsNum(goodsStore.getResidueNum());
             }
             goodsService.update(goodsUpdateWrapper);

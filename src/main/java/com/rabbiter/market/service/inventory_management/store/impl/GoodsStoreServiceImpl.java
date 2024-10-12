@@ -103,13 +103,13 @@ public class GoodsStoreServiceImpl extends ServiceImpl<GoodsStoreMapper, GoodsSt
     @Override
     public Map<String, Object> queryPageStorageSituationByQo(QueryStorageSituation qo) {
         HashMap<String, Object> map = new HashMap<>();
-        Long totalStoreNum=goodsStoreMapper.totalStoreNum();
-        map.put("totalStoreNum",totalStoreNum!=null?totalStoreNum:0L);
+        Long totalStoreNum = goodsStoreMapper.totalStoreNum();
+        map.put("totalStoreNum", totalStoreNum != null ? totalStoreNum : 0L);
         Page<GoodsStore> goodsStorePage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         QueryWrapper<GoodsStore> goodsStoreQueryWrapper = new QueryWrapper<GoodsStore>().select("store_id,store_name,SUM(residue_num) residue_num")
                 .like(StringUtils.hasText(qo.getName()), "store_name", qo.getName())
                 .groupBy("store_id", "store_name");
-        super.page(goodsStorePage,goodsStoreQueryWrapper);
+        super.page(goodsStorePage, goodsStoreQueryWrapper);
         Page<StorageSituationVo> situationVoPage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         List<StorageSituationVo> vos = new ArrayList<>();
         for (GoodsStore record : goodsStorePage.getRecords()) {
@@ -121,42 +121,42 @@ public class GoodsStoreServiceImpl extends ServiceImpl<GoodsStoreMapper, GoodsSt
         }
         situationVoPage.setRecords(vos);
         situationVoPage.setTotal(goodsStorePage.getTotal());
-        map.put("page",situationVoPage);
+        map.put("page", situationVoPage);
         return map;
     }
 
     @Override
     public Map<String, Object> queryStoreGoodsByStoreId(QueryDetailStorageSituation qo) {
         Map<String, Object> map = new HashMap<>();
-        Long totalStoreNum1=goodsStoreMapper.getTotalStoreNum1(qo.getStoreId());
-        map.put("totalStoreNum1",totalStoreNum1);//该仓库的存储量
+        Long totalStoreNum1 = goodsStoreMapper.getTotalStoreNum1(qo.getStoreId());
+        map.put("totalStoreNum1", totalStoreNum1);//该仓库的存储量
 
         QueryWrapper<GoodsStore> wrapper = new QueryWrapper<GoodsStore>()
-                .gt("residue_num",0)
+                .gt("residue_num", 0)
                 .eq("store_id", qo.getStoreId());
         List<GoodsStore> list = super.list(wrapper);
         Set<Long> goodsIds = new HashSet<>();
         for (GoodsStore goodsStore : list) {
             goodsIds.add(goodsStore.getGoodsId());
         }
-        if (goodsIds.size()<=0){
+        if (goodsIds.size() <= 0) {
             throw new BusinessException("该仓库没有存放任何的商品");
         }
         List<Goods> goodsList = goodsService.listByIds(goodsIds);
         List<Map<String, Object>> optionsStoreGoods = new ArrayList<>();
         for (Goods goods : goodsList) {
             Map<String, Object> options = new HashMap<>();
-            options.put("id",goods.getId());
-            options.put("name",goods.getName());
+            options.put("id", goods.getId());
+            options.put("name", goods.getName());
             optionsStoreGoods.add(options);
         }
-        map.put("optionsStoreGoods",optionsStoreGoods);//选择框
+        map.put("optionsStoreGoods", optionsStoreGoods);//选择框
         Page<GoodsStore> goodsStorePage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         QueryWrapper<GoodsStore> goodsStoreQueryWrapper = new QueryWrapper<GoodsStore>()
-                .eq("store_id",qo.getStoreId())
-                .gt("residue_num",0)
-                .eq(qo.getId()!=null,"goods_id", qo.getId());
-        super.page(goodsStorePage,goodsStoreQueryWrapper);
+                .eq("store_id", qo.getStoreId())
+                .gt("residue_num", 0)
+                .eq(qo.getId() != null, "goods_id", qo.getId());
+        super.page(goodsStorePage, goodsStoreQueryWrapper);
 
         Page<DetailStorageSituationVo> voPage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         voPage.setTotal(goodsStorePage.getTotal());
@@ -170,7 +170,7 @@ public class GoodsStoreServiceImpl extends ServiceImpl<GoodsStoreMapper, GoodsSt
             detailStorageSituationVoList.add(vo);
         }
         voPage.setRecords(detailStorageSituationVoList);
-        map.put("vos",voPage);//表格数据
+        map.put("vos", voPage);//表格数据
         return map;
     }
 }

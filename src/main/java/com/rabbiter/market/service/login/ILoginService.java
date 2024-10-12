@@ -13,20 +13,23 @@ import java.util.Map;
 public interface ILoginService extends IService<Employee> {
     /**
      * 处理员工登录业务
+     *
      * @param username
      * @param password
      * @return
      */
-    Map<String,Object> login(String username, String password);
+    Map<String, Object> login(String username, String password);
 
     /**
      * 退出功能
+     *
      * @param token
      */
     void exit(String token);
 
     /**
      * 注销账户功能
+     *
      * @param token
      * @param content
      */
@@ -34,6 +37,7 @@ public interface ILoginService extends IService<Employee> {
 
     /**
      * 登录者拥有的菜单信息
+     *
      * @param token
      * @return
      */

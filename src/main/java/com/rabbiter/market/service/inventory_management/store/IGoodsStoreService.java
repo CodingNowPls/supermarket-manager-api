@@ -14,7 +14,7 @@ public interface IGoodsStoreService extends IService<GoodsStore> {
 
     Long getResidueNumByGoodsId(Long id);
 
-    void goodsInStore(Long goodsId, Long goodsNum,Long storeId);
+    void goodsInStore(Long goodsId, Long goodsNum, Long storeId);
 
     void goodsOutStore(Long goodsId, Long goodsNum, Long storeId);
 

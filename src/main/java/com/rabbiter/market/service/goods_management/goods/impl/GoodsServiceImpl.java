@@ -56,6 +56,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     private IGoodsStoreService goodsStoreService;
     @Autowired
     private GoodsMapper goodsMapper;
+
     @Override
     public Page<GoodsListVo> queryPageByQo(QueryGoods qo) {
         Page<GoodsListVo> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
@@ -73,7 +74,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         for (Goods record : goodsPage.getRecords()) {
             GoodsListVo vo = new GoodsListVo();
             BeanUtils.copyProperties(record, vo);
-            Long residueNum=storeService.getResidueNumByGoodsId(record.getId());
+            Long residueNum = storeService.getResidueNumByGoodsId(record.getId());
             vo.setResidueStoreNum(residueNum);
             volists.add(vo);
         }
@@ -110,7 +111,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 
     @Transactional
     @Override
-    public void upOrdown(Long gid, String state,String token) {
+    public void upOrdown(Long gid, String state, String token) {
         UpdateWrapper<Goods> wrapper = new UpdateWrapper<>();
         wrapper.eq("id", gid);
         if (Goods.STATE_UP.equals(state)) {
@@ -130,14 +131,14 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
                 detailStoreGoods.setState1(DetailStoreGoods.STATE1_UNTREATED);
                 detailStoreGoods.setState(DetailStoreGoods.STATE_DOWN);
                 detailStoreGoods.setCn(IdWorker.getIdStr());
-                detailStoreGoods.setInfo(goods.getName()+"下架处理");
+                detailStoreGoods.setInfo(goods.getName() + "下架处理");
                 detailStoreGoods.setGoodsNum(goodsStore.getResidueNum());
                 detailStoreGoods.setUntreatedNum(goodsStore.getResidueNum());
                 detailStoreGoods.setStoreId(goodsStore.getStoreId());
                 detailStoreGoodsService.save(detailStoreGoods);
             }
         } else {
-            wrapper.set("residue_num",0);
+            wrapper.set("residue_num", 0);
             wrapper.set("state", Goods.STATE_UP);
             QueryWrapper<DetailStoreGoods> queryWrapper = new QueryWrapper<DetailStoreGoods>().eq("goods_id", gid)
                     .eq("state", DetailStoreGoods.STATE_DOWN)
@@ -175,14 +176,14 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     public List<Map<String, Object>> selected_goodsAll() {
         QueryWrapper<Goods> wrapper = new QueryWrapper<Goods>().eq("state", Goods.STATE_UP);
         List<Goods> list = super.list(wrapper);
-        if (list==null&&list.size()==0){
+        if (list == null && list.size() == 0) {
             return null;
         }
         List<Map<String, Object>> listVo = new ArrayList<>();
         for (Goods goods : list) {
             Map<String, Object> map = new HashMap<>();
-            map.put("id",goods.getId());
-            map.put("name",goods.getName());
+            map.put("id", goods.getId());
+            map.put("name", goods.getName());
             listVo.add(map);
         }
 
@@ -194,11 +195,11 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         List<Map<String, Object>> list = new ArrayList<>();
         QueryWrapper<Store> wrapper = new QueryWrapper<Store>().eq("state", Store.STATE_NORMAL);
         List<Store> list1 = storeService.list(wrapper);
-        if (list1!=null &&list1.size()>0){
+        if (list1 != null && list1.size() > 0) {
             for (Store store : list1) {
                 Map<String, Object> map = new HashMap<>();
-                map.put("id",store.getId());
-                map.put("name",store.getName());
+                map.put("id", store.getId());
+                map.put("name", store.getName());
                 list.add(map);
             }
         }
@@ -215,10 +216,10 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         detailStoreGoods.setCreateby(employee.getNickName());
         detailStoreGoods.setCreateid(employee.getId());
         detailStoreGoods.setType(DetailStoreGoods.TYPE_IN);
-        if (DetailStoreGoods.STATE_EXPIRY.equals(detailStoreGoods.getState())){
+        if (DetailStoreGoods.STATE_EXPIRY.equals(detailStoreGoods.getState())) {
             //如果是过期，将入库订单的state1修改成2：待处理的状态
             detailStoreGoods.setState1(DetailStoreGoods.STATE1_UNTREATED);
-        }else {
+        } else {
             detailStoreGoods.setState1(DetailStoreGoods.STATE1_NORMAL);
         }
 
@@ -228,7 +229,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
                 .eq("goods_id", detailStoreGoods.getGoodsId())
                 .eq("store_id", detailStoreGoods.getStoreId());
         GoodsStore goodsStore = goodsStoreService.getOne(goodsStoreQueryWrapper);
-        if (goodsStore==null){
+        if (goodsStore == null) {
             goodsStore = new GoodsStore();
             goodsStore.setGoodsId(detailStoreGoods.getGoodsId());
             goodsStore.setStoreId(detailStoreGoods.getStoreId());
@@ -239,7 +240,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
             goodsStoreService.save(goodsStore);
         }
         long num = goods.getResidueNum() - detailStoreGoods.getGoodsNum();
-        if (num>=0){
+        if (num >= 0) {
             //货架还有商品数量
             /*更改商品信息*/
             UpdateWrapper<Goods> goodsUpdateWrapper = new UpdateWrapper<Goods>()
@@ -254,7 +255,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
             goodsStoreService.update(goodsStoreUpdateWrapper);
             detailStoreGoods.setUntreatedNum(detailStoreGoods.getGoodsNum());
 
-        }else {
+        } else {
             //货架没有商品数量
             /*更改商品信息*/
             UpdateWrapper<Goods> goodsUpdateWrapper = new UpdateWrapper<Goods>()
@@ -275,12 +276,12 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 
     @Override
     public Page<GoodsStoreVo> queryPageGoodsStore(QueryGoodsStore qo) {
-        Page<GoodsStoreVo> page = new Page<>(qo.getCurrentPage(),qo.getPageSize());
+        Page<GoodsStoreVo> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         Page<Goods> goodsPage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         QueryWrapper<Goods> wrapper = new QueryWrapper<Goods>().eq("state", Goods.STATE_UP)
                 .like(StringUtils.hasText(qo.getName()), "name", qo.getName());
-        super.page(goodsPage,wrapper);
-        if (goodsPage.getTotal()<=0) {
+        super.page(goodsPage, wrapper);
+        if (goodsPage.getTotal() <= 0) {
             page.setRecords(new ArrayList<>());
             page.setTotal(0);
             return page;
@@ -288,7 +289,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         List<GoodsStoreVo> list = new ArrayList<>();
         for (Goods record : goodsPage.getRecords()) {
             GoodsStoreVo vo = new GoodsStoreVo();
-            BeanUtils.copyProperties(record,vo);
+            BeanUtils.copyProperties(record, vo);
             list.add(vo);
         }
         page.setTotal(goodsPage.getTotal());
@@ -300,22 +301,22 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     public GoodsStoreVo queryGoodsStoreById(Long id) {
         GoodsStoreVo vo = new GoodsStoreVo();
         Goods goods = super.getById(id);
-        BeanUtils.copyProperties(goods,vo);
+        BeanUtils.copyProperties(goods, vo);
         return vo;
     }
 
     @Override
     public void updateInventory(GoodsStoreVo vo) {
-        if (vo.getInventory()==null){
+        if (vo.getInventory() == null) {
             vo.setInventory(0L);
         }
-        if(vo.getShelves()==null){
+        if (vo.getShelves() == null) {
             vo.setShelves(0L);
         }
         UpdateWrapper<Goods> updateWrapper = new UpdateWrapper<Goods>()
-                .set("inventory",vo.getInventory())
-                .set("shelves",vo.getShelves())
-                .eq("id",vo.getId());
+                .set("inventory", vo.getInventory())
+                .set("shelves", vo.getShelves())
+                .eq("id", vo.getId());
         super.update(updateWrapper);
 
     }
@@ -324,15 +325,15 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     public Page<NoticeIn> queryPageNoticeIn(QueryNoticeIn qo) {
         Page<NoticeIn> noticeInPage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         List<NoticeIn> list = new ArrayList<>();
-        int start=(qo.getCurrentPage()-1)*qo.getPageSize();
+        int start = (qo.getCurrentPage() - 1) * qo.getPageSize();
         Map<String, Object> map = new HashMap<>();
-        map.put("start",start);
-        map.put("size",qo.getPageSize());
-        if (StringUtils.hasLength(qo.getName())){
-            map.put("name",qo.getName());
+        map.put("start", start);
+        map.put("size", qo.getPageSize());
+        if (StringUtils.hasLength(qo.getName())) {
+            map.put("name", qo.getName());
         }
-        int totalCount=goodsMapper.getNoticeInTotalCount(map);
-        list=goodsMapper.getNoticePageList(map);
+        int totalCount = goodsMapper.getNoticeInTotalCount(map);
+        list = goodsMapper.getNoticePageList(map);
         noticeInPage.setTotal(totalCount);
         noticeInPage.setRecords(list);
         return noticeInPage;
@@ -342,27 +343,27 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     public Page<NoticeOut> queryPageNoticeOut_shelves(QueryNoticeOut qo) {
         Page<NoticeOut> noticeOutPage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         List<NoticeOut> list = new ArrayList<>();
-        int start=(qo.getCurrentPage()-1)*qo.getPageSize();
+        int start = (qo.getCurrentPage() - 1) * qo.getPageSize();
         Map<String, Object> map = new HashMap<>();
-        map.put("start",start);
-        map.put("size",qo.getPageSize());
-        if (StringUtils.hasLength(qo.getName())){
-            map.put("name",qo.getName());
+        map.put("start", start);
+        map.put("size", qo.getPageSize());
+        if (StringUtils.hasLength(qo.getName())) {
+            map.put("name", qo.getName());
         }
-        int totalCount=goodsMapper.getNoticeOutShelvesTotalCount(map);
-        list=goodsMapper.getNoticeShelvesPageList(map);
+        int totalCount = goodsMapper.getNoticeOutShelvesTotalCount(map);
+        list = goodsMapper.getNoticeShelvesPageList(map);
         noticeOutPage.setTotal(totalCount);
         noticeOutPage.setRecords(list);
         return noticeOutPage;
     }
 
     @Override
-    public void saveOut_shelves(DetailStoreGoods detailStoreGoods,String token) {
+    public void saveOut_shelves(DetailStoreGoods detailStoreGoods, String token) {
         Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
         QueryWrapper<GoodsStore> detailStoreGoodsQueryWrapper = new QueryWrapper<GoodsStore>().eq("goods_id", detailStoreGoods.getGoodsId())
                 .eq("store_id", detailStoreGoods.getStoreId());
         GoodsStore goodsStore = goodsStoreService.getOne(detailStoreGoodsQueryWrapper);
-        if (goodsStore==null || goodsStore.getResidueNum()==null ||goodsStore.getResidueNum()==0){
+        if (goodsStore == null || goodsStore.getResidueNum() == null || goodsStore.getResidueNum() == 0) {
             throw new BusinessException("出库失败，库存中没有该商品的库存");
         }
         /*补全出库单的信息*/
@@ -373,11 +374,11 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         detailStoreGoods.setState1(DetailStoreGoods.STATE1_NORMAL);
         long num = goodsStore.getResidueNum() - detailStoreGoods.getGoodsNum();
         Goods goods = super.getById(detailStoreGoods.getGoodsId());
-        if (num>=0){
+        if (num >= 0) {
             /*修改货架商品数量*/
             UpdateWrapper<Goods> goodsUpdateWrapper = new UpdateWrapper<Goods>()
                     .set("residue_num", goods.getResidueNum() == null ? detailStoreGoods.getGoodsNum() : goods.getResidueNum() + detailStoreGoods.getGoodsNum())
-                    .eq("id",detailStoreGoods.getGoodsId());
+                    .eq("id", detailStoreGoods.getGoodsId());
             super.update(goodsUpdateWrapper);
             /*修改商品库存数量*/
             UpdateWrapper<GoodsStore> goodsStoreUpdateWrapper = new UpdateWrapper<GoodsStore>()
@@ -387,15 +388,15 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
             goodsStoreService.update(goodsStoreUpdateWrapper);
             /*添加出库记录*/
             detailStoreGoodsService.save(detailStoreGoods);
-        }else {
+        } else {
             /*修改货架商品数量*/
             UpdateWrapper<Goods> goodsUpdateWrapper = new UpdateWrapper<Goods>()
                     .set("residue_num", goods.getResidueNum() == null ? goodsStore.getResidueNum() : goods.getResidueNum() + goodsStore.getResidueNum())
-                    .eq("id",detailStoreGoods.getGoodsId());
+                    .eq("id", detailStoreGoods.getGoodsId());
             super.update(goodsUpdateWrapper);
             /*修改商品库存数量*/
             UpdateWrapper<GoodsStore> goodsStoreUpdateWrapper = new UpdateWrapper<GoodsStore>()
-                    .set("residue_num",0L)
+                    .set("residue_num", 0L)
                     .eq("goods_id", detailStoreGoods.getGoodsId())
                     .eq("store_id", detailStoreGoods.getStoreId());
             goodsStoreService.update(goodsStoreUpdateWrapper);
@@ -409,13 +410,13 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 
     @Override
     public SalesStatisticsVo queryPageStatisticSaleByQo(QueryStatisticSale qo) {
-       Long total=goodsMapper.queryPageStatisticSaleByQo(qo.getName());
+        Long total = goodsMapper.queryPageStatisticSaleByQo(qo.getName());
         SalesStatisticsVo vo = new SalesStatisticsVo();
         vo.setTotal(total);
         QueryWrapper<Goods> wrapper = new QueryWrapper<Goods>().eq("state", Goods.STATE_UP)
                 .like(StringUtils.hasText(qo.getName()), "name", qo.getName());
         Page<Goods> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        super.page(page,wrapper);
+        super.page(page, wrapper);
         Page<SaleGoodsVo> saleGoodsVoPage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         saleGoodsVoPage.setTotal(page.getTotal());
         List<SaleGoodsVo> saleGoodsVos = new ArrayList<>();
@@ -438,9 +439,9 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         Page<NoticeInNotNormalVo> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         List<NoticeInNotNormalVo> vos = new ArrayList<>();
         QueryWrapper<DetailStoreGoods> queryWrapper = new QueryWrapper<DetailStoreGoods>().eq("state1", DetailStoreGoods.STATE1_UNTREATED);
-        queryWrapper.eq(StringUtils.hasText(qo.getState()),"state",qo.getState());
-        queryWrapper.like(StringUtils.hasText(qo.getName()),"goods_name",qo.getName());
-        queryWrapper.eq("type",DetailStoreGoods.TYPE_IN);
+        queryWrapper.eq(StringUtils.hasText(qo.getState()), "state", qo.getState());
+        queryWrapper.like(StringUtils.hasText(qo.getName()), "goods_name", qo.getName());
+        queryWrapper.eq("type", DetailStoreGoods.TYPE_IN);
         queryWrapper.orderByDesc("create_time");
         List<DetailStoreGoods> list = detailStoreGoodsService.list(queryWrapper);
         for (DetailStoreGoods detailStoreGoods : list) {
@@ -470,7 +471,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
                 .eq("cn", vo.getCn())
                 .eq("state1", DetailStoreGoods.STATE1_UNTREATED);
         DetailStoreGoods detailStoreGoods = detailStoreGoodsService.getOne(queryWrapper);
-        if (detailStoreGoods==null){
+        if (detailStoreGoods == null) {
             throw new BusinessException("该订单已被处理");
         }
 
@@ -479,34 +480,34 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
                 .eq("goods_id", vo.getGoodsId())
                 .eq("store_id", vo.getStoreId());
         GoodsStore goodsStore = goodsStoreService.getOne(goodsStoreQueryWrapper);
-        if (num>0){
+        if (num > 0) {
             //未处理完毕
             UpdateWrapper<DetailStoreGoods> updateWrapper = new UpdateWrapper<DetailStoreGoods>()
                     .eq("cn", detailStoreGoods.getCn())
-                    .set("untreated_num",num);
+                    .set("untreated_num", num);
             detailStoreGoodsService.update(updateWrapper);
             //改变库存
             UpdateWrapper<GoodsStore> goodsStoreUpdateWrapper = new UpdateWrapper<GoodsStore>()
                     .eq("goods_id", vo.getGoodsId())
                     .eq("store_id", vo.getStoreId())
-                    .set("residue_num",goodsStore.getResidueNum()-vo.getUntreatedNum());
+                    .set("residue_num", goodsStore.getResidueNum() - vo.getUntreatedNum());
             goodsStoreService.update(goodsStoreUpdateWrapper);
-        }else {
+        } else {
             //处理完毕
             UpdateWrapper<DetailStoreGoods> updateWrapper = new UpdateWrapper<DetailStoreGoods>()
                     .eq("cn", detailStoreGoods.getCn())
-                    .set("untreated_num",0L)
-                    .set("state1",DetailStoreGoods.STATE1_NORMAL)
-                    .set("createid",employee.getId())
-                    .set("createby",employee.getNickName())
-                    .set("create_time",new Date())
-                    .set("type",DetailStoreGoods.TYPE_OUT);
+                    .set("untreated_num", 0L)
+                    .set("state1", DetailStoreGoods.STATE1_NORMAL)
+                    .set("createid", employee.getId())
+                    .set("createby", employee.getNickName())
+                    .set("create_time", new Date())
+                    .set("type", DetailStoreGoods.TYPE_OUT);
             detailStoreGoodsService.update(updateWrapper);
             //改变库存
             UpdateWrapper<GoodsStore> goodsStoreUpdateWrapper = new UpdateWrapper<GoodsStore>()
                     .eq("goods_id", vo.getGoodsId())
                     .eq("store_id", vo.getStoreId())
-                    .set("residue_num",0L);
+                    .set("residue_num", 0L);
             goodsStoreService.update(goodsStoreUpdateWrapper);
         }
 

@@ -27,12 +27,14 @@ import java.util.Map;
 public class GoodsController {
     @Autowired
     private IGoodsService goodsService;
+
     /*查询信息*/
     @PostMapping("/queryPageByQo")
     public JsonResult queryPageByQo(QueryGoods qo) {
         Page<GoodsListVo> page = goodsService.queryPageByQo(qo);
         return JsonResult.success(page);
     }
+
     /**
      * 上传图片到阿里云oss
      * 返回网络图片地址,uploaded:1:成功 0:失败
@@ -65,47 +67,49 @@ public class GoodsController {
         }
         return map;
     }
+
     /*保存*/
     @PostMapping("/save")
-    public JsonResult saveGoods(Goods goods, HttpServletRequest request){
-        goodsService.saveGoods(goods,(String) request.getHeader("token"));
+    public JsonResult saveGoods(Goods goods, HttpServletRequest request) {
+        goodsService.saveGoods(goods, (String) request.getHeader("token"));
         return JsonResult.success();
     }
     /*上/下架*/
 
     @PostMapping("/upOrdown")
-    public JsonResult upOrdown(@NotNull(message = "商品编号不能为空") Long gid, String state,HttpServletRequest request){
-        goodsService.upOrdown(gid,state,(String) request.getHeader("token"));
+    public JsonResult upOrdown(@NotNull(message = "商品编号不能为空") Long gid, String state, HttpServletRequest request) {
+        goodsService.upOrdown(gid, state, (String) request.getHeader("token"));
         return JsonResult.success();
     }
+
     @GetMapping("/queryGoodsById")
-    public JsonResult queryGoodsById(@NotNull(message = "商品编号不能为空") Long id){
+    public JsonResult queryGoodsById(@NotNull(message = "商品编号不能为空") Long id) {
         return JsonResult.success(goodsService.getById(id));
     }
 
     @PostMapping("/update")
-    public JsonResult update(Goods goods, HttpServletRequest request){
-        goodsService.updateGoods(goods,(String)request.getHeader("token"));
+    public JsonResult update(Goods goods, HttpServletRequest request) {
+        goodsService.updateGoods(goods, (String) request.getHeader("token"));
         return JsonResult.success();
     }
 
     @GetMapping("/selected_goodsAll")
-    public JsonResult selected_goodsAll(){
-        List<Map<String,Object>> list=goodsService.selected_goodsAll();
+    public JsonResult selected_goodsAll() {
+        List<Map<String, Object>> list = goodsService.selected_goodsAll();
         return JsonResult.success(list);
     }
 
     @GetMapping("/selected_storeAll")
-    public JsonResult selected_storeAll(){
-        List<Map<String,Object>> list=goodsService.selected_storeAll();
+    public JsonResult selected_storeAll() {
+        List<Map<String, Object>> list = goodsService.selected_storeAll();
         return JsonResult.success(list);
     }
 
 
     /*退还商品入库*/
     @PostMapping("/returnGoods")
-    public JsonResult returnGoods(DetailStoreGoods detailStoreGoods, HttpServletRequest request){
-        goodsService.returnGoods(detailStoreGoods,(String) request.getHeader("token"));
+    public JsonResult returnGoods(DetailStoreGoods detailStoreGoods, HttpServletRequest request) {
+        goodsService.returnGoods(detailStoreGoods, (String) request.getHeader("token"));
         return JsonResult.success();
     }
 

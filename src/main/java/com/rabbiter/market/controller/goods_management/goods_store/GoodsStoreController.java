@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GoodsStoreController {
     @Autowired
     private IGoodsService goodsService;
+
     /*查询信息*/
     @HasPermisson("goods_management:goods_store:list")
     @PostMapping("/queryPageByQo")
@@ -29,13 +30,13 @@ public class GoodsStoreController {
 
     @GetMapping("/queryGoodsStoreById")
     public JsonResult queryGoodsStoreById(Long id) {
-        GoodsStoreVo vo= goodsService.queryGoodsStoreById(id);
+        GoodsStoreVo vo = goodsService.queryGoodsStoreById(id);
         return JsonResult.success(vo);
     }
 
     @PostMapping("/updateInventory")
     public JsonResult updateInventory(GoodsStoreVo vo) {
-         goodsService.updateInventory(vo);
+        goodsService.updateInventory(vo);
         return JsonResult.success();
     }
 

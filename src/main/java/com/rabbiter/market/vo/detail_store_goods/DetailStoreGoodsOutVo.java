@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
+
 public class DetailStoreGoodsOutVo implements Serializable {
     private String cn;
     private Long goodsId;
@@ -13,7 +14,7 @@ public class DetailStoreGoodsOutVo implements Serializable {
     private Long createid;
     private String createby;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern ="yyyy-MM-dd" )
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createTime;
     private String state;
     private String info;

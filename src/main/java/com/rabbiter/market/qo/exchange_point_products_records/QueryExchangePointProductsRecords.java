@@ -2,7 +2,7 @@ package com.rabbiter.market.qo.exchange_point_products_records;
 
 import com.rabbiter.market.qo.BaseQuery;
 
-public class QueryExchangePointProductsRecords  extends BaseQuery {
+public class QueryExchangePointProductsRecords extends BaseQuery {
     private String cn;
     private Long memberId;
     private String startTime;

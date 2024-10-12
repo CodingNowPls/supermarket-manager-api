@@ -12,20 +12,22 @@ public interface IGoodsCategoryService extends IService<GoodsCategory> {
 
     /**
      * 更改业务
+     *
      * @param goodsCategory
      */
     void updateGoodsCategory(GoodsCategory goodsCategory);
 
     /**
      * 停用业务
+     *
      * @param cid
      */
     void deactivate(Long cid);
 
 
-
     /**
      * 条件查询
+     *
      * @param qo
      * @return
      */
@@ -33,6 +35,7 @@ public interface IGoodsCategoryService extends IService<GoodsCategory> {
 
     /**
      * 保存商品分类信息
+     *
      * @param category
      */
     void saveGoodsCategory(GoodsCategory category);

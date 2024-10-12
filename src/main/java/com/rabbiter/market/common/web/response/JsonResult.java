@@ -14,7 +14,8 @@ public class JsonResult<T> {
     private int code;  //区分不同结果, 而不再是true或者false
     private String msg;
     private T data;  //除了操作结果之后, 还行携带数据返回
-    public JsonResult(int code, String msg, T data){
+
+    public JsonResult(int code, String msg, T data) {
         this.code = code;
         this.msg = msg;
         this.data = data;
@@ -47,21 +48,23 @@ public class JsonResult<T> {
         this.data = data;
     }
 
-    public static <T> JsonResult success(T data){
+    public static <T> JsonResult success(T data) {
         return new JsonResult(CODE_SUCCESS, MSG_SUCCESS, data);
     }
 
-    public static JsonResult success(){
+    public static JsonResult success() {
         return new JsonResult(CODE_SUCCESS, MSG_SUCCESS, null);
     }
 
-    public static <T> JsonResult error(int code, String msg, T data){
+    public static <T> JsonResult error(int code, String msg, T data) {
         return new JsonResult(code, msg, data);
     }
-    public static <T> JsonResult error(int code, String msg){
+
+    public static <T> JsonResult error(int code, String msg) {
         return new JsonResult(code, msg, null);
     }
-    public static JsonResult defaultError(){
+
+    public static JsonResult defaultError() {
         return new JsonResult(CODE_ERROR, MSG_ERROR, null);
     }
 
@@ -73,7 +76,6 @@ public class JsonResult<T> {
     public static JsonResult noPermission() {
         return new JsonResult(403, "非法访问", null);
     }
-
 
 
 }

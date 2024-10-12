@@ -1,6 +1,7 @@
 package com.rabbiter.market.vo.employee;
 
 import java.io.Serializable;
+
 public class EditEmpVo implements Serializable {
     private Long id;
     private String idCard;

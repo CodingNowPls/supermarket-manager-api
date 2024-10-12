@@ -48,6 +48,7 @@ public class RedisTemplateService {
     public <T> void setCacheObject(final String key, final T value, final Long timeout, final TimeUnit timeUnit) {
         redisTemplate.opsForValue().set(key, value, timeout, timeUnit);
     }
+
     /**
      * 缓存基本的对象，Integer、String、实体类等
      *
@@ -63,18 +64,20 @@ public class RedisTemplateService {
 
     /**
      * 给指定key值减delta
+     *
      * @param key
      * @param delta
      */
-    public Long decrementCacheObjectValue(final String key,final long delta){
+    public Long decrementCacheObjectValue(final String key, final long delta) {
         return redisTemplate.opsForValue().decrement(key, delta);
     }
 
     /**
      * 给指定key值减一
+     *
      * @param key
      */
-    public Long decrementCacheObjectValue(final String key){
+    public Long decrementCacheObjectValue(final String key) {
         return redisTemplate.opsForValue().decrement(key);
     }
 
@@ -201,34 +204,37 @@ public class RedisTemplateService {
 
     /**
      * 指定的value是否包含在缓存set中
+     *
      * @param key
      * @param value
      * @param <T>
      * @return
      */
-    public <T> boolean isCacheSetContains(final String key, final T value){
+    public <T> boolean isCacheSetContains(final String key, final T value) {
         return redisTemplate.opsForSet().isMember(key, value);
     }
 
     /**
      * 从缓存set 中删除value值
+     *
      * @param key
      * @param value
      * @param <T>
      * @return
      */
-    public <T> Long deleteCacheSetValue(final String key, final T value){
+    public <T> Long deleteCacheSetValue(final String key, final T value) {
         return redisTemplate.opsForSet().remove(key, value);
     }
 
     /**
      * 往缓存set中添加value值
+     *
      * @param key
      * @param value
      * @param <T>
      * @return
      */
-    public <T> Long addCacheSetValue(final String key, final T value){
+    public <T> Long addCacheSetValue(final String key, final T value) {
         return redisTemplate.opsForSet().add(key, value);
     }
 
@@ -302,11 +308,12 @@ public class RedisTemplateService {
 
     /**
      * 给hash中hk 值 + increment
+     *
      * @param key
      * @param hk
      * @param increment
      */
-    public Long incrementCacheMapValue(final String key,final Object hk,  final long increment){
+    public Long incrementCacheMapValue(final String key, final Object hk, final long increment) {
         return redisTemplate.opsForHash().increment(key, hk, increment);
     }
 

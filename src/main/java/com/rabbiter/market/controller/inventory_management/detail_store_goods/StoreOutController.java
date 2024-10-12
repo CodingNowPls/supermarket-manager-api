@@ -21,39 +21,44 @@ import java.util.Map;
 public class StoreOutController {
     @Autowired
     private IDetailStoreGoodsService detailStoreGoodsService;
+
     @HasPermisson("inventory_management:detail_store_goods_out:list")
     @PostMapping("/queryPageByQoOut")
-    public JsonResult queryPageByQoOut(QueryDetailStoreGoodsOut qo){
-        Page<DetailStoreGoodsOutVo> page=detailStoreGoodsService.queryPageByQoOut(qo);
+    public JsonResult queryPageByQoOut(QueryDetailStoreGoodsOut qo) {
+        Page<DetailStoreGoodsOutVo> page = detailStoreGoodsService.queryPageByQoOut(qo);
         return JsonResult.success(page);
     }
+
     @HasPermisson("inventory_management:detail_store_goods_out:save")
     @GetMapping("/initOutOptions")
-    public JsonResult<Map<String,Object>> initOutOptions(){
+    public JsonResult<Map<String, Object>> initOutOptions() {
         return JsonResult.success(detailStoreGoodsService.initOutOptions());
     }
 
     @HasPermisson("inventory_management:detail_store_goods_out:save")
     @GetMapping("/changeOutGoods")
-    public JsonResult changeOutGoods(Long gid){
+    public JsonResult changeOutGoods(Long gid) {
         return JsonResult.success(detailStoreGoodsService.changeOutGoods(gid));
     }
+
     @HasPermisson("inventory_management:detail_store_goods_out:save")
     @GetMapping("/changeOutStore")
-    public JsonResult changeOutStore(Long storeId){
+    public JsonResult changeOutStore(Long storeId) {
         return JsonResult.success(detailStoreGoodsService.changeOutStore(storeId));
     }
+
     @HasPermisson("inventory_management:detail_store_goods_out:save")
     @PostMapping("/queryOutGoods")
     public JsonResult queryOutGoods(@RequestParam("goodsId") Long goodsId,
-                                    @RequestParam("storeId") Long storeId){
-        DetailStoreGoodsOutVo vo=detailStoreGoodsService.queryOutGoods(goodsId,storeId);
+                                    @RequestParam("storeId") Long storeId) {
+        DetailStoreGoodsOutVo vo = detailStoreGoodsService.queryOutGoods(goodsId, storeId);
         return JsonResult.success(vo);
     }
+
     @HasPermisson("inventory_management:detail_store_goods_out:save")
     @PostMapping("/save")
-    public JsonResult saveOut(DetailStoreGoods detailStoreGoods,HttpServletRequest request){
-        detailStoreGoodsService.saveOut(detailStoreGoods,(String) request.getHeader("token"));
+    public JsonResult saveOut(DetailStoreGoods detailStoreGoods, HttpServletRequest request) {
+        detailStoreGoodsService.saveOut(detailStoreGoods, (String) request.getHeader("token"));
         return JsonResult.success();
     }
 

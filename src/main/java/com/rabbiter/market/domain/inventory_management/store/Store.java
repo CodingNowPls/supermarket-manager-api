@@ -10,9 +10,9 @@ import java.io.Serializable;
  * 仓库实体
  */
 @TableName("store")
-public class Store  implements Serializable {
-    public static  final String  STATE_NORMAL="0";
-    public static  final String  STATE_BAN="-1";
+public class Store implements Serializable {
+    public static final String STATE_NORMAL = "0";
+    public static final String STATE_BAN = "-1";
     @TableId(type = IdType.AUTO)
     private Long id;
     private String name;

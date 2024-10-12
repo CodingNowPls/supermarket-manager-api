@@ -11,8 +11,8 @@ import java.io.Serializable;
  */
 @TableName("goods_category")
 public class GoodsCategory implements Serializable {
-    public static  final String  STATE_NORMAL="0";
-    public static  final String  STATE_BAN="-1";
+    public static final String STATE_NORMAL = "0";
+    public static final String STATE_BAN = "-1";
     @TableId(type = IdType.AUTO)
     private Long id;
     private String name;

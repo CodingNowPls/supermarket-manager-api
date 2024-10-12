@@ -11,11 +11,11 @@ import java.io.Serializable;
  */
 @TableName("t_role")
 public class Role implements Serializable {
-    public static final Long SYS_ID=1L;
+    public static final Long SYS_ID = 1L;
     //正常
-    public static final String STATE_NORMAL="0";
+    public static final String STATE_NORMAL = "0";
     //禁用
-    public static final String STATE_BAN="-1";
+    public static final String STATE_BAN = "-1";
     @TableId(type = IdType.AUTO)
     private Long id;
     private String name;

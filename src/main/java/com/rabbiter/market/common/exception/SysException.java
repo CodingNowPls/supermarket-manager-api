@@ -9,9 +9,10 @@ public class SysException extends RuntimeException {
         super(message);
         this.code = code;
     }
-    public SysException(String msg){
+
+    public SysException(String msg) {
         super(msg);
-        this.code= HttpStatus.CODE_ERROR;
+        this.code = HttpStatus.CODE_ERROR;
     }
 
     public Integer getCode() {

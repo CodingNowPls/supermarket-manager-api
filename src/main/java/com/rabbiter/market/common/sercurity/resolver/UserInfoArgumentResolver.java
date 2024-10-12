@@ -21,13 +21,15 @@ import javax.servlet.http.HttpServletRequest;
 public class UserInfoArgumentResolver implements HandlerMethodArgumentResolver {
     @Autowired
     private RedisTemplateService redisService;
+
     //当前解析器能解析类型--表示当前解析器要解析的参数类型-UserInfo
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
         return
                 methodParameter.getParameterType() == Employee.class
-                && methodParameter.hasParameterAnnotation(UserParam.class);
+                        && methodParameter.hasParameterAnnotation(UserParam.class);
     }
+
     //怎么解析支持的参数--怎么讲UserInfo参数解析成当前登录用户对象
     //必须保证supportsParameter 返回true 才会执行
     @Override
@@ -39,7 +41,7 @@ public class UserInfoArgumentResolver implements HandlerMethodArgumentResolver {
         HttpServletRequest request = nativeWebRequest.getNativeRequest(HttpServletRequest.class);
         String token = request.getHeader("token");
         String userStr = redisService.getCacheObject(token);
-        if(!StringUtils.hasText(userStr)){
+        if (!StringUtils.hasText(userStr)) {
             return null;
         }
         return JSON.parseObject(userStr, Employee.class);

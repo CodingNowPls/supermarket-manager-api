@@ -8,8 +8,8 @@ import java.io.Serializable;
 
 @TableName("supplier")
 public class Supplier implements Serializable {
-    public static  final String  STATE_NORMAL="0";
-    public static  final String  STATE_BAN="-1";
+    public static final String STATE_NORMAL = "0";
+    public static final String STATE_BAN = "-1";
     @TableId(type = IdType.AUTO)
     private Long cn;
     private String name;

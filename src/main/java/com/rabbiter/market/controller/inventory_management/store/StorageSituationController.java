@@ -25,6 +25,7 @@ public class StorageSituationController {
         return JsonResult.success(map);
 
     }
+
     @HasPermisson("inventory_management:store:storage_situation")
     @PostMapping("/queryStoreGoodsByStoreId")
     public JsonResult queryStoreGoodsByStoreId(QueryDetailStorageSituation qo) {

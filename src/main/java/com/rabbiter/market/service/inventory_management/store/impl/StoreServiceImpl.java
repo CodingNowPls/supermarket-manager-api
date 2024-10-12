@@ -23,7 +23,7 @@ public class StoreServiceImpl extends ServiceImpl<StoreMapper, Store> implements
         QueryWrapper<Store> storeQueryWrapper = new QueryWrapper<Store>()
                 .eq("name", store.getName())
                 .eq("address", store.getAddress())
-                .eq("state",store.getState());
+                .eq("state", store.getState());
         Store one = super.getOne(storeQueryWrapper);
         if (Store.STATE_BAN.equals(store.getState())) {
             Long redisueNum = goodsStoreService.storeUsed(store.getId());
@@ -31,7 +31,7 @@ public class StoreServiceImpl extends ServiceImpl<StoreMapper, Store> implements
             if (redisueNum != null && redisueNum != 0) {
                 throw new BusinessException("仓库中存在商品，不能停用仓库");
             }
-            if (one!=null){
+            if (one != null) {
                 super.removeById(one);
             }
 

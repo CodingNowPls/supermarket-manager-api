@@ -13,6 +13,7 @@ public interface MenuMapper extends BaseMapper<Menu> {
 
     /**
      * 根据角色id集合查询权限信息
+     *
      * @param rids
      * @return
      */

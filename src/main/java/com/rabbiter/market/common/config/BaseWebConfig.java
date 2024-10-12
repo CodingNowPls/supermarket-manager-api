@@ -13,11 +13,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * 解决：1.跨域问题
  */
 @Configuration
-public class BaseWebConfig implements WebMvcConfigurer{
+public class BaseWebConfig implements WebMvcConfigurer {
     @Bean
-    public EmpLoginInterceptor empLoginInterceptor(){
+    public EmpLoginInterceptor empLoginInterceptor() {
         return new EmpLoginInterceptor();
     }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 //        registry.addInterceptor(empLoginInterceptor())
@@ -41,7 +42,7 @@ public class BaseWebConfig implements WebMvcConfigurer{
                         //是否发送Cookie信息
                         .allowCredentials(true)
                         //放行哪些原始域(请求方式)
-                        .allowedMethods("GET", "POST", "PUT", "DELETE","OPTIONS")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         //放行哪些原始域(头部信息)
                         .allowedHeaders("*")
                         //暴露哪些头部信息（因为跨域访问默认不能获取全部头部信息）

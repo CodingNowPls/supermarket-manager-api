@@ -23,22 +23,24 @@ public class PersonalController {
 
     /**
      * 修改个人的密码
+     *
      * @param request
      * @param editPwd
      * @return
      */
     @HasPermisson("personal:edit_pwd")
     @PostMapping("/edit_pwd")
-    public JsonResult edit_pwd(HttpServletRequest request, QueryEditPwd editPwd){
+    public JsonResult edit_pwd(HttpServletRequest request, QueryEditPwd editPwd) {
         String token = request.getHeader("token");
-        employeeService.edit_pwd(editPwd,token);
+        employeeService.edit_pwd(editPwd, token);
         return JsonResult.success();
     }
+
     @HasPermisson("personnel_management:employee:update")
     @GetMapping("/information")
-    public JsonResult information(HttpServletRequest request){
+    public JsonResult information(HttpServletRequest request) {
         String token = request.getHeader("token");
-        InformationVo vo=employeeService.information(token);
+        InformationVo vo = employeeService.information(token);
         return JsonResult.success(vo);
     }
 }

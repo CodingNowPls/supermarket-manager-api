@@ -56,7 +56,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
     public void updateMember(Member member) {
         if (Member.STATE_NORMAL.equals(member.getState())) {
             QueryWrapper<Member> wrapper = new QueryWrapper<Member>().eq("phone", member.getPhone())
-                    .ne("id",member.getId())
+                    .ne("id", member.getId())
                     .eq("state", Member.STATE_NORMAL);
             Member one = super.getOne(wrapper);
             if (one != null) {
@@ -70,7 +70,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
     public Member queryMemberByPhone(String phone) {
         QueryWrapper<Member> wrapper = new QueryWrapper<Member>().eq("phone", phone).eq("state", Member.STATE_NORMAL);
         Member one = super.getOne(wrapper);
-        if (one==null){
+        if (one == null) {
             throw new BusinessException("该会员不存在");
         }
         return one;

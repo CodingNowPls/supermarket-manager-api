@@ -11,12 +11,14 @@ import java.util.Set;
 public interface IMenuService extends IService<Menu> {
     /**
      * 查询所有的菜单
+     *
      * @return
      */
     List<Menu> findAll();
 
     /**
      * 根据角色id集合查询对应的菜单
+     *
      * @param rids
      * @return
      */
@@ -25,6 +27,7 @@ public interface IMenuService extends IService<Menu> {
     /**
      * 分页查询菜单的信息
      * 以目录进行分页
+     *
      * @param qo
      * @return
      */
@@ -33,6 +36,7 @@ public interface IMenuService extends IService<Menu> {
 
     /**
      * 查询父菜单id
+     *
      * @param ids
      * @return
      */

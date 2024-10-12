@@ -21,31 +21,33 @@ import java.util.Map;
 public class SaleRecordController {
     @Autowired
     private ISaleRecordsService saleRecordsService;
+
     @GetMapping("/getCn")
-    public JsonResult getCn(){
+    public JsonResult getCn() {
         return JsonResult.success(IdWorker.getIdStr());
     }
+
     @GetMapping("/getOptionSaleRecordsGoods")
-    public JsonResult getOptionSaleRecordsGoods(){
-        List<Map<String,Object>> list=saleRecordsService.getOptionSaleRecordsGoods();
+    public JsonResult getOptionSaleRecordsGoods() {
+        List<Map<String, Object>> list = saleRecordsService.getOptionSaleRecordsGoods();
         return JsonResult.success(list);
     }
 
     @PostMapping("/saveSaleRecords")
-    public JsonResult saveSaleRecords(@RequestBody SaleRecords saleRecords, HttpServletRequest request){
-        saleRecords=saleRecordsService.saveSaleRecords(saleRecords,(String) request.getHeader("token"));
+    public JsonResult saveSaleRecords(@RequestBody SaleRecords saleRecords, HttpServletRequest request) {
+        saleRecords = saleRecordsService.saveSaleRecords(saleRecords, (String) request.getHeader("token"));
         return JsonResult.success(saleRecords);
     }
 
     @HasPermisson("sale_management:sale_records:list")
     @PostMapping("/queryPageByQoSaleRecords")
-    public JsonResult queryPageByQoSaleRecords(QuerySaleRecords qo){
-        Page<SaleRecords> page=saleRecordsService.queryPageByQoSaleRecords(qo);
+    public JsonResult queryPageByQoSaleRecords(QuerySaleRecords qo) {
+        Page<SaleRecords> page = saleRecordsService.queryPageByQoSaleRecords(qo);
         return JsonResult.success(page);
     }
 
     @GetMapping("/delSaleRecords")
-    public JsonResult delSaleRecords(String cn){
+    public JsonResult delSaleRecords(String cn) {
         saleRecordsService.delSaleRecords(cn);
         return JsonResult.success();
     }

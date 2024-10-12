@@ -18,10 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class DeptController {
     @Autowired
     private IDeptService deptService;
+
     /*保存信息接口*/
     @HasPermisson("personnel_management:dept:save")
     @PostMapping("/save")
-    public JsonResult saveDept(Dept dept){
+    public JsonResult saveDept(Dept dept) {
         deptService.saveDept(dept);
         return JsonResult.success();
     }
@@ -29,7 +30,7 @@ public class DeptController {
     @HasPermisson("personnel_management:dept:update")
     /*修改接口*/
     @PostMapping("/update")
-    public JsonResult updateDept(Dept dept){
+    public JsonResult updateDept(Dept dept) {
         deptService.updateDept(dept);
         return JsonResult.success();
     }
@@ -37,13 +38,14 @@ public class DeptController {
     /*停用*/
     @HasPermisson("personnel_management:dept:deactivate")
     @PostMapping("/deactivate")
-    public JsonResult deactivate(Long id){
+    public JsonResult deactivate(Long id) {
         deptService.forbiddenRole(id);
         return JsonResult.success();
     }
+
     /*查询信息*/
     @GetMapping("/list")
-    public JsonResult listByQo(QueryDept qo){
+    public JsonResult listByQo(QueryDept qo) {
         return JsonResult.success(deptService.listByQo(qo));
     }
 }

@@ -9,11 +9,12 @@ import com.rabbiter.market.vo.employee.InformationVo;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
-public interface IEmployeeService  extends IService<Employee> {
+public interface IEmployeeService extends IService<Employee> {
 
 
     /**
      * 修改个人密码业务
+     *
      * @param editPwd
      * @param token
      */
@@ -21,6 +22,7 @@ public interface IEmployeeService  extends IService<Employee> {
 
     /**
      * 分页显示数据
+     *
      * @param qo
      * @return
      */
@@ -28,16 +30,17 @@ public interface IEmployeeService  extends IService<Employee> {
 
     DetailEmpVo detail(Long uid);
 
-    void saveEmp(Employee employee,String token);
+    void saveEmp(Employee employee, String token);
 
     EditEmpVo editbtn(Long uid);
 
-    void updateEmp(Employee employee,String token);
+    void updateEmp(Employee employee, String token);
 
     void deactivate(Long id);
 
     /**
      * 重置密码
+     *
      * @param eid
      * @param code
      */

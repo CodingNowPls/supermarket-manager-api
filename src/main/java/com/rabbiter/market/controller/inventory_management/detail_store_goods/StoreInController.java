@@ -49,6 +49,7 @@ public class StoreInController {
         detailStoreGoodsService.delIn(cn);
         return JsonResult.success();
     }
+
     @HasPermisson("inventory_management:detail_store_goods_in:save")
     @GetMapping("/queryOptionsSuppliers")
     public JsonResult queryOptionsSuppliers() {

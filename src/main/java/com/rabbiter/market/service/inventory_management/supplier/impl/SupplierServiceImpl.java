@@ -33,7 +33,7 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
                 .eq("state", DetailStoreGoods.STATE_NORMAL)
                 .eq("supplier_id", cn);
         List<DetailStoreGoods> list = detailStoreGoodsService.list(detailStoreGoodsQueryWrapper);
-        if (list!=null&&list.size()>0){
+        if (list != null && list.size() > 0) {
             throw new BusinessException("该供货商正在被入库订单使用，请解除关系之后在停用");
         }
         UpdateWrapper<Supplier> updateWrapper = new UpdateWrapper<Supplier>().set("state", Supplier.STATE_BAN).eq("cn", cn);
@@ -47,8 +47,8 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
                 .like(StringUtils.hasText(qo.getName()), "name", qo.getName())
                 .like(StringUtils.hasText(qo.getAddress()), "address", qo.getAddress())
                 .like(StringUtils.hasText(qo.getInfo()), "info", qo.getInfo())
-                .eq("state",Supplier.STATE_NORMAL);
-        super.page(page,wrapper);
+                .eq("state", Supplier.STATE_NORMAL);
+        super.page(page, wrapper);
         return page;
     }
 
@@ -57,13 +57,13 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
         List<Map<String, Object>> list = new ArrayList<>();
         QueryWrapper<Supplier> wrapper = new QueryWrapper<Supplier>().eq("state", Supplier.STATE_NORMAL);
         List<Supplier> suppliers = super.list(wrapper);
-        if (suppliers==null ||suppliers.size()<=0){
+        if (suppliers == null || suppliers.size() <= 0) {
             return new ArrayList<>();
         }
         for (Supplier supplier : suppliers) {
             Map<String, Object> map = new HashMap<>();
-            map.put("id",supplier.getCn());
-            map.put("name",supplier.getName());
+            map.put("id", supplier.getCn());
+            map.put("name", supplier.getName());
             list.add(map);
         }
         return list;
@@ -77,7 +77,7 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
                 .eq("name", supplier.getName())
                 .eq("state", Supplier.STATE_NORMAL);
         Supplier one = super.getOne(queryWrapper);
-        if (one!=null){
+        if (one != null) {
             throw new BusinessException("已存在供货商的联系方式");
         }
         super.save(supplier);
@@ -85,13 +85,13 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
 
     @Override
     public void updateSupplier(Supplier supplier) {
-        if (Supplier.STATE_NORMAL.equals(supplier.getState())){
+        if (Supplier.STATE_NORMAL.equals(supplier.getState())) {
             QueryWrapper<Supplier> queryWrapper = new QueryWrapper<Supplier>()
                     .eq("name", supplier.getName())
                     .eq("state", Supplier.STATE_NORMAL)
                     .ne("cn", supplier.getCn());
             Supplier one = super.getOne(queryWrapper);
-            if (one!=null){
+            if (one != null) {
                 throw new BusinessException("该供货商已存在");
             }
         }

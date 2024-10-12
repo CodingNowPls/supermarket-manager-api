@@ -122,6 +122,7 @@ public class RoleController {
         List<Long> list = roleService.queryRoleIdsByEid(eid);
         return JsonResult.success(list);
     }
+
     @HasPermisson("personnel_management:employee:queryRoleIdsByEid")
     @PostMapping("/saveRoleEmp")
     public JsonResult saveRoleEmp(Long eid, Long[] empRoleIds, HttpServletRequest request) {

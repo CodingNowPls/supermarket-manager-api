@@ -20,7 +20,7 @@ public class PathUtils {
     public static String getClassLoadRootPath() {
         String path = "";
         try {
-            String prePath = URLDecoder.decode(PathUtils.class.getClassLoader().getResource("").getPath(),"utf-8").replace("/target/classes", "");
+            String prePath = URLDecoder.decode(PathUtils.class.getClassLoader().getResource("").getPath(), "utf-8").replace("/target/classes", "");
             String osName = System.getProperty("os.name");
             if (osName.toLowerCase().startsWith("mac")) {
                 // 苹果
@@ -28,7 +28,7 @@ public class PathUtils {
             } else if (osName.toLowerCase().startsWith("windows")) {
                 // windows
                 path = prePath.substring(1, prePath.length() - 1);
-            } else if(osName.toLowerCase().startsWith("linux") || osName.toLowerCase().startsWith("unix")) {
+            } else if (osName.toLowerCase().startsWith("linux") || osName.toLowerCase().startsWith("unix")) {
                 // unix or linux
                 path = prePath.substring(0, prePath.length() - 1);
             } else {
@@ -46,9 +46,9 @@ public class PathUtils {
             String staticDir = PathUtils.getClassLoadRootPath() + "/src/main/resources/static/files/";
             // 如果结果目录不存在，则创建目录
             File resDirFile = new File(staticDir);
-            if(!resDirFile.exists()) {
+            if (!resDirFile.exists()) {
                 boolean flag = resDirFile.mkdirs();
-                if(!flag) throw new RuntimeException("创建结果目录失败");
+                if (!flag) throw new RuntimeException("创建结果目录失败");
             }
             // 获取MultipartFile的字节数组
             byte[] fileBytes = multipartFile.getBytes();

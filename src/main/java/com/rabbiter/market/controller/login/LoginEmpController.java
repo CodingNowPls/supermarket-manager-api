@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 import java.util.Map;
+
 @RestController
 @Validated
 public class LoginEmpController {
@@ -39,19 +40,21 @@ public class LoginEmpController {
 
     /**
      * 退出功能
+     *
      * @return
      */
     @NoRequireLogin
     @GetMapping("/exit")
     public JsonResult exit(HttpServletRequest request) {
         String token = request.getHeader("token");
-        if (StringUtils.hasLength(token)){
+        if (StringUtils.hasLength(token)) {
             loginService.exit(token);
         }
         return JsonResult.success();
     }
+
     @PostMapping("/logout")
-    public JsonResult logout(@NotEmpty(message = "内容不能为空") String content,HttpServletRequest request) {
+    public JsonResult logout(@NotEmpty(message = "内容不能为空") String content, HttpServletRequest request) {
 
         loginService.logout(request.getHeader("token"), content);
 
@@ -60,18 +63,20 @@ public class LoginEmpController {
 
     /**
      * 查询登录者的拥有的菜单
+     *
      * @param request
      * @return
      */
     @GetMapping("/empMenu")
-    public JsonResult empMenu(HttpServletRequest request){
-        List<Menu> menus=loginService.empMenu((String)request.getHeader("token"));
+    public JsonResult empMenu(HttpServletRequest request) {
+        List<Menu> menus = loginService.empMenu((String) request.getHeader("token"));
         return JsonResult.success(menus);
     }
+
     @NoRequireLogin
     @GetMapping("/checkedToken")
-    public JsonResult checkedToken(String token){
-        Map<String,Object> map=loginService.checkedToken(token);
+    public JsonResult checkedToken(String token) {
+        Map<String, Object> map = loginService.checkedToken(token);
         return JsonResult.success(map);
     }
 }

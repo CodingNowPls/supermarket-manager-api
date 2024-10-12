@@ -19,34 +19,38 @@ import org.springframework.web.bind.annotation.RestController;
 public class StoreController {
     @Autowired
     private IStoreService storeService;
+
     /*保存仓库信息接口*/
     @HasPermisson("inventory_management:store:save")
     @PostMapping("/save")
-    public JsonResult saveStore(Store store){
+    public JsonResult saveStore(Store store) {
         storeService.saveStore(store);
         return JsonResult.success();
     }
+
     /*修改仓库接口*/
     @HasPermisson("inventory_management:store:update")
     @PostMapping("/update")
-    public JsonResult updateStore(Store store){
+    public JsonResult updateStore(Store store) {
         storeService.updateStore(store);
         return JsonResult.success();
     }
+
     /*停用仓库*/
     @HasPermisson("inventory_management:store:deactivate")
     @PostMapping("/deactivate")
-    public JsonResult deactivate(Long sid){
+    public JsonResult deactivate(Long sid) {
         storeService.deactivate(sid);
         return JsonResult.success();
     }
+
     /*查询仓库信息*/
     @HasPermisson("inventory_management:store:list")
     @PostMapping("/list")
-    public JsonResult list(QueryStore qo){
-        return JsonResult.success(storeService.list( new QueryWrapper<Store>()
-                .like(StringUtils.hasText(qo.getName()),"name",qo.getName())
-                .eq(StringUtils.hasText(qo.getState()),"state",qo.getState())
+    public JsonResult list(QueryStore qo) {
+        return JsonResult.success(storeService.list(new QueryWrapper<Store>()
+                .like(StringUtils.hasText(qo.getName()), "name", qo.getName())
+                .eq(StringUtils.hasText(qo.getState()), "state", qo.getState())
         ));
     }
 

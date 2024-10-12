@@ -24,6 +24,7 @@ import java.util.Map;
 public class PointProductController {
     @Autowired
     private IPointProductsService pointProductsService;
+
     /*查询信息*/
     @HasPermisson("goods_management:point_products:list")
     @PostMapping("/queryPageByQo")
@@ -37,17 +38,19 @@ public class PointProductController {
         pointProductsService.del(id);
         return JsonResult.success();
     }
+
     @GetMapping("/queryOptionGoods")
     public JsonResult queryOptionGoods() {
-        List<Map<String,Object>> list=pointProductsService.queryOptionGoods();
+        List<Map<String, Object>> list = pointProductsService.queryOptionGoods();
         return JsonResult.success(list);
     }
 
     @PostMapping("/savePointGoods")
     public JsonResult savePointGoods(PointProducts pointProducts, HttpServletRequest request) {
-         pointProductsService.savePointGoods(pointProducts,(String) request.getHeader("token"));
+        pointProductsService.savePointGoods(pointProducts, (String) request.getHeader("token"));
         return JsonResult.success();
     }
+
     @GetMapping("/queryPointGoodsById")
     public JsonResult queryPointGoodsById(Long goodsId) {
         PointProducts pointProducts = pointProductsService.getOne(new QueryWrapper<PointProducts>().eq("goods_id", goodsId));
@@ -56,7 +59,7 @@ public class PointProductController {
 
     @PostMapping("/updatePointGoods")
     public JsonResult updatePointGoods(PointProducts pointProducts, HttpServletRequest request) {
-        pointProductsService.updatePointGoods(pointProducts,(String) request.getHeader("token"));
+        pointProductsService.updatePointGoods(pointProducts, (String) request.getHeader("token"));
         return JsonResult.success();
     }
 

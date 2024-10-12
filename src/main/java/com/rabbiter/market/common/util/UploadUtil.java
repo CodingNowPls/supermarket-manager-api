@@ -13,15 +13,15 @@ import java.util.regex.Pattern;
  * 文件上传工具
  */
 public class UploadUtil {
-	//阿里域名
-	private static final String ALI_DOMAIN = "https://zyl-9.oss-cn-chengdu.aliyuncs.com/";
-	private static final String ENDPOINT = "http://oss-cn-chengdu.aliyuncs.com";
-	private static final String BUCKET_NAME = "zyl-9";
+    //阿里域名
+    private static final String ALI_DOMAIN = "https://zyl-9.oss-cn-chengdu.aliyuncs.com/";
+    private static final String ENDPOINT = "http://oss-cn-chengdu.aliyuncs.com";
+    private static final String BUCKET_NAME = "zyl-9";
 
-	private static final String ACCESS_KEY_ID = "LTAI5tGxrbz4oXKzQ63LZzQn";
-	private static final String ACCESS_KEY_SECRET = "Do4mpXNQ4bOTzpNqrUhTeQSSwrXfHe";
-	private static  final String path = "wolf2w-70";
-	//MultipartFile 对象
+    private static final String ACCESS_KEY_ID = "LTAI5tGxrbz4oXKzQ63LZzQn";
+    private static final String ACCESS_KEY_SECRET = "Do4mpXNQ4bOTzpNqrUhTeQSSwrXfHe";
+    private static final String path = "wolf2w-70";
+    //MultipartFile 对象
 //	public static String uploadAli(MultipartFile file,String path_suffix) throws Exception {
 //		//生成文件名称
 //		String uuid = UUID.randomUUID().toString();

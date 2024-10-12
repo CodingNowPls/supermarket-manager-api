@@ -44,8 +44,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         QueryWrapper<Role> wrapper = new QueryWrapper<>();
         wrapper.like(StringUtils.hasText(qo.getName()), "name", qo.getName());
         wrapper.eq(StringUtils.hasText(qo.getState()), "state", qo.getState());
-        wrapper.ne("id",Role.SYS_ID);
-        wrapper.ne("id",2L);
+        wrapper.ne("id", Role.SYS_ID);
+        wrapper.ne("id", 2L);
         List<Role> list = super.list(wrapper);
         return list;
     }
@@ -53,7 +53,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Override
     public void forbiddenRole(Long rid) {
         Role role = super.getById(rid);
-        if (Role.SYS_ID==role.getId() || 2L==role.getId()) {
+        if (Role.SYS_ID == role.getId() || 2L == role.getId()) {
             throw new BusinessException("不能停用系统拥有者");
         }
         UpdateWrapper<Role> wrapper = new UpdateWrapper<Role>()
@@ -163,7 +163,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Override
     public void saveRolePermissons(Long rid, Long[] menuIds) {
         //判断是否是系统管理员
-        if (rid == Role.SYS_ID || rid==2L) {
+        if (rid == Role.SYS_ID || rid == 2L) {
             //系统管理员
             throw new BusinessException("系统管理员的权限不可操作");
         } else {
@@ -182,18 +182,18 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
                 List<Menu> list1 = menuService.list(qoWrapper);
                 for (Menu menu : list1) {
                     //按钮
-                    if (menu.getParentId()!=null && Menu.TYPE_BUTTON.equals(menu.getType())){
+                    if (menu.getParentId() != null && Menu.TYPE_BUTTON.equals(menu.getType())) {
                         totalIds.add(menu.getId());
                         QueryWrapper<Menu> btnWrapper = new QueryWrapper<Menu>().eq("id", menu.getParentId())
-                                .eq("type",Menu.TYPE_MENU);
+                                .eq("type", Menu.TYPE_MENU);
                         Menu menu1 = menuService.getOne(btnWrapper);
                         totalIds.add(menu1.getId());
                         totalIds.add(menu1.getParentId());
-                    } else if (menu.getParentId()!=null && Menu.TYPE_MENU.equals(menu.getType())){
+                    } else if (menu.getParentId() != null && Menu.TYPE_MENU.equals(menu.getType())) {
                         //菜单
                         totalIds.add(menu.getId());
                         totalIds.add(menu.getParentId());
-                    }else if (menu.getParentId()==null && Menu.TYPE_CATALOGUE.equals(menu.getType())){
+                    } else if (menu.getParentId() == null && Menu.TYPE_CATALOGUE.equals(menu.getType())) {
                         //目录
                         totalIds.add(menu.getId());
                     }
@@ -216,12 +216,12 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Override
     public List<Map<String, Object>> getRoleAll() {
         List<Map<String, Object>> list = new ArrayList<>();
-        QueryWrapper<Role> wrapper = new QueryWrapper<Role>().eq("state", Role.STATE_NORMAL).ne("id",Role.SYS_ID).ne("id",2L);
+        QueryWrapper<Role> wrapper = new QueryWrapper<Role>().eq("state", Role.STATE_NORMAL).ne("id", Role.SYS_ID).ne("id", 2L);
         List<Role> roles = super.list(wrapper);
         for (Role role : roles) {
-            Map<String, Object> map=new HashMap<>();
-            map.put("id",role.getId());
-            map.put("label",role.getName());
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", role.getId());
+            map.put("label", role.getName());
             list.add(map);
         }
         return list;
@@ -230,35 +230,35 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Override
     public List<Long> queryRoleIdsByEid(Long eid) {
         Employee emp = employeeService.getById(eid);
-        if (emp.getIsAdmin()){
+        if (emp.getIsAdmin()) {
             return roleMapper.queryRoleIdsAll();
-        }else {
+        } else {
             return roleMapper.queryRoleIdsByEid(eid);
         }
     }
 
     @Override
-    public void saveRoleEmp(Long eid, Long[] roleIds,String token) {
+    public void saveRoleEmp(Long eid, Long[] roleIds, String token) {
         Employee emp = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
-        if (emp.getId()==eid){
+        if (emp.getId() == eid) {
             throw new BusinessException("无法为自己赋予职务");
         }
         //查询用户的信息，判断是否是系统管理员
         Employee employee = employeeService.getById(eid);
-        if (employee.getIsAdmin()){
+        if (employee.getIsAdmin()) {
             throw new BusinessException("无法操作系统管理员的职务");
         }
         /*根据员工编号清除关系*/
         roleMapper.clearRelationByEid(eid);
         /*重新保存关系*/
-        List<Map<String,Object>> list=new ArrayList<>();
+        List<Map<String, Object>> list = new ArrayList<>();
         for (Long roleId : roleIds) {
             Map<String, Object> map = new HashMap<>();
-            map.put("eid",eid);
-            map.put("rid",roleId);
+            map.put("eid", eid);
+            map.put("rid", roleId);
             list.add(map);
         }
-        if (list.size()>0){
+        if (list.size() > 0) {
             roleMapper.reSaveRelation(list);
         }
     }

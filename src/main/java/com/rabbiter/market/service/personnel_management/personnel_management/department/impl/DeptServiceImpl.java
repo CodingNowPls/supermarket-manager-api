@@ -22,20 +22,21 @@ import java.util.List;
 public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements IDeptService {
     @Autowired
     private IEmployeeService employeeService;
+
     @Override
     public List<Dept> listByQo(QueryDept qo) {
         LambdaQueryWrapper<Dept> wrapper = new LambdaQueryWrapper<Dept>()
-                .like(StringUtils.hasText(qo.getName()),Dept::getName, qo.getName())
-                .eq(StringUtils.hasText(qo.getState()),Dept::getState, qo.getState());
+                .like(StringUtils.hasText(qo.getName()), Dept::getName, qo.getName())
+                .eq(StringUtils.hasText(qo.getState()), Dept::getState, qo.getState());
         return super.list(wrapper);
     }
 
     @Transactional
     @Override
     public void forbiddenRole(Long id) {
-        QueryWrapper<Employee> empWrapper = new QueryWrapper<Employee>().eq(id != null,"deptId", id);
+        QueryWrapper<Employee> empWrapper = new QueryWrapper<Employee>().eq(id != null, "deptId", id);
         List<Employee> list = employeeService.list(empWrapper);
-        if (list!=null &&list.size()>0){
+        if (list != null && list.size() > 0) {
             throw new BusinessException("操作失败，该部门正在使用");
         }
         UpdateWrapper<Dept> wrapper = new UpdateWrapper<Dept>().set("state", Dept.STATE_BAN).eq("id", id);
@@ -47,7 +48,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
     public void saveDept(Dept dept) {
         //判断是否有被创建
         QueryWrapper<Dept> wrapper = new QueryWrapper<Dept>().eq(StringUtils.hasText(dept.getName()), "name", dept.getName());
-        if (super.getOne(wrapper)!=null){
+        if (super.getOne(wrapper) != null) {
             throw new BusinessException("操作失败，该部门已存在");
         }
         dept.setState(Dept.STATE_NORMAL);
@@ -58,10 +59,10 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
     @Transactional
     @Override
     public void updateDept(Dept dept) {
-        if (Dept.STATE_BAN.equals(dept.getState())){
-            QueryWrapper<Employee> empWrapper = new QueryWrapper<Employee>().eq(dept.getId() != null,"deptId", dept.getId());
+        if (Dept.STATE_BAN.equals(dept.getState())) {
+            QueryWrapper<Employee> empWrapper = new QueryWrapper<Employee>().eq(dept.getId() != null, "deptId", dept.getId());
             List<Employee> list = employeeService.list(empWrapper);
-            if (list!=null &&list.size()>0){
+            if (list != null && list.size() > 0) {
                 throw new BusinessException("操作失败，该部门正在使用");
             }
         }

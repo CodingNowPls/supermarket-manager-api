@@ -22,11 +22,11 @@ public interface IDetailStoreGoodsService extends IService<DetailStoreGoods> {
 
     Page<DetailStoreGoodsOutVo> queryPageByQoOut(QueryDetailStoreGoodsOut qo);
 
-    Map<String ,Object> initOutOptions();
+    Map<String, Object> initOutOptions();
 
-    List<Map<String,Object>> changeOutGoods(Long gid);
+    List<Map<String, Object>> changeOutGoods(Long gid);
 
-    List<Map<String,Object>> changeOutStore(Long storeId);
+    List<Map<String, Object>> changeOutStore(Long storeId);
 
     DetailStoreGoodsOutVo queryOutGoods(Long goodsId, Long storeId);
 

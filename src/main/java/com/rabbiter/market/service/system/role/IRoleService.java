@@ -9,9 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public interface IRoleService  extends IService<Role> {
+public interface IRoleService extends IService<Role> {
     /**
      * 查询该员工id的角色信息
+     *
      * @param eid
      * @return
      */
@@ -19,6 +20,7 @@ public interface IRoleService  extends IService<Role> {
 
     /**
      * 条件查询角色信息
+     *
      * @param qo
      * @return
      */
@@ -26,18 +28,21 @@ public interface IRoleService  extends IService<Role> {
 
     /**
      * 停用角色业务
+     *
      * @param rid
      */
     void forbiddenRole(Long rid);
 
     /**
      * 保存角色信息业务
+     *
      * @param role
      */
     void saveRole(Role role);
 
     /**
      * 查看角色权限的业务
+     *
      * @param rid
      * @return
      */
@@ -45,6 +50,7 @@ public interface IRoleService  extends IService<Role> {
 
     /**
      * 保存角色-菜单的关系业务
+     *
      * @param rid
      * @param menuIds
      */
@@ -54,7 +60,7 @@ public interface IRoleService  extends IService<Role> {
 
     List<Long> queryRoleIdsByEid(Long eid);
 
-    void saveRoleEmp(Long eid, Long[] roleIds,String token);
+    void saveRoleEmp(Long eid, Long[] roleIds, String token);
 
     void clearEmpPermission(Long id);
 }

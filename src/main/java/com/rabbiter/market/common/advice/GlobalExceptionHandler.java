@@ -15,7 +15,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleException(Exception e) {
         // 自定义异常处理逻辑
         String message = e.getMessage();
-        if(!(e instanceof BusinessException)) {
+        if (!(e instanceof BusinessException)) {
 
             e.printStackTrace();
         }

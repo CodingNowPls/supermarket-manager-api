@@ -90,7 +90,7 @@ public class ExchangePointProductsServiceImpl extends ServiceImpl<ExchangePointP
         for (ExchangePointProducts exchangePointProducts : list) {
             memberIds.add(exchangePointProducts.getMemberId());
         }
-        if (memberIds==null || memberIds.size()<=0){
+        if (memberIds == null || memberIds.size() <= 0) {
             return null;
         }
         List<Member> members = memberService.listByIds(memberIds);

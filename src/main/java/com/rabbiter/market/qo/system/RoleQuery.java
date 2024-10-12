@@ -1,6 +1,6 @@
 package com.rabbiter.market.qo.system;
 
-public class RoleQuery{
+public class RoleQuery {
     private String name;
     private String state;
 

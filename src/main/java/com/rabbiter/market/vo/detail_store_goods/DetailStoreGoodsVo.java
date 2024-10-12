@@ -16,13 +16,13 @@ public class DetailStoreGoodsVo implements Serializable {
     private Long createid;
     private String createby;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern ="yyyy-MM-dd" )
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createTime;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern ="yyyy-MM-dd" )
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date expiryTime;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern ="yyyy-MM-dd" )
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birthTime;
     private String state1;
     private Long storeId;

@@ -5,10 +5,11 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
 import java.util.Date;
+
 @TableName("point_products")
 public class PointProducts implements Serializable {
-    public static  final  String STATE_NORMAL="0";
-    public static  final  String STATE_DEL="1";
+    public static final String STATE_NORMAL = "0";
+    public static final String STATE_DEL = "1";
     @TableField("goods_id")
     private Long goodsId;
     @TableField("goods_name")

@@ -29,7 +29,7 @@ public class GoodsCategoryServiceImpl extends ServiceImpl<GoodsCategoryMapper, G
     @Override
     public void updateGoodsCategory(GoodsCategory goodsCategory) {
         QueryWrapper<GoodsCategory> queryWrapper = new QueryWrapper<GoodsCategory>()
-                .ne("id",goodsCategory.getId())
+                .ne("id", goodsCategory.getId())
                 .eq("name", goodsCategory.getName())
                 .eq("state", goodsCategory.getState());
         GoodsCategory category = super.getOne(queryWrapper);
@@ -65,7 +65,7 @@ public class GoodsCategoryServiceImpl extends ServiceImpl<GoodsCategoryMapper, G
         /*查看删除中是否有*/
         GoodsCategory goodsCategory = super.getById(cid);
         QueryWrapper<GoodsCategory> queryWrapper = new QueryWrapper<GoodsCategory>()
-                .ne("id",cid)
+                .ne("id", cid)
                 .eq("name", goodsCategory.getName())
                 .eq("state", GoodsCategory.STATE_BAN);
         GoodsCategory one = super.getOne(queryWrapper);

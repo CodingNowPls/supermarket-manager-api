@@ -18,7 +18,9 @@ public interface HttpStatus {
      */
     Integer CODE_ERROR_PARAM = 400;
 
-    /**业务异常*/
-    Integer CODE_BUSINESS_ERROR=50000;
+    /**
+     * 业务异常
+     */
+    Integer CODE_BUSINESS_ERROR = 50000;
 
 }

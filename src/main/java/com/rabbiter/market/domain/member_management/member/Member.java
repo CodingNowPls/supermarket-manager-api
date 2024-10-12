@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class Member implements Serializable {
     public static final String STATE_NORMAL = "0";
     public static final String STATE_BAN = "1";
-    public static  final String DEFAULT_PWD="123456";
+    public static final String DEFAULT_PWD = "123456";
 
     @TableId(type = IdType.AUTO)
     private Long id;

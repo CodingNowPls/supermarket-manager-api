@@ -48,10 +48,10 @@ public class PointProductsServiceImpl extends ServiceImpl<PointProductsMapper, P
                 .eq("state", Goods.STATE_UP);
         List<Goods> goods = goodsService.list(goodsQueryWrapper);
         ArrayList<Map<String, Object>> options = new ArrayList<>();
-        goods.forEach(item->{
+        goods.forEach(item -> {
             Map<String, Object> map = new HashMap<>();
-            map.put("id",item.getId());
-            map.put("name",item.getName());
+            map.put("id", item.getId());
+            map.put("name", item.getName());
             options.add(map);
         });
 
@@ -59,11 +59,11 @@ public class PointProductsServiceImpl extends ServiceImpl<PointProductsMapper, P
     }
 
     @Override
-    public void savePointGoods(PointProducts pointProducts,String token) {
+    public void savePointGoods(PointProducts pointProducts, String token) {
         Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
         QueryWrapper<PointProducts> wrapper = new QueryWrapper<PointProducts>().eq("goods_id", pointProducts.getGoodsId());
         PointProducts one = super.getOne(wrapper);
-        if (one!=null){
+        if (one != null) {
             throw new BusinessException("该商品已经是积分商品");
         }
         pointProducts.setUpdateby(employee.getNickName());

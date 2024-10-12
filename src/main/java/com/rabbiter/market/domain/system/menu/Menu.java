@@ -4,17 +4,18 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
 @TableName("t_menu")
 public class Menu implements Serializable {
-    public static final String TYPE_CATALOGUE="0";//目录
-    public static final String TYPE_MENU="1"; //菜单
-    public static final String TYPE_BUTTON="2";//按钮
-    public static final String STATE_NORMAL="0";//正常
-    public static final String STATE_DEL="-1";//禁用
+    public static final String TYPE_CATALOGUE = "0";//目录
+    public static final String TYPE_MENU = "1"; //菜单
+    public static final String TYPE_BUTTON = "2";//按钮
+    public static final String STATE_NORMAL = "0";//正常
+    public static final String STATE_DEL = "-1";//禁用
     @TableId(type = IdType.AUTO)
     private Long id;
     private String label;

@@ -13,18 +13,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 //@RestControllerAdvice
 public class ExceptionControllerAdvice {
     @ExceptionHandler(RuntimeException.class)
-    public JsonResult<?> commonExceptionHandler(RuntimeException ex){
+    public JsonResult<?> commonExceptionHandler(RuntimeException ex) {
         ex.printStackTrace();
-        return JsonResult.error(HttpStatus.CODE_BUSINESS_ERROR,ex.getMessage());
+        return JsonResult.error(HttpStatus.CODE_BUSINESS_ERROR, ex.getMessage());
     }
+
     @ExceptionHandler(BusinessException.class)
-    public JsonResult<?> businessHanler(BusinessException ex){
-        return JsonResult.error(HttpStatus.CODE_BUSINESS_ERROR,ex.getMessage());
+    public JsonResult<?> businessHanler(BusinessException ex) {
+        return JsonResult.error(HttpStatus.CODE_BUSINESS_ERROR, ex.getMessage());
     }
+
     @ExceptionHandler(Exception.class)
-    public JsonResult<?> exceptionHandler(Exception ex){
+    public JsonResult<?> exceptionHandler(Exception ex) {
         ex.printStackTrace();
-        return JsonResult.error(HttpStatus.CODE_BUSINESS_ERROR,ex.getMessage());
+        return JsonResult.error(HttpStatus.CODE_BUSINESS_ERROR, ex.getMessage());
     }
 
 }

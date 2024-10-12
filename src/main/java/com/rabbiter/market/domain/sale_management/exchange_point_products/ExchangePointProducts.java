@@ -9,8 +9,8 @@ import java.util.Date;
 
 @TableName("exchange_point_products_records")
 public class ExchangePointProducts implements Serializable {
-    public static  final  String STATE_NORMAL="0";
-    public static  final  String STATE_DEL="1";
+    public static final String STATE_NORMAL = "0";
+    public static final String STATE_DEL = "1";
     private String cn;
     @TableField("goods_id")
     private Long goodsId;

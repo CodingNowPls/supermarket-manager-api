@@ -15,8 +15,8 @@ import java.util.Date;
  */
 @TableName("goods")
 public class Goods implements Serializable {
-    public static final  String STATE_UP="0";
-    public static final String STATE_DOWN="1";
+    public static final String STATE_UP = "0";
+    public static final String STATE_DOWN = "1";
     @TableId(type = IdType.AUTO)
     private Long id;
     private String name; //商品名
@@ -43,7 +43,7 @@ public class Goods implements Serializable {
     private Long residueStoreNum;//剩余库存数量
     @TableField("cover_url")
     private String coverUrl; //商品封面
-    private String state=STATE_UP;
+    private String state = STATE_UP;
     @TableField("sales_volume")
     private Long salesVolume;//销售量
     private Long inventory;//需库存量

@@ -4,7 +4,6 @@ package com.rabbiter.market.common.sercurity.resolver;
 import com.rabbiter.market.common.redis.service.RedisTemplateService;
 import com.rabbiter.market.person.domain.Employee;
 import com.alibaba.fastjson.JSON;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -19,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
  * 作用：将请求映射方法(接口)中声明UserInfo类型的参数解析成当前登录用户对象
  */
 public class UserInfoArgumentResolver implements HandlerMethodArgumentResolver {
-    @Autowired
+
     private RedisTemplateService redisService;
 
     //当前解析器能解析类型--表示当前解析器要解析的参数类型-UserInfo

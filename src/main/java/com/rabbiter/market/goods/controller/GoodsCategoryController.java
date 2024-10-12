@@ -1,6 +1,6 @@
 package com.rabbiter.market.goods.controller;
 
-import com.rabbiter.market.common.sercurity.annotation.HasPermisson;
+import com.rabbiter.market.common.sercurity.annotation.HasPermission;
 import com.rabbiter.market.common.web.response.JsonResult;
 import com.rabbiter.market.goods.doamin.GoodsCategory;
 import com.rabbiter.market.goods.qo.QueryGoodsCategory;
@@ -24,7 +24,7 @@ public class GoodsCategoryController {
     private IGoodsCategoryService goodsCategoryService;
 
     /*保存信息接口*/
-    @HasPermisson("goods_management:goods_category:save")
+    @HasPermission("goods_management:goods_category:save")
     @PostMapping("/save")
     public JsonResult saveGoodsCategory(GoodsCategory category) {
         goodsCategoryService.saveGoodsCategory(category);
@@ -32,7 +32,7 @@ public class GoodsCategoryController {
     }
 
     /*修改接口*/
-    @HasPermisson("goods_management:goods_category:update")
+    @HasPermission("goods_management:goods_category:update")
     @PostMapping("/update")
     public JsonResult updateGoodsCategory(GoodsCategory category) {
         goodsCategoryService.updateGoodsCategory(category);
@@ -40,7 +40,7 @@ public class GoodsCategoryController {
     }
 
     /*停用*/
-    @HasPermisson("goods_management:goods_category:deactivate")
+    @HasPermission("goods_management:goods_category:deactivate")
     @PostMapping("/deactivate")
     public JsonResult deactivate(Long cid) {
         goodsCategoryService.deactivate(cid);
@@ -48,7 +48,7 @@ public class GoodsCategoryController {
     }
 
     /*查询信息*/
-    @HasPermisson("goods_management:goods_category:list")
+    @HasPermission("goods_management:goods_category:list")
     @PostMapping("/queryPageByQo")
     public JsonResult queryPageByQo(QueryGoodsCategory qo) {
         Page<GoodsCategory> page = goodsCategoryService.queryPageByQo(qo);

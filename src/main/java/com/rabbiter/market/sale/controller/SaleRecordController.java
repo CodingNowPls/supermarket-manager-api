@@ -1,6 +1,6 @@
 package com.rabbiter.market.sale.controller;
 
-import com.rabbiter.market.common.sercurity.annotation.HasPermisson;
+import com.rabbiter.market.common.sercurity.annotation.HasPermission;
 import com.rabbiter.market.common.web.response.JsonResult;
 import com.rabbiter.market.sale.domain.SaleRecords;
 import com.rabbiter.market.sale.qo.QuerySaleRecords;
@@ -42,7 +42,7 @@ public class SaleRecordController {
         return JsonResult.success(saleRecords);
     }
 
-    @HasPermisson("sale_management:sale_records:list")
+    @HasPermission("sale_management:sale_records:list")
     @PostMapping("/queryPageByQoSaleRecords")
     public JsonResult queryPageByQoSaleRecords(QuerySaleRecords qo) {
         Page<SaleRecords> page = saleRecordsService.queryPageByQoSaleRecords(qo);

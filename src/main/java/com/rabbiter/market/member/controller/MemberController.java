@@ -1,6 +1,6 @@
 package com.rabbiter.market.member.controller;
 
-import com.rabbiter.market.common.sercurity.annotation.HasPermisson;
+import com.rabbiter.market.common.sercurity.annotation.HasPermission;
 import com.rabbiter.market.common.web.response.JsonResult;
 import com.rabbiter.market.member.domain.Member;
 import com.rabbiter.market.member.qo.QueryMember;
@@ -18,21 +18,21 @@ public class MemberController {
     private IMemberService memberService;
 
     /*查询信息*/
-    @HasPermisson("member_management:member:list")
+    @HasPermission("member_management:member:list")
     @PostMapping("/queryPageByQo")
     public JsonResult queryPageByQo(QueryMember qo) {
         Page<Member> page = memberService.queryPageByQo(qo);
         return JsonResult.success(page);
     }
 
-    @HasPermisson("member_management:member:delMember")
+    @HasPermission("member_management:member:delMember")
     @PostMapping("/delMember")
     public JsonResult delMember(Long id) {
         memberService.delMember(id);
         return JsonResult.success();
     }
 
-    @HasPermisson("member_management:member:save")
+    @HasPermission("member_management:member:save")
     @PostMapping("/save")
     public JsonResult save(Member member) {
         memberService.saveMember(member);
@@ -46,7 +46,7 @@ public class MemberController {
         return JsonResult.success(member);
     }
 
-    @HasPermisson("member_management:member:update")
+    @HasPermission("member_management:member:update")
     @PostMapping("/update")
     public JsonResult updateMember(Member member) {
         memberService.updateMember(member);

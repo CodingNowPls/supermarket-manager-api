@@ -11,10 +11,11 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- *
+ * permissions
+ * @author gao
  */
 @Data
-public class RolePermissonVo implements Serializable {
+public class RolePermissionVo implements Serializable {
     /**
      *
      */
@@ -24,17 +25,27 @@ public class RolePermissonVo implements Serializable {
      */
     private List<RoleMenu> menus;
 
+    /**
+     *
+     */
     public RoleMenu getRoleMenu() {
         return new RoleMenu();
     }
-    /**
-     * 成员内部类，供这个类使用
-     */
+
     @Data
     @JsonIgnoreType
     public class RoleMenu {
+        /**
+         *
+         */
         private Long value;
+        /**
+         *
+         */
         private String label;
+        /**
+         *
+         */
         private List<RoleMenu> children;
 
     }

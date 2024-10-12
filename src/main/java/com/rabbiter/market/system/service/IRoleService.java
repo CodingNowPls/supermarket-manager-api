@@ -2,7 +2,7 @@ package com.rabbiter.market.system.service;
 
 import com.rabbiter.market.system.domain.Role;
 import com.rabbiter.market.system.qo.RoleQuery;
-import com.rabbiter.market.system.vo.RolePermissonVo;
+import com.rabbiter.market.system.vo.RolePermissionVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -46,7 +46,7 @@ public interface IRoleService extends IService<Role> {
      * @param rid
      * @return
      */
-    RolePermissonVo checkPermissons(Long rid);
+    RolePermissionVo checkPermissons(Long rid);
 
     /**
      * 保存角色-菜单的关系业务

@@ -1,6 +1,6 @@
 package com.rabbiter.market.person.controller;
 
-import com.rabbiter.market.common.sercurity.annotation.HasPermisson;
+import com.rabbiter.market.common.sercurity.annotation.HasPermission;
 import com.rabbiter.market.common.web.response.JsonResult;
 import com.rabbiter.market.person.qo.QueryEditPwd;
 import com.rabbiter.market.person.service.IEmployeeService;
@@ -28,7 +28,7 @@ public class PersonalController {
      * @param editPwd
      * @return
      */
-    @HasPermisson("personal:edit_pwd")
+    @HasPermission("personal:edit_pwd")
     @PostMapping("/edit_pwd")
     public JsonResult edit_pwd(HttpServletRequest request, QueryEditPwd editPwd) {
         String token = request.getHeader("token");
@@ -36,7 +36,7 @@ public class PersonalController {
         return JsonResult.success();
     }
 
-    @HasPermisson("personnel_management:employee:update")
+    @HasPermission("personnel_management:employee:update")
     @GetMapping("/information")
     public JsonResult information(HttpServletRequest request) {
         String token = request.getHeader("token");

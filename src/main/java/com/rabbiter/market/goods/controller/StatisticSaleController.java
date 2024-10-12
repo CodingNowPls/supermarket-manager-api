@@ -1,6 +1,6 @@
 package com.rabbiter.market.goods.controller;
 
-import com.rabbiter.market.common.sercurity.annotation.HasPermisson;
+import com.rabbiter.market.common.sercurity.annotation.HasPermission;
 import com.rabbiter.market.common.web.response.JsonResult;
 import com.rabbiter.market.goods.qo.QueryStatisticSale;
 import com.rabbiter.market.goods.service.IGoodsService;
@@ -18,7 +18,7 @@ public class StatisticSaleController {
     @Autowired
     private IGoodsService goodsService;
 
-    @HasPermisson("goods_management:statistic_sale:list")
+    @HasPermission("goods_management:statistic_sale:list")
     @PostMapping("/queryPageByQo")
     public JsonResult queryPageByQo(QueryStatisticSale qo) {
         SalesStatisticsVo vo = goodsService.queryPageStatisticSaleByQo(qo);

@@ -1,6 +1,6 @@
 package com.rabbiter.market.inventory.controller;
 
-import com.rabbiter.market.common.sercurity.annotation.HasPermisson;
+import com.rabbiter.market.common.sercurity.annotation.HasPermission;
 import com.rabbiter.market.common.web.response.JsonResult;
 import com.rabbiter.market.inventory.domain.Store;
 import com.rabbiter.market.inventory.qo.QueryStore;
@@ -21,7 +21,7 @@ public class StoreController {
     private IStoreService storeService;
 
     /*保存仓库信息接口*/
-    @HasPermisson("inventory_management:store:save")
+    @HasPermission("inventory_management:store:save")
     @PostMapping("/save")
     public JsonResult saveStore(Store store) {
         storeService.saveStore(store);
@@ -29,7 +29,7 @@ public class StoreController {
     }
 
     /*修改仓库接口*/
-    @HasPermisson("inventory_management:store:update")
+    @HasPermission("inventory_management:store:update")
     @PostMapping("/update")
     public JsonResult updateStore(Store store) {
         storeService.updateStore(store);
@@ -37,7 +37,7 @@ public class StoreController {
     }
 
     /*停用仓库*/
-    @HasPermisson("inventory_management:store:deactivate")
+    @HasPermission("inventory_management:store:deactivate")
     @PostMapping("/deactivate")
     public JsonResult deactivate(Long sid) {
         storeService.deactivate(sid);
@@ -45,7 +45,7 @@ public class StoreController {
     }
 
     /*查询仓库信息*/
-    @HasPermisson("inventory_management:store:list")
+    @HasPermission("inventory_management:store:list")
     @PostMapping("/list")
     public JsonResult list(QueryStore qo) {
         return JsonResult.success(storeService.list(new QueryWrapper<Store>()

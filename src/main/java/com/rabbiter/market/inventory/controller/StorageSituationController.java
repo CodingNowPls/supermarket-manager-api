@@ -1,6 +1,6 @@
 package com.rabbiter.market.inventory.controller;
 
-import com.rabbiter.market.common.sercurity.annotation.HasPermisson;
+import com.rabbiter.market.common.sercurity.annotation.HasPermission;
 import com.rabbiter.market.common.web.response.JsonResult;
 import com.rabbiter.market.inventory.qo.QueryDetailStorageSituation;
 import com.rabbiter.market.inventory.qo.QueryStorageSituation;
@@ -18,7 +18,7 @@ public class StorageSituationController {
     @Autowired
     private IGoodsStoreService goodsStoreService;
 
-    @HasPermisson("inventory_management:store:storage_situation")
+    @HasPermission("inventory_management:store:storage_situation")
     @PostMapping("/queryPageByQo")
     public JsonResult queryPageByQo(QueryStorageSituation qo) {
         Map<String, Object> map = goodsStoreService.queryPageStorageSituationByQo(qo);
@@ -26,7 +26,7 @@ public class StorageSituationController {
 
     }
 
-    @HasPermisson("inventory_management:store:storage_situation")
+    @HasPermission("inventory_management:store:storage_situation")
     @PostMapping("/queryStoreGoodsByStoreId")
     public JsonResult queryStoreGoodsByStoreId(QueryDetailStorageSituation qo) {
         Map<String, Object> map = goodsStoreService.queryStoreGoodsByStoreId(qo);

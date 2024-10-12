@@ -10,7 +10,7 @@ import com.rabbiter.market.system.qo.RoleQuery;
 import com.rabbiter.market.person.service.IEmployeeService;
 import com.rabbiter.market.system.service.IMenuService;
 import com.rabbiter.market.system.service.IRoleService;
-import com.rabbiter.market.system.vo.RolePermissonVo;
+import com.rabbiter.market.system.vo.RolePermissionVo;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -84,12 +84,12 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 
     @Transactional
     @Override
-    public RolePermissonVo checkPermissons(Long rid) {
-        RolePermissonVo vo = new RolePermissonVo();
+    public RolePermissionVo checkPermissons(Long rid) {
+        RolePermissionVo vo = new RolePermissionVo();
         /*角色所拥有的菜单id集合*/
         List<Long> menuIds = new ArrayList<>();
         /*所有的菜单信息*/
-        List<RolePermissonVo.RoleMenu> menus1 = new ArrayList<>();
+        List<RolePermissionVo.RoleMenu> menus1 = new ArrayList<>();
         //步骤1：查询所有的菜单信息
         List<Menu> menus = menuService.findAll();
         if (menus == null) {
@@ -97,23 +97,23 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         }
         //封装菜单信息
         for (Menu menu : menus) {
-            RolePermissonVo.RoleMenu roleMenu_catalogs = vo.getRoleMenu();
+            RolePermissionVo.RoleMenu roleMenu_catalogs = vo.getRoleMenu();
             roleMenu_catalogs.setValue(menu.getId());
             roleMenu_catalogs.setLabel(menu.getLabel());
             /*目录下的菜单*/
-            List<RolePermissonVo.RoleMenu> children = new ArrayList<>();
+            List<RolePermissionVo.RoleMenu> children = new ArrayList<>();
             //目录
             if (menu.getChildren() != null) {
                 for (Menu child : menu.getChildren()) {
                     //菜单
-                    RolePermissonVo.RoleMenu roleMenu_menu = vo.getRoleMenu();
+                    RolePermissionVo.RoleMenu roleMenu_menu = vo.getRoleMenu();
                     roleMenu_menu.setValue(child.getId());
                     roleMenu_menu.setLabel(child.getLabel());
-                    List<RolePermissonVo.RoleMenu> children1 = new ArrayList<>();
+                    List<RolePermissionVo.RoleMenu> children1 = new ArrayList<>();
                     if (child.getChildren() != null) {
                         for (Menu childChild : child.getChildren()) {
                             //按钮
-                            RolePermissonVo.RoleMenu roleMenu_button = vo.getRoleMenu();
+                            RolePermissionVo.RoleMenu roleMenu_button = vo.getRoleMenu();
                             roleMenu_button.setValue(childChild.getId());
                             roleMenu_button.setLabel(childChild.getLabel());
                             children1.add(roleMenu_button);

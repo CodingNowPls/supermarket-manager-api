@@ -1,6 +1,6 @@
 package com.rabbiter.market.system.controller;
 
-import com.rabbiter.market.common.sercurity.annotation.HasPermisson;
+import com.rabbiter.market.common.sercurity.annotation.HasPermission;
 import com.rabbiter.market.common.web.response.JsonResult;
 import com.rabbiter.market.system.domain.Menu;
 import com.rabbiter.market.system.qo.MenuQuery;
@@ -23,7 +23,7 @@ public class MenuController {
      * @param qo
      * @return
      */
-    @HasPermisson("system:menu:list")
+    @HasPermission("system:menu:list")
     @PostMapping("/queryPageByQo")
     public JsonResult queryPageByQo(MenuQuery qo) {
         Page<Menu> page = menuService.queryPageByQo(qo);

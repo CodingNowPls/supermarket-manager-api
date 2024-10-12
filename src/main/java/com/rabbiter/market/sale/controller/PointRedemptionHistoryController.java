@@ -1,6 +1,6 @@
 package com.rabbiter.market.sale.controller;
 
-import com.rabbiter.market.common.sercurity.annotation.HasPermisson;
+import com.rabbiter.market.common.sercurity.annotation.HasPermission;
 import com.rabbiter.market.common.web.response.JsonResult;
 import com.rabbiter.market.goods.doamin.PointProducts;
 import com.rabbiter.market.sale.domain.PointRedemptionHistory;
@@ -66,7 +66,7 @@ public class PointRedemptionHistoryController {
         return JsonResult.success();
     }
 
-    @HasPermisson("sale_management:exchange_point_products_records:list")
+    @HasPermission("sale_management:exchange_point_products_records:list")
     @PostMapping("/queryPageByQoExchangePointProducts")
     public JsonResult queryPageByQoExchangePointProducts(QueryExchangePointProductsRecords qo) {
         Page<PointRedemptionHistory> page = exchangePointProductsService.queryPageByQoExchangePointProducts(qo);

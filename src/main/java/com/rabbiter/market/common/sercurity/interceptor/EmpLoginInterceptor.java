@@ -4,7 +4,7 @@ package com.rabbiter.market.common.sercurity.interceptor;
 import com.rabbiter.market.common.constants.HttpStatus;
 import com.rabbiter.market.common.redis.constants.RedisKeys;
 import com.rabbiter.market.common.redis.service.RedisTemplateService;
-import com.rabbiter.market.common.sercurity.annotation.HasPermisson;
+import com.rabbiter.market.common.sercurity.annotation.HasPermission;
 import com.rabbiter.market.common.sercurity.annotation.NoRequireLogin;
 import com.rabbiter.market.common.web.response.JsonResult;
 import com.rabbiter.market.person.domain.Employee;
@@ -63,8 +63,8 @@ public class EmpLoginInterceptor implements HandlerInterceptor {
             }
         }
         //是否贴有HasPermisson注解
-        HasPermisson hasPermisson = handler1.getMethodAnnotation(HasPermisson.class);
-        if (hasPermisson != null) {
+        HasPermission hasPermission = handler1.getMethodAnnotation(HasPermission.class);
+        if (hasPermission != null) {
             if (!StringUtils.hasText(token)) {
                 //没有token
                 JsonResult res = JsonResult.error(HttpStatus.CODE_BUSINESS_ERROR, "请先登录");
@@ -78,7 +78,7 @@ public class EmpLoginInterceptor implements HandlerInterceptor {
             if (employee.getIsAdmin()) {
                 return true;
             }
-            String value = hasPermisson.value();
+            String value = hasPermission.value();
             boolean contains = employee.getFlags().contains(value);
             if (!contains) {
                 JsonResult res = JsonResult.error(HttpStatus.CODE_BUSINESS_ERROR, "您没有权限操作");

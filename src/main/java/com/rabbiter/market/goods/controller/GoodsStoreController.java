@@ -1,6 +1,6 @@
 package com.rabbiter.market.goods.controller;
 
-import com.rabbiter.market.common.sercurity.annotation.HasPermisson;
+import com.rabbiter.market.common.sercurity.annotation.HasPermission;
 import com.rabbiter.market.common.web.response.JsonResult;
 import com.rabbiter.market.goods.qo.QueryGoodsStore;
 import com.rabbiter.market.goods.service.IGoodsService;
@@ -21,7 +21,7 @@ public class GoodsStoreController {
     private IGoodsService goodsService;
 
     /*查询信息*/
-    @HasPermisson("goods_management:goods_store:list")
+    @HasPermission("goods_management:goods_store:list")
     @PostMapping("/queryPageByQo")
     public JsonResult queryPageByQo(QueryGoodsStore qo) {
         Page<GoodsStoreVo> page = goodsService.queryPageGoodsStore(qo);

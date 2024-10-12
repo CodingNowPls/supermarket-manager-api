@@ -1,12 +1,12 @@
 package com.rabbiter.market.system.controller;
 
 import com.rabbiter.market.common.exception.BusinessException;
-import com.rabbiter.market.common.sercurity.annotation.HasPermisson;
+import com.rabbiter.market.common.sercurity.annotation.HasPermission;
 import com.rabbiter.market.common.web.response.JsonResult;
 import com.rabbiter.market.system.domain.Role;
 import com.rabbiter.market.system.qo.RoleQuery;
 import com.rabbiter.market.system.service.IRoleService;
-import com.rabbiter.market.system.vo.RolePermissonVo;
+import com.rabbiter.market.system.vo.RolePermissionVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -29,7 +29,7 @@ public class RoleController {
      *
      * @return
      */
-    @HasPermisson("system:role:list")
+    @HasPermission("system:role:list")
     @PostMapping("/list")
     public JsonResult list(RoleQuery qo) {
         List<Role> roles = roleService.listByQo(qo);
@@ -42,7 +42,7 @@ public class RoleController {
      * @param rid
      * @return
      */
-    @HasPermisson("system:role:forbiddenRole")
+    @HasPermission("system:role:forbiddenRole")
     @PostMapping("/forbiddenRole")
     public JsonResult forbiddenRole(Long rid) {
         roleService.forbiddenRole(rid);
@@ -55,7 +55,7 @@ public class RoleController {
      * @param role
      * @return
      */
-    @HasPermisson("system:role:edit_role")
+    @HasPermission("system:role:edit_role")
     @PostMapping("/edit_role")
     public JsonResult edit_role(Role role) {
         if (Role.SYS_ID == role.getId() || 2L == role.getId()) {
@@ -73,7 +73,7 @@ public class RoleController {
      * @param role
      * @return
      */
-    @HasPermisson("system:role:save")
+    @HasPermission("system:role:save")
     @PostMapping("/save")
     public JsonResult save(Role role) {
         roleService.saveRole(role);
@@ -86,10 +86,10 @@ public class RoleController {
      * @param rid
      * @return
      */
-    @HasPermisson("system:role:saveRolePermissons")
+    @HasPermission("system:role:saveRolePermissons")
     @GetMapping("/checkPermissons")
     public JsonResult checkPermissons(@NotNull(message = "角色不能为空") Long rid) {
-        RolePermissonVo vo = roleService.checkPermissons(rid);
+        RolePermissionVo vo = roleService.checkPermissons(rid);
         return JsonResult.success(vo);
     }
 
@@ -100,7 +100,7 @@ public class RoleController {
      * @param menuIds
      * @return
      */
-    @HasPermisson("system:role:saveRolePermissons")
+    @HasPermission("system:role:saveRolePermissons")
     @PostMapping("/saveRolePermissons")
     public JsonResult saveRolePermissons(@NotNull(message = "角色不能为空") @RequestParam("rid") Long rid, @RequestParam("menuIds") Long[] menuIds) {
         roleService.saveRolePermissons(rid, menuIds);
@@ -115,7 +115,7 @@ public class RoleController {
         return JsonResult.success(list);
     }
 
-    @HasPermisson("personnel_management:employee:queryRoleIdsByEid")
+    @HasPermission("personnel_management:employee:queryRoleIdsByEid")
     @GetMapping("/queryRoleIdsByEid")
     public JsonResult queryRoleIdsByEid(Long eid) {
 
@@ -123,7 +123,7 @@ public class RoleController {
         return JsonResult.success(list);
     }
 
-    @HasPermisson("personnel_management:employee:queryRoleIdsByEid")
+    @HasPermission("personnel_management:employee:queryRoleIdsByEid")
     @PostMapping("/saveRoleEmp")
     public JsonResult saveRoleEmp(Long eid, Long[] empRoleIds, HttpServletRequest request) {
         String token = request.getHeader("token");

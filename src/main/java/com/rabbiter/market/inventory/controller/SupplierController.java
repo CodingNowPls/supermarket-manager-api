@@ -1,6 +1,6 @@
 package com.rabbiter.market.inventory.controller;
 
-import com.rabbiter.market.common.sercurity.annotation.HasPermisson;
+import com.rabbiter.market.common.sercurity.annotation.HasPermission;
 import com.rabbiter.market.common.web.response.JsonResult;
 import com.rabbiter.market.inventory.domain.Supplier;
 import com.rabbiter.market.inventory.qo.QuerySupplier;
@@ -20,14 +20,14 @@ public class SupplierController {
     @Autowired
     private ISupplierService supplierService;
 
-    @HasPermisson("inventory_management:supplier:list")
+    @HasPermission("inventory_management:supplier:list")
     @PostMapping("/queryPageByQo")
     public JsonResult queryPageByQo(QuerySupplier qo) {
         Page<Supplier> page = supplierService.queryPageByQo(qo);
         return JsonResult.success(page);
     }
 
-    @HasPermisson("inventory_management:supplier:save")
+    @HasPermission("inventory_management:supplier:save")
     @PostMapping("/save")
     public JsonResult saveSupplier(Supplier supplier) {
         supplierService.saveSupplier(supplier);
@@ -35,20 +35,20 @@ public class SupplierController {
     }
 
     /*修改接口*/
-    @HasPermisson("inventory_management:supplier:update")
+    @HasPermission("inventory_management:supplier:update")
     @PostMapping("/update")
     public JsonResult updateSupplier(Supplier supplier) {
         supplierService.updateSupplier(supplier);
         return JsonResult.success();
     }
 
-    @HasPermisson("inventory_management:supplier:update")
+    @HasPermission("inventory_management:supplier:update")
     @GetMapping("/queryByCn")
     public JsonResult queryByCn(Long cn) {
         return JsonResult.success(supplierService.getById(cn));
     }
 
-    @HasPermisson("inventory_management:supplier:deactivate")
+    @HasPermission("inventory_management:supplier:deactivate")
     @PostMapping("/deactivate")
     public JsonResult deactivate(Long cn) {
         supplierService.deactivate(cn);

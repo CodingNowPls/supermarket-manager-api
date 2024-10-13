@@ -63,13 +63,19 @@ public class PointRedemptionController {
         return JsonResult.success(list);
     }
 
+    /**
+     * 删除积分商品兑换记录
+     *
+     * @param cn
+     * @return
+     */
     @GetMapping("/delExchangePointProducts")
     public JsonResult delExchangePointProducts(String cn) {
         exchangePointProductsService.delExchangePointProducts(cn);
         return JsonResult.success();
     }
 
-    @HasPermission("sale:pointRedemptionHistory")
+    @HasPermission("sale:pointRedemption")
     @PostMapping("/queryPageByQoExchangePointProducts")
     public JsonResult queryPageByQoExchangePointProducts(@RequestBody QueryExchangePointProductsRecords qo) {
         Page<PointRedemption> page = exchangePointProductsService.queryPageByQoExchangePointProducts(qo);

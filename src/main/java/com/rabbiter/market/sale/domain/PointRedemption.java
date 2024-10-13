@@ -12,7 +12,7 @@ import java.util.Date;
  * 积分兑换历史记录
  */
 @Data
-@TableName("exchange_point_products_records")
+@TableName("t_point_redemption")
 public class PointRedemption implements Serializable {
 
     public static final String STATE_NORMAL = "0";

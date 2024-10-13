@@ -2,7 +2,7 @@ package com.rabbiter.market.sale.controller;
 
 import com.rabbiter.market.common.sercurity.annotation.HasPermission;
 import com.rabbiter.market.common.web.response.JsonResult;
-import com.rabbiter.market.sale.domain.SaleRecords;
+import com.rabbiter.market.sale.domain.SaleRecord;
 import com.rabbiter.market.sale.qo.QuerySaleRecords;
 import com.rabbiter.market.sale.service.ISaleRecordsService;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
@@ -37,15 +37,15 @@ public class SaleRecordController {
     }
 
     @PostMapping("/saveSaleRecords")
-    public JsonResult saveSaleRecords(@RequestBody SaleRecords saleRecords, HttpServletRequest request) {
-        saleRecords = saleRecordsService.saveSaleRecords(saleRecords, (String) request.getHeader("token"));
-        return JsonResult.success(saleRecords);
+    public JsonResult saveSaleRecords(@RequestBody SaleRecord saleRecord, HttpServletRequest request) {
+        saleRecord = saleRecordsService.saveSaleRecords(saleRecord, (String) request.getHeader("token"));
+        return JsonResult.success(saleRecord);
     }
 
     @HasPermission("sale:saleRecordsList")
     @PostMapping("/queryPageByQoSaleRecords")
     public JsonResult queryPageByQoSaleRecords(QuerySaleRecords qo) {
-        Page<SaleRecords> page = saleRecordsService.queryPageByQoSaleRecords(qo);
+        Page<SaleRecord> page = saleRecordsService.queryPageByQoSaleRecords(qo);
         return JsonResult.success(page);
     }
 

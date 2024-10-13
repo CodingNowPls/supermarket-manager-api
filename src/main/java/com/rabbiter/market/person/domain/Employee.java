@@ -17,7 +17,7 @@ import java.util.*;
  * 员工实体类
  */
 @Data
-@TableName("employee")
+@TableName("t_employee")
 public class Employee implements Serializable {
 
     public static final String STATE_NORMAL = "0";

@@ -1,6 +1,6 @@
 package com.rabbiter.market.inventory.service;
 
-import com.rabbiter.market.inventory.domain.StockDetailGoods;
+import com.rabbiter.market.inventory.domain.GoodsStockDetail;
 import com.rabbiter.market.inventory.qo.QueryDetailStoreGoods;
 import com.rabbiter.market.inventory.qo.QueryDetailStoreGoodsOut;
 import com.rabbiter.market.goods.vo.StockGoodsOutDetailVo;
@@ -11,9 +11,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
 import java.util.Map;
 
-public interface IStockGoodsDetailService extends IService<StockDetailGoods> {
+public interface IStockGoodsDetailService extends IService<GoodsStockDetail> {
 
-    void saveIn(StockDetailGoods stockDetailGoods, String token);
+    void saveIn(GoodsStockDetail goodsStockDetail, String token);
 
     Page<StockGoodsDetailVo> queryPageByQoIn(QueryDetailStoreGoods qo);
 
@@ -29,5 +29,5 @@ public interface IStockGoodsDetailService extends IService<StockDetailGoods> {
 
     StockGoodsOutDetailVo queryOutGoods(Long goodsId, Long storeId);
 
-    void saveOut(StockDetailGoods stockDetailGoods, String token);
+    void saveOut(GoodsStockDetail goodsStockDetail, String token);
 }

@@ -10,7 +10,7 @@ import java.io.Serializable;
  * 销售记录详细
  */
 @Data
-@TableName("detail_sale_records")
+@TableName("t_sale_record_detail")
 public class SaleRecordDetail implements Serializable {
     /**
      *

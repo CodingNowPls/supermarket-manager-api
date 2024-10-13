@@ -35,10 +35,11 @@ CREATE TABLE `department`  (
 INSERT INTO `department` VALUES (8, '销售部', '销售部门', '0');
 
 -- ----------------------------
--- Table structure for detail_sale_records
+-- Table structure for t_sale_record_detail
 -- ----------------------------
-DROP TABLE IF EXISTS `detail_sale_records`;
-CREATE TABLE `detail_sale_records`  (
+DROP TABLE IF EXISTS `t_sale_record_detail`;
+CREATE TABLE `t_sale_record_detail`
+(
   `sell_cn` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '销售订单号',
   `goods_id` bigint(0) NOT NULL COMMENT '商品编号',
   `goods_num` bigint(0) NOT NULL COMMENT '商品数量',
@@ -47,10 +48,12 @@ CREATE TABLE `detail_sale_records`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
 
 -- ----------------------------
--- Records of detail_sale_records
+-- Records of t_sale_record_detail
 -- ----------------------------
-INSERT INTO `detail_sale_records` VALUES ('1701213155180429314', 7, 1, 120.00, '运动鞋');
-INSERT INTO `detail_sale_records` VALUES ('1701220094014722049', 9, 1, 350.00, '桌椅套装');
+INSERT INTO `t_sale_record_detail`
+VALUES ('1701213155180429314', 7, 1, 120.00, '运动鞋');
+INSERT INTO `t_sale_record_detail`
+VALUES ('1701220094014722049', 9, 1, 350.00, '桌椅套装');
 
 -- ----------------------------
 -- Table structure for employee
@@ -85,10 +88,11 @@ INSERT INTO `employee` VALUES (15, '14788888888', NULL, '北京市海淀区', '1
 INSERT INTO `employee` VALUES (16, '15455555555', NULL, NULL, '1', '123456', '叶子', '/files/1694434162457_07.jpg', '0', b'0', '仓库管理员', '张三', '2023-09-11 13:06:52', 18, 8, '511111199501015555', NULL);
 
 -- ----------------------------
--- Table structure for exchange_point_products_records
+-- Table structure for point_redemption
 -- ----------------------------
-DROP TABLE IF EXISTS `exchange_point_products_records`;
-CREATE TABLE `exchange_point_products_records`  (
+DROP TABLE IF EXISTS `point_redemption`;
+CREATE TABLE `point_redemption`
+(
   `cn` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '订单号',
   `goods_id` bigint(0) NULL DEFAULT NULL COMMENT '商品编号',
   `member_id` bigint(0) NULL DEFAULT NULL COMMENT '会员编号',
@@ -101,9 +105,10 @@ CREATE TABLE `exchange_point_products_records`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
 
 -- ----------------------------
--- Records of exchange_point_products_records
+-- Records of point_redemption
 -- ----------------------------
-INSERT INTO `exchange_point_products_records` VALUES ('1701220420541288450', 10, 5, 60, '2023-09-11 13:05:30', '张三', 1, '0');
+INSERT INTO `point_redemption`
+VALUES ('1701220420541288450', 10, 5, 60, '2023-09-11 13:05:30', '张三', 1, '0');
 
 -- ----------------------------
 -- Table structure for goods
@@ -142,8 +147,9 @@ INSERT INTO `goods` VALUES (11, '变形金刚玩具套装', '张三', '2023-09-1
 -- ----------------------------
 -- Table structure for goods_category
 -- ----------------------------
-DROP TABLE IF EXISTS `goods_category`;
-CREATE TABLE `goods_category`  (
+DROP TABLE IF EXISTS `t_goods_category`;
+CREATE TABLE `t_goods_category`
+(
   `id` bigint(0) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '分类名',
   `info` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '备注',
@@ -152,19 +158,25 @@ CREATE TABLE `goods_category`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
 
 -- ----------------------------
--- Records of goods_category
+-- Records of t_goods_category
 -- ----------------------------
-INSERT INTO `goods_category` VALUES (9, '服装', '衣服鞋袜', '0');
-INSERT INTO `goods_category` VALUES (10, '零食', '饭后零食', '0');
-INSERT INTO `goods_category` VALUES (11, '书籍', NULL, '0');
-INSERT INTO `goods_category` VALUES (12, '饮料酒水', '饮料酒水类别', '0');
-INSERT INTO `goods_category` VALUES (13, '办公用具', '办公用具', '0');
+INSERT INTO `t_goods_category`
+VALUES (9, '服装', '衣服鞋袜', '0');
+INSERT INTO `t_goods_category`
+VALUES (10, '零食', '饭后零食', '0');
+INSERT INTO `t_goods_category`
+VALUES (11, '书籍', NULL, '0');
+INSERT INTO `t_goods_category`
+VALUES (12, '饮料酒水', '饮料酒水类别', '0');
+INSERT INTO `t_goods_category`
+VALUES (13, '办公用具', '办公用具', '0');
 
 -- ----------------------------
--- Table structure for point_products
+-- Table structure for point_goods
 -- ----------------------------
-DROP TABLE IF EXISTS `point_products`;
-CREATE TABLE `point_products`  (
+DROP TABLE IF EXISTS `point_goods`;
+CREATE TABLE `point_goods`
+(
   `goods_id` bigint(0) NULL DEFAULT NULL,
   `goods_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
   `integral` bigint(0) NULL DEFAULT NULL,
@@ -176,10 +188,13 @@ CREATE TABLE `point_products`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
 
 -- ----------------------------
--- Records of point_products
+-- Records of point_goods
 -- ----------------------------
-INSERT INTO `point_products` VALUES (11, '变形金刚玩具套装', 50, '张三', '2023-09-11 12:59:48', 1, '/files/1694435421618_e04f06dc02b84d38bc4d1ba2b39add0d.jpg', '0');
-INSERT INTO `point_products` VALUES (10, '短袖', 60, '张三', '2023-09-11 12:59:57', 1, '/files/1694434945440_02.jpg', '0');
+INSERT INTO `point_goods`
+VALUES (11, '变形金刚玩具套装', 50, '张三', '2023-09-11 12:59:48', 1,
+        '/files/1694435421618_e04f06dc02b84d38bc4d1ba2b39add0d.jpg', '0');
+INSERT INTO `point_goods`
+VALUES (10, '短袖', 60, '张三', '2023-09-11 12:59:57', 1, '/files/1694434945440_02.jpg', '0');
 
 -- ----------------------------
 -- Table structure for warehouse
@@ -221,10 +236,11 @@ CREATE TABLE `supplier`  (
 INSERT INTO `supplier` VALUES (7, '阿里巴巴', '浙江省杭州市', '19955555555', '1688商家供货商', '0');
 
 -- ----------------------------
--- Table structure for t_detail_store_goods
+-- Table structure for t_goods_stock_detail
 -- ----------------------------
-DROP TABLE IF EXISTS `t_detail_store_goods`;
-CREATE TABLE `t_detail_store_goods`  (
+DROP TABLE IF EXISTS `t_goods_stock_detail`;
+CREATE TABLE `t_goods_stock_detail`
+(
   `cn` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `goods_id` bigint(0) NOT NULL,
   `goods_num` int(0) NULL DEFAULT NULL,
@@ -247,19 +263,41 @@ CREATE TABLE `t_detail_store_goods`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
 
 -- ----------------------------
--- Records of t_detail_store_goods
+-- Records of t_goods_stock_detail
 -- ----------------------------
-INSERT INTO `t_detail_store_goods` VALUES ('1701212006578667522', 7, 200, '运动鞋', 120, '0', 1, '2023-09-11 12:32:04', '0', '运动鞋入库', '2029-06-25 16:00:00', '张三', '2023-09-10 16:00:00', '0', 5, 7, '阿里巴巴', NULL);
-INSERT INTO `t_detail_store_goods` VALUES ('1701212043736006658', 8, 200, '《PASLMS》英文版', 50, '0', 1, '2023-09-11 12:32:13', '0', '', '2029-06-25 16:00:00', '张三', '2023-09-10 16:00:00', '0', 5, 7, '阿里巴巴', NULL);
-INSERT INTO `t_detail_store_goods` VALUES ('1701212067161194498', 9, 200, '桌椅套装', 350, '0', 1, '2023-09-11 12:32:18', '0', '', '2029-06-25 16:00:00', '张三', '2023-09-10 16:00:00', '0', 5, 7, '阿里巴巴', NULL);
-INSERT INTO `t_detail_store_goods` VALUES ('1701212086803120129', 10, 200, '短袖', 40, '0', 1, '2023-09-11 12:32:23', '0', '', '2029-06-25 16:00:00', '张三', '2023-09-10 16:00:00', '0', 5, 7, '阿里巴巴', NULL);
-INSERT INTO `t_detail_store_goods` VALUES ('1701212102829555713', 11, 200, '变形金刚玩具套装', 140, '0', 1, '2023-09-11 12:32:27', '0', '', '2029-06-25 16:00:00', '张三', '2023-09-10 16:00:00', '0', 5, 7, '阿里巴巴', NULL);
-INSERT INTO `t_detail_store_goods` VALUES ('1701212176804495361', 7, 20, '运动鞋', NULL, '1', 1, '2023-09-11 12:32:45', '0', '', NULL, '张三', NULL, '0', 5, NULL, NULL, NULL);
-INSERT INTO `t_detail_store_goods` VALUES ('1701218295690104833', 8, 50, '《PASLMS》英文版', NULL, '1', 1, '2023-09-11 12:57:03', '0', '', NULL, '张三', NULL, '0', 5, NULL, NULL, NULL);
-INSERT INTO `t_detail_store_goods` VALUES ('1701218352346763266', 9, 10, '桌椅套装', NULL, '1', 1, '2023-09-11 12:57:17', '0', '', NULL, '张三', NULL, '0', 5, NULL, NULL, NULL);
-INSERT INTO `t_detail_store_goods` VALUES ('1701218386224156674', 10, 60, '短袖', NULL, '1', 1, '2023-09-11 12:57:25', '0', '', NULL, '张三', NULL, '0', 5, NULL, NULL, NULL);
-INSERT INTO `t_detail_store_goods` VALUES ('1701218444214603778', 11, 20, '变形金刚玩具套装', NULL, '1', 1, '2023-09-11 12:57:39', '0', '', NULL, '张三', NULL, '0', 5, NULL, NULL, NULL);
-INSERT INTO `t_detail_store_goods` VALUES ('1701219991275245570', 8, 10, '《PASLMS》英文版', NULL, '1', 1, '2023-09-11 13:03:48', '0', '', NULL, '张三', NULL, '0', 5, NULL, NULL, NULL);
+INSERT INTO `t_goods_stock_detail`
+VALUES ('1701212006578667522', 7, 200, '运动鞋', 120, '0', 1, '2023-09-11 12:32:04', '0', '运动鞋入库',
+        '2029-06-25 16:00:00', '张三', '2023-09-10 16:00:00', '0', 5, 7, '阿里巴巴', NULL);
+INSERT INTO `t_goods_stock_detail`
+VALUES ('1701212043736006658', 8, 200, '《PASLMS》英文版', 50, '0', 1, '2023-09-11 12:32:13', '0', '',
+        '2029-06-25 16:00:00', '张三', '2023-09-10 16:00:00', '0', 5, 7, '阿里巴巴', NULL);
+INSERT INTO `t_goods_stock_detail`
+VALUES ('1701212067161194498', 9, 200, '桌椅套装', 350, '0', 1, '2023-09-11 12:32:18', '0', '', '2029-06-25 16:00:00',
+        '张三', '2023-09-10 16:00:00', '0', 5, 7, '阿里巴巴', NULL);
+INSERT INTO `t_goods_stock_detail`
+VALUES ('1701212086803120129', 10, 200, '短袖', 40, '0', 1, '2023-09-11 12:32:23', '0', '', '2029-06-25 16:00:00',
+        '张三', '2023-09-10 16:00:00', '0', 5, 7, '阿里巴巴', NULL);
+INSERT INTO `t_goods_stock_detail`
+VALUES ('1701212102829555713', 11, 200, '变形金刚玩具套装', 140, '0', 1, '2023-09-11 12:32:27', '0', '',
+        '2029-06-25 16:00:00', '张三', '2023-09-10 16:00:00', '0', 5, 7, '阿里巴巴', NULL);
+INSERT INTO `t_goods_stock_detail`
+VALUES ('1701212176804495361', 7, 20, '运动鞋', NULL, '1', 1, '2023-09-11 12:32:45', '0', '', NULL, '张三', NULL, '0',
+        5, NULL, NULL, NULL);
+INSERT INTO `t_goods_stock_detail`
+VALUES ('1701218295690104833', 8, 50, '《PASLMS》英文版', NULL, '1', 1, '2023-09-11 12:57:03', '0', '', NULL, '张三',
+        NULL, '0', 5, NULL, NULL, NULL);
+INSERT INTO `t_goods_stock_detail`
+VALUES ('1701218352346763266', 9, 10, '桌椅套装', NULL, '1', 1, '2023-09-11 12:57:17', '0', '', NULL, '张三', NULL, '0',
+        5, NULL, NULL, NULL);
+INSERT INTO `t_goods_stock_detail`
+VALUES ('1701218386224156674', 10, 60, '短袖', NULL, '1', 1, '2023-09-11 12:57:25', '0', '', NULL, '张三', NULL, '0', 5,
+        NULL, NULL, NULL);
+INSERT INTO `t_goods_stock_detail`
+VALUES ('1701218444214603778', 11, 20, '变形金刚玩具套装', NULL, '1', 1, '2023-09-11 12:57:39', '0', '', NULL, '张三',
+        NULL, '0', 5, NULL, NULL, NULL);
+INSERT INTO `t_goods_stock_detail`
+VALUES ('1701219991275245570', 8, 10, '《PASLMS》英文版', NULL, '1', 1, '2023-09-11 13:03:48', '0', '', NULL, '张三',
+        NULL, '0', 5, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for t_emp_role
@@ -281,10 +319,11 @@ INSERT INTO `t_emp_role` VALUES (21, 16, 4);
 INSERT INTO `t_emp_role` VALUES (22, 16, 5);
 
 -- ----------------------------
--- Table structure for t_goods_store
+-- Table structure for t_goods_stock
 -- ----------------------------
-DROP TABLE IF EXISTS `t_goods_store`;
-CREATE TABLE `t_goods_store`  (
+DROP TABLE IF EXISTS `t_goods_stock`;
+CREATE TABLE `t_goods_stock`
+(
   `goods_id` bigint(0) NOT NULL COMMENT '商品编号',
   `store_id` bigint(0) NOT NULL COMMENT '仓库编号',
   `in_num` bigint(0) NOT NULL COMMENT '入库数数量',
@@ -293,13 +332,18 @@ CREATE TABLE `t_goods_store`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
 
 -- ----------------------------
--- Records of t_goods_store
+-- Records of t_goods_stock
 -- ----------------------------
-INSERT INTO `t_goods_store` VALUES (7, 5, 200, 180, '一号仓库');
-INSERT INTO `t_goods_store` VALUES (8, 5, 200, 140, '一号仓库');
-INSERT INTO `t_goods_store` VALUES (9, 5, 200, 190, '一号仓库');
-INSERT INTO `t_goods_store` VALUES (10, 5, 200, 140, '一号仓库');
-INSERT INTO `t_goods_store` VALUES (11, 5, 200, 180, '一号仓库');
+INSERT INTO `t_goods_stock`
+VALUES (7, 5, 200, 180, '一号仓库');
+INSERT INTO `t_goods_stock`
+VALUES (8, 5, 200, 140, '一号仓库');
+INSERT INTO `t_goods_stock`
+VALUES (9, 5, 200, 190, '一号仓库');
+INSERT INTO `t_goods_stock`
+VALUES (10, 5, 200, 140, '一号仓库');
+INSERT INTO `t_goods_stock`
+VALUES (11, 5, 200, 180, '一号仓库');
 
 -- ----------------------------
 -- Table structure for t_member
@@ -384,13 +428,18 @@ INSERT INTO `t_menu` VALUES (34, '入库明细', '/inventory_management/detail_s
 INSERT INTO `t_menu` VALUES (35, '销售主页', '/sale_management/sale_cmd/list', '1', 1, '销售管理', NULL, '0', 'sale_management:sale_cmd:list', 'iconfont icon-r-home', 'views/sale_management/sale_cmd/List');
 INSERT INTO `t_menu` VALUES (36, '销售记录', '/sale_management/sale_records/list', '1', 1, '销售管理', NULL, '0', 'sale_management:sale_records:list', 'iconfont icon-r-paper', 'views/sale_management/sale_records/List');
 INSERT INTO `t_menu` VALUES (37, '供货商信息', '/inventory_management/supplier/list', '1', 4, '库存管理', NULL, '0', 'inventory_management:supplier:list', 'iconfont icon-r-mark3', 'views/inventory_management/supplier/List');
-INSERT INTO `t_menu` VALUES (41, '积分商品', '/goods_management/point_products/list', '1', 19, '商品管理', NULL, '0', 'goods_management:point_products:list', 'iconfont icon-r-mark1', 'views/goods_management/point_products/List');
+INSERT INTO `t_menu`
+VALUES (41, '积分商品', '/goods_management/point_goods/list', '1', 19, '商品管理', NULL, '0',
+        'goods_management:point_goods:list', 'iconfont icon-r-mark1', 'views/goods_management/point_goods/List');
 INSERT INTO `t_menu` VALUES (42, '销售统计', '/goods_management/statistic_sale/list', '1', 19, '商品管理', NULL, '0', 'goods_management:statistic_sale:list', 'iconfont icon-r-add', 'views/goods_management/statistic_sale/List');
 INSERT INTO `t_menu`
 VALUES (43, '库存统计', '/inventory_management/warehouse/storage_situation', '1', 4, '库存管理', NULL, '0',
         'inventory_management:warehouse:storage_situation', 'iconfont icon-r-add',
         'views/inventory_management/warehouse/StorageSituation');
-INSERT INTO `t_menu` VALUES (44, '积分兑换记录', '/sale_management/exchange_point_products_records/list', '1', 1, '销售管理', NULL, '0', 'sale_management:exchange_point_products_records:list', 'iconfont icon-r-paper', 'views//sale_management/exchange_point_products_records/List');
+INSERT INTO `t_menu`
+VALUES (44, '积分兑换记录', '/sale_management/exchange_point_goods_records/list', '1', 1, '销售管理', NULL, '0',
+        'sale_management:exchange_point_goods_records:list', 'iconfont icon-r-paper',
+        'views//sale_management/exchange_point_goods_records/List');
 INSERT INTO `t_menu` VALUES (45, '员工创建', NULL, '2', 28, '员工管理', NULL, '0', 'personnel_management:employee:save', NULL, NULL);
 INSERT INTO `t_menu` VALUES (46, '员工修改', NULL, '2', 28, '员工管理', NULL, '0', 'personnel_management:employee:update', NULL, NULL);
 INSERT INTO `t_menu` VALUES (47, '员工分配职务', NULL, '2', 28, '员工管理', NULL, '0', 'personnel_management:employee:queryRoleIdsByEid', NULL, NULL);
@@ -405,7 +454,9 @@ INSERT INTO `t_menu` VALUES (55, '删除', NULL, '2', 37, '供货商信息', NUL
 INSERT INTO `t_menu` VALUES (56, '商品上架处理', NULL, '2', 40, '出库通知', NULL, '0', 'inventory_management:detail_store_goods_out:notice:saveOut_shelves', NULL, NULL);
 INSERT INTO `t_menu` VALUES (57, '商品过期/下架处理', NULL, '2', 40, '出库通知', NULL, '0', 'inventory_management:detail_store_goods_out:notice:resolveOutUntreatedForm', NULL, NULL);
 INSERT INTO `t_menu` VALUES (58, '创建', NULL, '2', 31, '会员信息管理', NULL, '0', 'member_management:member:save', NULL, NULL);
-INSERT INTO `t_menu` VALUES (59, '兑换商品', NULL, '2', 31, '会员信息管理', NULL, '0', 'sale_management:exchange_point_products_records:saveExchangePointProductRecords', NULL, NULL);
+INSERT INTO `t_menu`
+VALUES (59, '兑换商品', NULL, '2', 31, '会员信息管理', NULL, '0',
+        'sale_management:exchange_point_goods_records:saveExchangePointProductRecords', NULL, NULL);
 INSERT INTO `t_menu` VALUES (60, '修改', NULL, '2', 31, '会员信息管理', NULL, '0', 'member_management:member:update', NULL, NULL);
 INSERT INTO `t_menu` VALUES (61, '删除', NULL, '2', 31, '会员信息管理', NULL, '0', 'member_management:member:delMember', NULL, NULL);
 
@@ -503,10 +554,11 @@ INSERT INTO `t_role_menu` VALUES (132, 3, 61);
 INSERT INTO `t_role_menu` VALUES (133, 3, 31);
 
 -- ----------------------------
--- Table structure for t_sale_records
+-- Table structure for t_sale_record
 -- ----------------------------
-DROP TABLE IF EXISTS `t_sale_records`;
-CREATE TABLE `t_sale_records`  (
+DROP TABLE IF EXISTS `t_sale_record`;
+CREATE TABLE `t_sale_record`
+(
   `cn` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `eid` bigint(0) NOT NULL,
   `sellway` char(2) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
@@ -522,9 +574,11 @@ CREATE TABLE `t_sale_records`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
 
 -- ----------------------------
--- Records of t_sale_records
+-- Records of t_sale_record
 -- ----------------------------
-INSERT INTO `t_sale_records` VALUES ('1701213155180429314', 15, '0', '2023-09-11 12:37:16', '0', '', '李四', 1, 120, '0', NULL);
-INSERT INTO `t_sale_records` VALUES ('1701220094014722049', 1, '1', '2023-09-11 13:04:45', '0', '', '张三', 1, 315, '1', '19955555555');
+INSERT INTO `t_sale_record`
+VALUES ('1701213155180429314', 15, '0', '2023-09-11 12:37:16', '0', '', '李四', 1, 120, '0', NULL);
+INSERT INTO `t_sale_record`
+VALUES ('1701220094014722049', 1, '1', '2023-09-11 13:04:45', '0', '', '张三', 1, 315, '1', '19955555555');
 
 SET FOREIGN_KEY_CHECKS = 1;

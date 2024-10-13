@@ -11,7 +11,7 @@ import java.io.Serializable;
  * 仓库实体
  */
 @Data
-@TableName("store")
+@TableName("t_warehouse")
 public class Warehouse implements Serializable {
     public static final String STATE_NORMAL = "0";
     public static final String STATE_BAN = "-1";

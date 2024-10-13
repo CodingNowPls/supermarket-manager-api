@@ -12,8 +12,8 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-@TableName("t_sale_records")
-public class SaleRecords implements Serializable {
+@TableName("t_sale_record")
+public class SaleRecord implements Serializable {
 
     public static final String STATE_NORMAL = "0";
     public static final String STATE_DEL = "1";
@@ -24,6 +24,7 @@ public class SaleRecords implements Serializable {
     private static final String SELLWAY_CASH = "2";
     private static final String SELLWAY_CREDIT = "3";
     private static final Double DISCOUNT = 0.9;
+
     @TableField("cn")
     private String cn;
 

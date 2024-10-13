@@ -1,7 +1,7 @@
 package com.rabbiter.market.inventory.service.impl;
 
 import com.rabbiter.market.common.exception.BusinessException;
-import com.rabbiter.market.inventory.domain.StockDetailGoods;
+import com.rabbiter.market.inventory.domain.GoodsStockDetail;
 import com.rabbiter.market.inventory.domain.Supplier;
 import com.rabbiter.market.inventory.mapper.SupplierMapper;
 import com.rabbiter.market.inventory.qo.QuerySupplier;
@@ -30,12 +30,12 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
 
     @Override
     public void deactivate(Long cn) {
-        QueryWrapper<StockDetailGoods> detailStoreGoodsQueryWrapper = new QueryWrapper<StockDetailGoods>()
-                .eq("state1", StockDetailGoods.STATE1_NORMAL)
-                .eq("type", StockDetailGoods.TYPE_IN)
-                .eq("state", StockDetailGoods.STATE_NORMAL)
+        QueryWrapper<GoodsStockDetail> detailStoreGoodsQueryWrapper = new QueryWrapper<GoodsStockDetail>()
+                .eq("state1", GoodsStockDetail.STATE1_NORMAL)
+                .eq("type", GoodsStockDetail.TYPE_IN)
+                .eq("state", GoodsStockDetail.STATE_NORMAL)
                 .eq("supplier_id", cn);
-        List<StockDetailGoods> list = detailStoreGoodsService.list(detailStoreGoodsQueryWrapper);
+        List<GoodsStockDetail> list = detailStoreGoodsService.list(detailStoreGoodsQueryWrapper);
         if (list != null && list.size() > 0) {
             throw new BusinessException("该供货商正在被入库订单使用，请解除关系之后在停用");
         }

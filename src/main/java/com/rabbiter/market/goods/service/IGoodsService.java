@@ -1,7 +1,7 @@
 package com.rabbiter.market.goods.service;
 
 import com.rabbiter.market.goods.doamin.Goods;
-import com.rabbiter.market.inventory.domain.StockDetailGoods;
+import com.rabbiter.market.inventory.domain.GoodsStockDetail;
 import com.rabbiter.market.inventory.domain.NoticeIn;
 import com.rabbiter.market.inventory.domain.NoticeOut;
 import com.rabbiter.market.goods.qo.QueryGoods;
@@ -39,7 +39,7 @@ public interface IGoodsService extends IService<Goods> {
     List<Map<String, Object>> selected_storeAll();
 
 
-    void returnGoods(StockDetailGoods stockDetailGoods, String token);
+    void returnGoods(GoodsStockDetail goodsStockDetail, String token);
 
     Page<GoodsStockVo> queryPageGoodsStore(QueryGoodsStore qo);
 
@@ -51,7 +51,7 @@ public interface IGoodsService extends IService<Goods> {
 
     Page<NoticeOut> queryPageNoticeOut_shelves(QueryNoticeOut qo);
 
-    void saveOut_shelves(StockDetailGoods stockDetailGoods, String token);
+    void saveOut_shelves(GoodsStockDetail goodsStockDetail, String token);
 
     SalesStatisticsVo queryPageStatisticSaleByQo(QueryStatisticSale qo);
 

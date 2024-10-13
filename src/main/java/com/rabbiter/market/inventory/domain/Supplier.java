@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  */
 @Data
-@TableName("supplier")
+@TableName("t_supplier")
 public class Supplier implements Serializable {
 
     public static final String STATE_NORMAL = "0";

@@ -3,7 +3,7 @@ package com.rabbiter.market.inventory.service.impl;
 import com.rabbiter.market.common.exception.BusinessException;
 import com.rabbiter.market.common.redis.service.RedisTemplateService;
 import com.rabbiter.market.goods.doamin.Goods;
-import com.rabbiter.market.inventory.domain.StockDetailGoods;
+import com.rabbiter.market.inventory.domain.GoodsStockDetail;
 import com.rabbiter.market.inventory.domain.GoodsStock;
 import com.rabbiter.market.inventory.domain.Warehouse;
 import com.rabbiter.market.inventory.domain.Supplier;
@@ -32,7 +32,7 @@ import org.springframework.util.StringUtils;
 import java.util.*;
 
 @Service
-public class StockGoodsDetailServiceImpl extends ServiceImpl<StockGoodsDetailMapper, StockDetailGoods> implements IStockGoodsDetailService {
+public class StockGoodsDetailServiceImpl extends ServiceImpl<StockGoodsDetailMapper, GoodsStockDetail> implements IStockGoodsDetailService {
 
     @Autowired
     private RedisTemplateService redisTemplateService;
@@ -46,39 +46,39 @@ public class StockGoodsDetailServiceImpl extends ServiceImpl<StockGoodsDetailMap
     private ISupplierService supplierService;
 
     @Override
-    public void saveIn(StockDetailGoods stockDetailGoods, String token) {
+    public void saveIn(GoodsStockDetail goodsStockDetail, String token) {
         Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
-        stockDetailGoods.setType(StockDetailGoods.TYPE_IN);
-        stockDetailGoods.setState(StockDetailGoods.STATE_NORMAL);
-        stockDetailGoods.setCreateid(employee.getId());
-        stockDetailGoods.setCreateby(employee.getNickName());
-        stockDetailGoods.setCn(IdWorker.getIdStr());
-        stockDetailGoods.setCreateTime(new Date());
-        stockDetailGoods.setState1(StockDetailGoods.STATE1_NORMAL);
-        goodsStoreService.goodsInStore(stockDetailGoods.getGoodsId(), stockDetailGoods.getGoodsNum(), stockDetailGoods.getStoreId());
-        Supplier supplier = supplierService.getById(stockDetailGoods.getSupplierId());
-        stockDetailGoods.setSupplierName(supplier.getName());
-        super.save(stockDetailGoods);
+        goodsStockDetail.setType(GoodsStockDetail.TYPE_IN);
+        goodsStockDetail.setState(GoodsStockDetail.STATE_NORMAL);
+        goodsStockDetail.setCreateid(employee.getId());
+        goodsStockDetail.setCreateby(employee.getNickName());
+        goodsStockDetail.setCn(IdWorker.getIdStr());
+        goodsStockDetail.setCreateTime(new Date());
+        goodsStockDetail.setState1(GoodsStockDetail.STATE1_NORMAL);
+        goodsStoreService.goodsInStore(goodsStockDetail.getGoodsId(), goodsStockDetail.getGoodsNum(), goodsStockDetail.getStoreId());
+        Supplier supplier = supplierService.getById(goodsStockDetail.getSupplierId());
+        goodsStockDetail.setSupplierName(supplier.getName());
+        super.save(goodsStockDetail);
     }
 
     @Override
     public Page<StockGoodsDetailVo> queryPageByQoIn(QueryDetailStoreGoods qo) {
-        Page<StockDetailGoods> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
+        Page<GoodsStockDetail> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         Page<StockGoodsDetailVo> page1 = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        QueryWrapper<StockDetailGoods> wrapper = new QueryWrapper<>();
+        QueryWrapper<GoodsStockDetail> wrapper = new QueryWrapper<>();
         wrapper.likeRight(StringUtils.hasText(qo.getCn()), "cn", qo.getCn());
         wrapper.like(StringUtils.hasText(qo.getGoodsName()), "goods_name", qo.getGoodsName());
         wrapper.eq(StringUtils.hasText(qo.getState1()), "state1", qo.getState1());
         wrapper.ge(StringUtils.hasText(qo.getStartCreateTime()), "create_time", qo.getStartCreateTime());
         wrapper.le(StringUtils.hasText(qo.getEndCreateTime()), "create_time", qo.getEndCreateTime());
-        wrapper.eq("type", StockDetailGoods.TYPE_IN);
+        wrapper.eq("type", GoodsStockDetail.TYPE_IN);
         super.page(page, wrapper);
-        List<StockDetailGoods> records = page.getRecords();
+        List<GoodsStockDetail> records = page.getRecords();
         if (records == null || records.size() <= 0) {
             page1.setTotal(0L);
         }
         List<StockGoodsDetailVo> list = new ArrayList<>();
-        for (StockDetailGoods record : records) {
+        for (GoodsStockDetail record : records) {
             StockGoodsDetailVo vo = new StockGoodsDetailVo();
             BeanUtils.copyProperties(record, vo);
             Warehouse warehouse = storeService.getById(record.getStoreId());
@@ -94,31 +94,31 @@ public class StockGoodsDetailServiceImpl extends ServiceImpl<StockGoodsDetailMap
 
     @Override
     public void delIn(String cn) {
-        UpdateWrapper<StockDetailGoods> wrapper = new UpdateWrapper<>();
-        wrapper.set("state1", StockDetailGoods.STATE1_DEL);
+        UpdateWrapper<GoodsStockDetail> wrapper = new UpdateWrapper<>();
+        wrapper.set("state1", GoodsStockDetail.STATE1_DEL);
         wrapper.eq("cn", cn);
         super.update(wrapper);
     }
 
     @Override
     public Page<StockGoodsOutDetailVo> queryPageByQoOut(QueryDetailStoreGoodsOut qo) {
-        Page<StockDetailGoods> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
+        Page<GoodsStockDetail> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         Page<StockGoodsOutDetailVo> page1 = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        QueryWrapper<StockDetailGoods> wrapper = new QueryWrapper<>();
+        QueryWrapper<GoodsStockDetail> wrapper = new QueryWrapper<>();
         wrapper.likeRight(StringUtils.hasText(qo.getCn()), "cn", qo.getCn());
         wrapper.like(StringUtils.hasText(qo.getGoodsName()), "goods_name", qo.getGoodsName());
         wrapper.ge(StringUtils.hasText(qo.getStartCreateTime()), "create_time", qo.getStartCreateTime());
         wrapper.le(StringUtils.hasText(qo.getEndCreateTime()), "create_time", qo.getEndCreateTime());
-        wrapper.eq("type", StockDetailGoods.TYPE_OUT);
+        wrapper.eq("type", GoodsStockDetail.TYPE_OUT);
         wrapper.eq(StringUtils.hasText(qo.getState()), "state", qo.getState());
         wrapper.eq(StringUtils.hasText(qo.getState1()), "state1", qo.getState1());
         super.page(page, wrapper);
-        List<StockDetailGoods> records = page.getRecords();
+        List<GoodsStockDetail> records = page.getRecords();
         if (records == null || records.size() <= 0) {
             page1.setTotal(0L);
         }
         List<StockGoodsOutDetailVo> list = new ArrayList<>();
-        for (StockDetailGoods record : records) {
+        for (GoodsStockDetail record : records) {
             StockGoodsOutDetailVo vo = new StockGoodsOutDetailVo();
             BeanUtils.copyProperties(record, vo);
             Warehouse warehouse = storeService.getById(record.getStoreId());
@@ -225,51 +225,51 @@ public class StockGoodsDetailServiceImpl extends ServiceImpl<StockGoodsDetailMap
     }
 
     @Override
-    public void saveOut(StockDetailGoods stockDetailGoods, String token) {
+    public void saveOut(GoodsStockDetail goodsStockDetail, String token) {
         Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
-        stockDetailGoods.setType(StockDetailGoods.TYPE_OUT);
-        stockDetailGoods.setState1(StockDetailGoods.STATE1_NORMAL);
-        stockDetailGoods.setCreateid(employee.getId());
-        stockDetailGoods.setCreateby(employee.getNickName());
-        stockDetailGoods.setCn(IdWorker.getIdStr());
-        stockDetailGoods.setCreateTime(new Date());
+        goodsStockDetail.setType(GoodsStockDetail.TYPE_OUT);
+        goodsStockDetail.setState1(GoodsStockDetail.STATE1_NORMAL);
+        goodsStockDetail.setCreateid(employee.getId());
+        goodsStockDetail.setCreateby(employee.getNickName());
+        goodsStockDetail.setCn(IdWorker.getIdStr());
+        goodsStockDetail.setCreateTime(new Date());
 
         QueryWrapper<GoodsStock> goodsStoreQueryWrapper = new QueryWrapper<GoodsStock>()
-                .eq("goods_id", stockDetailGoods.getGoodsId())
-                .eq("store_id", stockDetailGoods.getStoreId());
+                .eq("goods_id", goodsStockDetail.getGoodsId())
+                .eq("store_id", goodsStockDetail.getStoreId());
 
         GoodsStock goodsStock = goodsStoreService.getOne(goodsStoreQueryWrapper);
-        long num = goodsStock.getResidueNum() - stockDetailGoods.getGoodsNum();
+        long num = goodsStock.getResidueNum() - goodsStockDetail.getGoodsNum();
 
         UpdateWrapper<GoodsStock> goodsStoreUpdateWrapper = new UpdateWrapper<GoodsStock>()
-                .eq("goods_id", stockDetailGoods.getGoodsId())
-                .eq("store_id", stockDetailGoods.getStoreId());
-        if (StockDetailGoods.STATE_EXPIRY.equals(stockDetailGoods.getState())) {
+                .eq("goods_id", goodsStockDetail.getGoodsId())
+                .eq("store_id", goodsStockDetail.getStoreId());
+        if (GoodsStockDetail.STATE_EXPIRY.equals(goodsStockDetail.getState())) {
             //过期处理
-            stockDetailGoods.setState(StockDetailGoods.STATE_EXPIRY);
+            goodsStockDetail.setState(GoodsStockDetail.STATE_EXPIRY);
             if (num >= 0) {
                 goodsStoreUpdateWrapper.set("residue_num", num);
 
             } else {
                 goodsStoreUpdateWrapper.set("residue_num", 0L);
-                stockDetailGoods.setGoodsNum(goodsStock.getResidueNum());
+                goodsStockDetail.setGoodsNum(goodsStock.getResidueNum());
             }
         } else {
             //出库到货架上
-            stockDetailGoods.setState(StockDetailGoods.STATE_NORMAL);
-            Goods goods = goodsService.getById(stockDetailGoods.getGoodsId());
+            goodsStockDetail.setState(GoodsStockDetail.STATE_NORMAL);
+            Goods goods = goodsService.getById(goodsStockDetail.getGoodsId());
             UpdateWrapper<Goods> goodsUpdateWrapper = new UpdateWrapper<Goods>().eq("id", goods.getId());
             if (num >= 0) {
                 goodsStoreUpdateWrapper.set("residue_num", num);
-                goodsUpdateWrapper.set("residue_num", goods.getResidueNum() == null ? stockDetailGoods.getGoodsNum() : goods.getResidueNum() + stockDetailGoods.getGoodsNum());
+                goodsUpdateWrapper.set("residue_num", goods.getResidueNum() == null ? goodsStockDetail.getGoodsNum() : goods.getResidueNum() + goodsStockDetail.getGoodsNum());
             } else {
                 goodsStoreUpdateWrapper.set("residue_num", 0L);
                 goodsUpdateWrapper.set("residue_num", goods.getResidueNum() == null ? goodsStock.getResidueNum() : goods.getResidueNum() + goodsStock.getResidueNum());
-                stockDetailGoods.setGoodsNum(goodsStock.getResidueNum());
+                goodsStockDetail.setGoodsNum(goodsStock.getResidueNum());
             }
             goodsService.update(goodsUpdateWrapper);
         }
         goodsStoreService.update(goodsStoreUpdateWrapper);
-        super.save(stockDetailGoods);
+        super.save(goodsStockDetail);
     }
 }

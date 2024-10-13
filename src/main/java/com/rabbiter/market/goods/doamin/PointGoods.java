@@ -11,7 +11,7 @@ import java.util.Date;
  *
  */
 @Data
-@TableName("point_products")
+@TableName("t_point_goods")
 public class PointGoods implements Serializable {
 
     public static final String STATE_NORMAL = "0";

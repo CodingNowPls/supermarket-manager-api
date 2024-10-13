@@ -2,7 +2,7 @@ package com.rabbiter.market.inventory.controller;
 
 import com.rabbiter.market.common.sercurity.annotation.HasPermission;
 import com.rabbiter.market.common.web.response.JsonResult;
-import com.rabbiter.market.inventory.domain.StockDetailGoods;
+import com.rabbiter.market.inventory.domain.GoodsStockDetail;
 import com.rabbiter.market.inventory.qo.QueryDetailStoreGoodsOut;
 import com.rabbiter.market.inventory.service.IStockGoodsDetailService;
 import com.rabbiter.market.goods.vo.StockGoodsOutDetailVo;
@@ -57,8 +57,8 @@ public class StockOutController {
 
     @HasPermission("inventory:detail_store_goods_out:save")
     @PostMapping("/save")
-    public JsonResult saveOut(StockDetailGoods stockDetailGoods, HttpServletRequest request) {
-        detailStoreGoodsService.saveOut(stockDetailGoods, (String) request.getHeader("token"));
+    public JsonResult saveOut(GoodsStockDetail goodsStockDetail, HttpServletRequest request) {
+        detailStoreGoodsService.saveOut(goodsStockDetail, (String) request.getHeader("token"));
         return JsonResult.success();
     }
 

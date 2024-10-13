@@ -7,7 +7,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-@TableName("t_goods_store")
+@TableName("t_goods_stock")
 public class GoodsStock implements Serializable {
     /**
      *

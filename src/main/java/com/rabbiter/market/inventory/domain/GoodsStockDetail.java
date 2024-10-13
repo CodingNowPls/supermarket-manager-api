@@ -13,8 +13,8 @@ import java.util.Date;
  *
  */
 @Data
-@TableName("t_detail_store_goods")
-public class StockDetailGoods implements Serializable {
+@TableName("t_goods_stock_detail")
+public class GoodsStockDetail implements Serializable {
     public static final String STATE_NORMAL = "0"; //正常
     public static final String STATE_EXPIRY = "1"; //过期
     public static final String STATE_DOWN = "2"; //下架

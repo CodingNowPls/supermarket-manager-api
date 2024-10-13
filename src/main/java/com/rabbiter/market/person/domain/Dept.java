@@ -11,7 +11,7 @@ import java.io.Serializable;
  * 部门实体
  */
 @Data
-@TableName("department")
+@TableName("t_department")
 public class Dept implements Serializable {
     //正常
     public static final String STATE_NORMAL = "0";

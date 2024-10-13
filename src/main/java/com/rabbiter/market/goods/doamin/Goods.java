@@ -15,7 +15,7 @@ import java.util.Date;
  * 商品
  */
 @Data
-@TableName("goods")
+@TableName("t_goods")
 public class Goods implements Serializable {
     public static final String STATE_UP = "0";
     public static final String STATE_DOWN = "1";

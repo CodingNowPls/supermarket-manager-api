@@ -5,7 +5,7 @@ import com.rabbiter.market.goods.doamin.Goods;
 import com.rabbiter.market.member.domain.Member;
 import com.rabbiter.market.person.domain.Employee;
 import com.rabbiter.market.sale.domain.SaleRecordDetail;
-import com.rabbiter.market.sale.domain.SaleRecords;
+import com.rabbiter.market.sale.domain.SaleRecord;
 import com.rabbiter.market.sale.mapper.SaleRecordsMapper;
 import com.rabbiter.market.sale.qo.QuerySaleRecords;
 import com.rabbiter.market.goods.service.IGoodsService;
@@ -25,7 +25,7 @@ import org.springframework.util.StringUtils;
 import java.util.*;
 
 @Service
-public class SaleRecordsServiceImpl extends ServiceImpl<SaleRecordsMapper, SaleRecords> implements ISaleRecordsService {
+public class SaleRecordsServiceImpl extends ServiceImpl<SaleRecordsMapper, SaleRecord> implements ISaleRecordsService {
     @Autowired
     private IGoodsService goodsService;
     @Autowired
@@ -55,14 +55,14 @@ public class SaleRecordsServiceImpl extends ServiceImpl<SaleRecordsMapper, SaleR
     }
 
     @Override
-    public SaleRecords saveSaleRecords(SaleRecords saleRecords, String token) {
+    public SaleRecord saveSaleRecords(SaleRecord saleRecord, String token) {
         Employee employee = JSON.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
-        saleRecords.setEid(employee.getId());
-        saleRecords.setSellTime(new Date());
-        saleRecords.setSellby(employee.getNickName());
-        saleRecords.setState(SaleRecords.STATE_NORMAL);
-        for (SaleRecordDetail detailSaleRecord : saleRecords.getSaleRecords()) {
-            detailSaleRecord.setSellCn(saleRecords.getCn());
+        saleRecord.setEid(employee.getId());
+        saleRecord.setSellTime(new Date());
+        saleRecord.setSellby(employee.getNickName());
+        saleRecord.setState(SaleRecord.STATE_NORMAL);
+        for (SaleRecordDetail detailSaleRecord : saleRecord.getSaleRecords()) {
+            detailSaleRecord.setSellCn(saleRecord.getCn());
             Goods goods = goodsService.getById(detailSaleRecord.getGoodsId());
             UpdateWrapper<Goods> wrapper = new UpdateWrapper<Goods>()
                     .set("sales_volume", goods.getSalesVolume() != null ? goods.getSalesVolume() + detailSaleRecord.getGoodsNum() : detailSaleRecord.getGoodsNum())
@@ -70,37 +70,37 @@ public class SaleRecordsServiceImpl extends ServiceImpl<SaleRecordsMapper, SaleR
                     .eq("id", goods.getId());
             goodsService.update(wrapper);
         }
-        detailSaleRecordsService.saveBatch(saleRecords.getSaleRecords());
-        super.save(saleRecords);
-        if ("1".equals(saleRecords.getType())) {
+        detailSaleRecordsService.saveBatch(saleRecord.getSaleRecords());
+        super.save(saleRecord);
+        if ("1".equals(saleRecord.getType())) {
             //为会员增加积分 积分规则：积分=总金额*5%取整
-            String s = saleRecords.getSellTotalmoney() * 0.05 + "";
+            String s = saleRecord.getSellTotalmoney() * 0.05 + "";
             long integral = Long.parseLong(s.split("\\.")[0]);
-            QueryWrapper<Member> memberQueryWrapper = new QueryWrapper<Member>().eq("phone", saleRecords.getMemberPhone());
+            QueryWrapper<Member> memberQueryWrapper = new QueryWrapper<Member>().eq("phone", saleRecord.getMemberPhone());
             Member member = memberService.getOne(memberQueryWrapper);
             UpdateWrapper<Member> memberUpdateWrapper = new UpdateWrapper<Member>()
                     .set("integral", member.getIntegral() != null ? member.getIntegral() +
                             integral : integral)
-                    .eq("phone", saleRecords.getMemberPhone());
+                    .eq("phone", saleRecord.getMemberPhone());
             memberService.update(memberUpdateWrapper);
         }
-        return saleRecords;
+        return saleRecord;
     }
 
     @Override
-    public Page<SaleRecords> queryPageByQoSaleRecords(QuerySaleRecords qo) {
-        Page<SaleRecords> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        QueryWrapper<SaleRecords> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("state", SaleRecords.STATE_NORMAL);
+    public Page<SaleRecord> queryPageByQoSaleRecords(QuerySaleRecords qo) {
+        Page<SaleRecord> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
+        QueryWrapper<SaleRecord> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("state", SaleRecord.STATE_NORMAL);
         queryWrapper.eq(StringUtils.hasText(qo.getType()), "type", qo.getType());
         queryWrapper.likeRight(StringUtils.hasText(qo.getCn()), "cn", qo.getCn());
         queryWrapper.ge(StringUtils.hasText(qo.getStartSellTime()), "sell_time", qo.getStartSellTime());
         queryWrapper.le(StringUtils.hasText(qo.getEndSellTime()), "sell_time", qo.getEndSellTime());
         queryWrapper.eq(StringUtils.hasText(qo.getSellway()), "sellway", qo.getSellway());
         super.page(page, queryWrapper);
-        List<SaleRecords> records = page.getRecords();
+        List<SaleRecord> records = page.getRecords();
         if (records != null && records.size() > 0) {
-            for (SaleRecords record : records) {
+            for (SaleRecord record : records) {
                 QueryWrapper<SaleRecordDetail> sellCnWrapper = new QueryWrapper<SaleRecordDetail>().eq("sell_cn", record.getCn());
                 List<SaleRecordDetail> list = detailSaleRecordsService.list(sellCnWrapper);
                 record.setSaleRecords(list);
@@ -111,9 +111,9 @@ public class SaleRecordsServiceImpl extends ServiceImpl<SaleRecordsMapper, SaleR
 
     @Override
     public void delSaleRecords(String cn) {
-        UpdateWrapper<SaleRecords> wrapper = new UpdateWrapper<>();
+        UpdateWrapper<SaleRecord> wrapper = new UpdateWrapper<>();
         wrapper.eq("cn", cn);
-        wrapper.set("state", SaleRecords.STATE_DEL);
+        wrapper.set("state", SaleRecord.STATE_DEL);
         super.update(wrapper);
     }
 

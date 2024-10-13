@@ -11,7 +11,7 @@ import java.io.Serializable;
  * 商品分类
  */
 @Data
-@TableName("goods_category")
+@TableName("t_goods_category")
 public class GoodsCategory implements Serializable {
 
     public static final String STATE_NORMAL = "0";

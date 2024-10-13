@@ -13,6 +13,7 @@ import java.util.Date;
 
 /**
  * 商品
+ * @author gao
  */
 @Data
 @TableName("t_goods")

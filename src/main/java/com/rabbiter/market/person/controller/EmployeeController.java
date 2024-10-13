@@ -19,6 +19,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 员工管理
+ *
+ * @author gao
+ */
 @RestController
 @Validated
 @RequestMapping("/person/employee")

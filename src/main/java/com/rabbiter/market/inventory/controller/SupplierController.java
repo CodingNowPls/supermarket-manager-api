@@ -10,6 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 供应商管理
+ *
+ * @author gao
+ */
 @RestController
 @Validated
 @RequestMapping("/inventory/supplier")

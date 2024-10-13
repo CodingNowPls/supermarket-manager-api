@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 /**
- *
+ * 库存统计
+ * @author gao
  */
 @RestController
 @Validated

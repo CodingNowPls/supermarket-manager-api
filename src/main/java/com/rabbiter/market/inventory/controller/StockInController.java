@@ -17,6 +17,11 @@ import javax.validation.constraints.NotEmpty;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 库存管理-入库
+ *
+ * @author gao
+ */
 @RestController
 @Validated
 @RequestMapping("/inventory/stockIn")

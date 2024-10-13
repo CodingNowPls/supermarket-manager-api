@@ -22,6 +22,7 @@ import java.util.Map;
 
 /**
  * 商品列表
+ * @author gao
  */
 @RestController
 @Validated

@@ -15,6 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotEmpty;
 import java.util.Map;
 
+/**
+ * 出库管理
+ *
+ * @author gao
+ */
 @RestController
 @Validated
 @RequestMapping("/inventory/stockOut")

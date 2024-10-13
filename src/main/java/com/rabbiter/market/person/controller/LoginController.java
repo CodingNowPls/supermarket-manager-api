@@ -4,22 +4,24 @@ import com.rabbiter.market.common.sercurity.annotation.NoRequireLogin;
 import com.rabbiter.market.common.web.response.JsonResult;
 import com.rabbiter.market.system.domain.Menu;
 import com.rabbiter.market.person.service.ILoginService;
-import com.rabbiter.market.util.HttpRequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 登录控制器
+ *
+ * @author gao
+ */
 @RestController
 @Validated
-public class LoginEmpController {
+public class LoginController {
     @Autowired
     private ILoginService loginService;
 

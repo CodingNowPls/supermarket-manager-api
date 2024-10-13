@@ -17,6 +17,7 @@ import java.util.Map;
 
 /**
  * 积分商品
+ * @author gao
  */
 @RestController
 @Validated

@@ -9,6 +9,7 @@ import java.io.Serializable;
 
 /**
  * 商品分类
+ * @author gao
  */
 @Data
 @TableName("t_goods_category")

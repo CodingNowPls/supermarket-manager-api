@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * 个人信息
+ *
+ * @author gao
+ */
 @RestController
 @Validated
 @RequestMapping("/person")

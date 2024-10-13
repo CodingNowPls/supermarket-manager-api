@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 菜单管理
+ *
+ * @author gao
+ */
 @RestController
 @RequestMapping("/system/menu")
 public class MenuController {

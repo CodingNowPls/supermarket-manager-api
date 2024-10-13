@@ -8,7 +8,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- *
+ * 积分商品
+ * @author gao
  */
 @Data
 @TableName("t_point_goods")

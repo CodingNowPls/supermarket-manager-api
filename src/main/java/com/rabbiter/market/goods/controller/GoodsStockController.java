@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * 商品库存
+ * @author gao
  */
 @RestController
 @Validated

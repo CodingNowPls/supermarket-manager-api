@@ -9,6 +9,9 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author gao
+ */
 @Mapper
 public interface GoodsMapper extends BaseMapper<Goods> {
 

@@ -55,9 +55,7 @@ public class LoginEmpController {
 
     @PostMapping("/logout")
     public JsonResult logout(@NotEmpty(message = "内容不能为空") String content, HttpServletRequest request) {
-
         loginService.logout(request.getHeader("token"), content);
-
         return JsonResult.success();
     }
 
@@ -69,7 +67,7 @@ public class LoginEmpController {
      */
     @GetMapping("/empMenu")
     public JsonResult empMenu(HttpServletRequest request) {
-        List<Menu> menus = loginService.empMenu((String) request.getHeader("token"));
+        List<Menu> menus = loginService.empMenu(request.getHeader("token"));
         return JsonResult.success(menus);
     }
 

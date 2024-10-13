@@ -77,7 +77,7 @@ public class EmployeeController {
     @HasPermission("person:employee:save")
     @PostMapping("/save")
     public JsonResult saveEmp(Employee employee, HttpServletRequest request) {
-        employeeService.saveEmp(employee, (String) request.getHeader("token"));
+        employeeService.saveEmp(employee, request.getHeader("token"));
         return JsonResult.success();
     }
 
@@ -93,7 +93,7 @@ public class EmployeeController {
     @HasPermission("person:employee:update")
     @PostMapping("/update")
     public JsonResult updateEmp(Employee employee, HttpServletRequest request) {
-        employeeService.updateEmp(employee, (String) request.getHeader("token"));
+        employeeService.updateEmp(employee, request.getHeader("token"));
         return JsonResult.success();
     }
 

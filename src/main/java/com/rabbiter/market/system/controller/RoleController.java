@@ -58,7 +58,7 @@ public class RoleController {
     @HasPermission("system:role:edit_role")
     @PostMapping("/edit_role")
     public JsonResult edit_role(Role role) {
-        if (Role.SYS_ID == role.getId() || 2L == role.getId()) {
+        if (Role.SYS_ID.equals(role.getId()) || 2L == role.getId()) {
             throw new BusinessException("不能停用系统拥有者");
         }
         if (role != null && StringUtils.hasText(role.getInfo())) {

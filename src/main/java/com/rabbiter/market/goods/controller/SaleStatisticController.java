@@ -8,6 +8,7 @@ import com.rabbiter.market.sale.vo.SalesStatisticsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +25,7 @@ public class SaleStatisticController {
 
     @HasPermission("goods:saleStatistic:list")
     @PostMapping("/queryPageByQo")
-    public JsonResult queryPageByQo(QueryStatisticSale qo) {
+    public JsonResult queryPageByQo(@RequestBody QueryStatisticSale qo) {
         SalesStatisticsVo vo = goodsService.queryPageStatisticSaleByQo(qo);
         return JsonResult.success(vo);
     }

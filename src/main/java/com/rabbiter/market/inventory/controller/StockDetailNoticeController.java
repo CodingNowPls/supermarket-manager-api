@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,35 +31,35 @@ public class StockDetailNoticeController {
 
     @HasPermission("inventory:stockDetailIn:notice:list")
     @PostMapping("/queryPageNoticeIn")
-    public JsonResult queryPageNoticeIn(QueryNoticeIn qo) {
+    public JsonResult queryPageNoticeIn(@RequestBody QueryNoticeIn qo) {
         Page<NoticeIn> page = goodsService.queryPageNoticeIn(qo);
         return JsonResult.success(page);
     }
 
     @HasPermission("inventory:stockDetailOut:notice:list")
     @PostMapping("/queryPageNoticeOut_shelves")
-    public JsonResult queryPageNoticeOut_shelves(QueryNoticeOut qo) {
+    public JsonResult queryPageNoticeOut_shelves(@RequestBody QueryNoticeOut qo) {
         Page<NoticeOut> page = goodsService.queryPageNoticeOut_shelves(qo);
         return JsonResult.success(page);
     }
 
     @HasPermission("inventory:stockDetailOut:notice:saveOut_shelves")
     @PostMapping("/saveOut_shelves")
-    public JsonResult saveOut_shelves(GoodsStockDetail goodsStockDetail, HttpServletRequest request) {
+    public JsonResult saveOut_shelves(@RequestBody GoodsStockDetail goodsStockDetail, HttpServletRequest request) {
         goodsService.saveOut_shelves(goodsStockDetail, (String) request.getHeader("token"));
         return JsonResult.success();
     }
 
     @HasPermission("inventory:stockDetailOut:notice:list")
     @PostMapping("/queryPageNoticeOut_untreated")
-    public JsonResult queryPageNoticeOut_untreated(QueryNoticeOut qo) {
+    public JsonResult queryPageNoticeOut_untreated(@RequestBody QueryNoticeOut qo) {
         Page<NoticeInNotNormalVo> page = goodsService.queryPageNoticeOut_untreated(qo);
         return JsonResult.success(page);
     }
 
     @HasPermission("inventory:stockDetailOut:notice:resolveOutUntreatedForm")
     @PostMapping("/resolveOutUntreatedForm")
-    public JsonResult resolveOutUntreatedForm(NoticeInNotNormalVo vo, HttpServletRequest request) {
+    public JsonResult resolveOutUntreatedForm(@RequestBody NoticeInNotNormalVo vo, HttpServletRequest request) {
         goodsService.resolveOutUntreatedForm(vo, (String) request.getHeader("token"));
         return JsonResult.success();
     }

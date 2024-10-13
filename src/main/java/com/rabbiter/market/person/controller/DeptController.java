@@ -7,10 +7,7 @@ import com.rabbiter.market.person.qo.QueryDept;
 import com.rabbiter.market.person.service.IDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Validated
@@ -22,7 +19,7 @@ public class DeptController {
     /*保存信息接口*/
     @HasPermission("person:dept:save")
     @PostMapping("/save")
-    public JsonResult saveDept(Dept dept) {
+    public JsonResult saveDept(@RequestBody Dept dept) {
         deptService.saveDept(dept);
         return JsonResult.success();
     }
@@ -30,7 +27,7 @@ public class DeptController {
     @HasPermission("person:dept:update")
     /*修改接口*/
     @PostMapping("/update")
-    public JsonResult updateDept(Dept dept) {
+    public JsonResult updateDept(@RequestBody Dept dept) {
         deptService.updateDept(dept);
         return JsonResult.success();
     }
@@ -45,7 +42,7 @@ public class DeptController {
 
     /*查询信息*/
     @GetMapping("/list")
-    public JsonResult listByQo(QueryDept qo) {
+    public JsonResult listByQo(@RequestBody QueryDept qo) {
         return JsonResult.success(deptService.listByQo(qo));
     }
 }

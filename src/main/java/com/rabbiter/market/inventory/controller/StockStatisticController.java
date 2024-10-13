@@ -23,7 +23,7 @@ public class StockStatisticController {
 
     @HasPermission("inventory:stock:statistic:list")
     @PostMapping("/queryPageByQo")
-    public JsonResult queryPageByQo(QueryStorageSituation qo) {
+    public JsonResult queryPageByQo(@RequestBody QueryStorageSituation qo) {
         Map<String, Object> map = goodsStoreService.queryPageStorageSituationByQo(qo);
         return JsonResult.success(map);
 
@@ -31,7 +31,7 @@ public class StockStatisticController {
 
     @HasPermission("inventory:stock:statistic")
     @PostMapping("/queryStoreGoodsByStoreId")
-    public JsonResult queryStoreGoodsByStoreId(QueryDetailStorageSituation qo) {
+    public JsonResult queryStoreGoodsByStoreId(@RequestBody QueryDetailStorageSituation qo) {
         Map<String, Object> map = goodsStoreService.queryStoreGoodsByStoreId(qo);
         return JsonResult.success(map);
 

@@ -24,7 +24,7 @@ public class StockOutController {
 
     @HasPermission("inventory:detail_store_goods_out:list")
     @PostMapping("/queryPageByQoOut")
-    public JsonResult queryPageByQoOut(QueryDetailStoreGoodsOut qo) {
+    public JsonResult queryPageByQoOut(@RequestBody QueryDetailStoreGoodsOut qo) {
         Page<StockGoodsOutDetailVo> page = detailStoreGoodsService.queryPageByQoOut(qo);
         return JsonResult.success(page);
     }
@@ -57,7 +57,7 @@ public class StockOutController {
 
     @HasPermission("inventory:detail_store_goods_out:save")
     @PostMapping("/save")
-    public JsonResult saveOut(GoodsStockDetail goodsStockDetail, HttpServletRequest request) {
+    public JsonResult saveOut(@RequestBody GoodsStockDetail goodsStockDetail, HttpServletRequest request) {
         detailStoreGoodsService.saveOut(goodsStockDetail, (String) request.getHeader("token"));
         return JsonResult.success();
     }

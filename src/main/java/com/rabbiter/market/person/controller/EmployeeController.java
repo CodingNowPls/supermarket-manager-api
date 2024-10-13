@@ -28,7 +28,7 @@ public class EmployeeController {
 
     @HasPermission("person:employee:list")
     @PostMapping("/list")
-    public JsonResult pageByQo(QueryEmp qo) {
+    public JsonResult pageByQo(@RequestBody QueryEmp qo) {
         Page<Employee> page = employeeService.pageByQo(qo);
         return JsonResult.success(page);
     }
@@ -76,7 +76,7 @@ public class EmployeeController {
     /*保存*/
     @HasPermission("person:employee:save")
     @PostMapping("/save")
-    public JsonResult saveEmp(Employee employee, HttpServletRequest request) {
+    public JsonResult saveEmp(@RequestBody Employee employee, HttpServletRequest request) {
         employeeService.saveEmp(employee, request.getHeader("token"));
         return JsonResult.success();
     }
@@ -92,7 +92,7 @@ public class EmployeeController {
     /*修改员工业务*/
     @HasPermission("person:employee:update")
     @PostMapping("/update")
-    public JsonResult updateEmp(Employee employee, HttpServletRequest request) {
+    public JsonResult updateEmp(@RequestBody Employee employee, HttpServletRequest request) {
         employeeService.updateEmp(employee, request.getHeader("token"));
         return JsonResult.success();
     }

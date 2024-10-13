@@ -9,10 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -31,7 +28,7 @@ public class PointGoodsController {
     /*查询信息*/
     @HasPermission("goods:pointGoods:list")
     @PostMapping("/queryPageByQo")
-    public JsonResult queryPageByQo(QueryPointProducts qo) {
+    public JsonResult queryPageByQo(@RequestBody QueryPointProducts qo) {
         Page<PointGoods> page = pointProductsService.queryPageByQo(qo);
         return JsonResult.success(page);
     }
@@ -49,7 +46,7 @@ public class PointGoodsController {
     }
 
     @PostMapping("/savePointGoods")
-    public JsonResult savePointGoods(PointGoods pointGoods, HttpServletRequest request) {
+    public JsonResult savePointGoods(@RequestBody PointGoods pointGoods, HttpServletRequest request) {
         pointProductsService.savePointGoods(pointGoods, (String) request.getHeader("token"));
         return JsonResult.success();
     }
@@ -61,7 +58,7 @@ public class PointGoodsController {
     }
 
     @PostMapping("/updatePointGoods")
-    public JsonResult updatePointGoods(PointGoods pointGoods, HttpServletRequest request) {
+    public JsonResult updatePointGoods(@RequestBody PointGoods pointGoods, HttpServletRequest request) {
         pointProductsService.updatePointGoods(pointGoods, (String) request.getHeader("token"));
         return JsonResult.success();
     }

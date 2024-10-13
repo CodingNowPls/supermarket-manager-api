@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,7 +27,7 @@ public class WarehouseController {
     /*保存仓库信息接口*/
     @HasPermission("inventory:warehouse:save")
     @PostMapping("/save")
-    public JsonResult saveStore(Warehouse warehouse) {
+    public JsonResult saveStore(@RequestBody Warehouse warehouse) {
         storeService.saveStore(warehouse);
         return JsonResult.success();
     }
@@ -34,7 +35,7 @@ public class WarehouseController {
     /*修改仓库接口*/
     @HasPermission("inventory:warehouse:update")
     @PostMapping("/update")
-    public JsonResult updateStore(Warehouse warehouse) {
+    public JsonResult updateStore(@RequestBody Warehouse warehouse) {
         storeService.updateStore(warehouse);
         return JsonResult.success();
     }
@@ -50,7 +51,7 @@ public class WarehouseController {
     /*查询仓库信息*/
     @HasPermission("inventory:warehouse:list")
     @PostMapping("/list")
-    public JsonResult list(QueryStore qo) {
+    public JsonResult list(@RequestBody QueryStore qo) {
         return JsonResult.success(storeService.list(new QueryWrapper<Warehouse>()
                 .like(StringUtils.hasText(qo.getName()), "name", qo.getName())
                 .eq(StringUtils.hasText(qo.getState()), "state", qo.getState())

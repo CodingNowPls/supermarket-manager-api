@@ -8,6 +8,7 @@ import com.rabbiter.market.system.service.IMenuService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,7 +26,7 @@ public class MenuController {
      */
     @HasPermission("system:menu:list")
     @PostMapping("/queryPageByQo")
-    public JsonResult queryPageByQo(MenuQuery qo) {
+    public JsonResult queryPageByQo(@RequestBody MenuQuery qo) {
         Page<Menu> page = menuService.queryPageByQo(qo);
         return JsonResult.success(page);
     }

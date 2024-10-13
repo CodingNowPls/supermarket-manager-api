@@ -17,6 +17,9 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author gao
+ */
 @RestController
 @Validated
 @RequestMapping("/system/role")
@@ -31,7 +34,7 @@ public class RoleController {
      */
     @HasPermission("system:role:list")
     @PostMapping("/list")
-    public JsonResult list(RoleQuery qo) {
+    public JsonResult list(@RequestBody RoleQuery qo) {
         List<Role> roles = roleService.listByQo(qo);
         return JsonResult.success(roles);
     }
@@ -57,7 +60,7 @@ public class RoleController {
      */
     @HasPermission("system:role:edit_role")
     @PostMapping("/edit_role")
-    public JsonResult edit_role(Role role) {
+    public JsonResult edit_role(@RequestBody Role role) {
         if (Role.SYS_ID.equals(role.getId()) || 2L == role.getId()) {
             throw new BusinessException("不能停用系统拥有者");
         }
@@ -75,7 +78,7 @@ public class RoleController {
      */
     @HasPermission("system:role:save")
     @PostMapping("/save")
-    public JsonResult save(Role role) {
+    public JsonResult save(@RequestBody Role role) {
         roleService.saveRole(role);
         return JsonResult.success();
     }
@@ -118,7 +121,6 @@ public class RoleController {
     @HasPermission("person:employee:queryRoleIdsByEid")
     @GetMapping("/queryRoleIdsByEid")
     public JsonResult queryRoleIdsByEid(Long eid) {
-
         List<Long> list = roleService.queryRoleIdsByEid(eid);
         return JsonResult.success(list);
     }

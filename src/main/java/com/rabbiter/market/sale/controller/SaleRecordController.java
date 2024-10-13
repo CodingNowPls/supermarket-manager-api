@@ -44,7 +44,7 @@ public class SaleRecordController {
 
     @HasPermission("sale:saleRecordsList")
     @PostMapping("/queryPageByQoSaleRecords")
-    public JsonResult queryPageByQoSaleRecords(QuerySaleRecords qo) {
+    public JsonResult queryPageByQoSaleRecords(@RequestBody QuerySaleRecords qo) {
         Page<SaleRecord> page = saleRecordsService.queryPageByQoSaleRecords(qo);
         return JsonResult.success(page);
     }

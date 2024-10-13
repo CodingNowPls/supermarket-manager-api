@@ -8,10 +8,7 @@ import com.rabbiter.market.goods.service.IGoodsCategoryService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -29,7 +26,7 @@ public class GoodsCategoryController {
     /*保存信息接口*/
     @HasPermission("goods:category:save")
     @PostMapping("/save")
-    public JsonResult saveGoodsCategory(GoodsCategory category) {
+    public JsonResult saveGoodsCategory(@RequestBody GoodsCategory category) {
         goodsCategoryService.saveGoodsCategory(category);
         return JsonResult.success();
     }
@@ -37,7 +34,7 @@ public class GoodsCategoryController {
     /*修改接口*/
     @HasPermission("goods:category:update")
     @PostMapping("/update")
-    public JsonResult updateGoodsCategory(GoodsCategory category) {
+    public JsonResult updateGoodsCategory(@RequestBody GoodsCategory category) {
         goodsCategoryService.updateGoodsCategory(category);
         return JsonResult.success();
     }
@@ -53,7 +50,7 @@ public class GoodsCategoryController {
     /*查询信息*/
     @HasPermission("goods:category:list")
     @PostMapping("/queryPageByQo")
-    public JsonResult queryPageByQo(QueryGoodsCategory qo) {
+    public JsonResult queryPageByQo(@RequestBody QueryGoodsCategory qo) {
         Page<GoodsCategory> page = goodsCategoryService.queryPageByQo(qo);
         return JsonResult.success(page);
     }

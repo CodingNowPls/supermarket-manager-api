@@ -8,10 +8,7 @@ import com.rabbiter.market.goods.vo.GoodsStockVo;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 商品库存
@@ -26,7 +23,7 @@ public class GoodsStockController {
     /*查询信息*/
     @HasPermission("goods:goods:list")
     @PostMapping("/queryPageByQo")
-    public JsonResult queryPageByQo(QueryGoodsStore qo) {
+    public JsonResult queryPageByQo(@RequestBody QueryGoodsStore qo) {
         Page<GoodsStockVo> page = goodsService.queryPageGoodsStore(qo);
         return JsonResult.success(page);
     }
@@ -38,7 +35,7 @@ public class GoodsStockController {
     }
 
     @PostMapping("/updateInventory")
-    public JsonResult updateInventory(GoodsStockVo vo) {
+    public JsonResult updateInventory(@RequestBody GoodsStockVo vo) {
         goodsService.updateInventory(vo);
         return JsonResult.success();
     }

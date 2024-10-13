@@ -20,7 +20,7 @@ public class MemberController {
     /*查询信息*/
     @HasPermission("member:member:list")
     @PostMapping("/queryPageByQo")
-    public JsonResult queryPageByQo(QueryMember qo) {
+    public JsonResult queryPageByQo(@RequestBody QueryMember qo) {
         Page<Member> page = memberService.queryPageByQo(qo);
         return JsonResult.success(page);
     }
@@ -34,7 +34,7 @@ public class MemberController {
 
     @HasPermission("member:member:save")
     @PostMapping("/save")
-    public JsonResult save(Member member) {
+    public JsonResult save(@RequestBody Member member) {
         memberService.saveMember(member);
         return JsonResult.success();
     }
@@ -48,7 +48,7 @@ public class MemberController {
 
     @HasPermission("member:member:update")
     @PostMapping("/update")
-    public JsonResult updateMember(Member member) {
+    public JsonResult updateMember(@RequestBody Member member) {
         memberService.updateMember(member);
         return JsonResult.success();
     }

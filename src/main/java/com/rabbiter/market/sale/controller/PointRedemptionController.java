@@ -9,10 +9,7 @@ import com.rabbiter.market.sale.service.IPointRedemptionService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -56,7 +53,7 @@ public class PointRedemptionController {
      * @return
      */
     @PostMapping("/savePointRedemptionRecords")
-    public JsonResult saveExchangePointProductRecords(PointRedemption pointRedemption, HttpServletRequest request) {
+    public JsonResult saveExchangePointProductRecords(@RequestBody PointRedemption pointRedemption, HttpServletRequest request) {
         exchangePointProductsService.saveExchangePointProductRecords(pointRedemption, (String) request.getHeader("token"));
         return JsonResult.success();
     }
@@ -75,7 +72,7 @@ public class PointRedemptionController {
 
     @HasPermission("sale:pointRedemptionHistory")
     @PostMapping("/queryPageByQoExchangePointProducts")
-    public JsonResult queryPageByQoExchangePointProducts(QueryExchangePointProductsRecords qo) {
+    public JsonResult queryPageByQoExchangePointProducts(@RequestBody QueryExchangePointProductsRecords qo) {
         Page<PointRedemption> page = exchangePointProductsService.queryPageByQoExchangePointProducts(qo);
 
         return JsonResult.success(page);

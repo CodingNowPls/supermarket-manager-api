@@ -8,10 +8,7 @@ import com.rabbiter.market.inventory.service.ISupplierService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Validated
@@ -22,14 +19,14 @@ public class SupplierController {
 
     @HasPermission("inventory:supplier:list")
     @PostMapping("/queryPageByQo")
-    public JsonResult queryPageByQo(QuerySupplier qo) {
+    public JsonResult queryPageByQo(@RequestBody QuerySupplier qo) {
         Page<Supplier> page = supplierService.queryPageByQo(qo);
         return JsonResult.success(page);
     }
 
     @HasPermission("inventory:supplier:save")
     @PostMapping("/save")
-    public JsonResult saveSupplier(Supplier supplier) {
+    public JsonResult saveSupplier(@RequestBody Supplier supplier) {
         supplierService.saveSupplier(supplier);
         return JsonResult.success();
     }
@@ -37,7 +34,7 @@ public class SupplierController {
     /*修改接口*/
     @HasPermission("inventory:supplier:update")
     @PostMapping("/update")
-    public JsonResult updateSupplier(Supplier supplier) {
+    public JsonResult updateSupplier(@RequestBody Supplier supplier) {
         supplierService.updateSupplier(supplier);
         return JsonResult.success();
     }

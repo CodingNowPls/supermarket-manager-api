@@ -3,9 +3,9 @@ package com.rabbiter.market.sale.controller;
 import com.rabbiter.market.common.sercurity.annotation.HasPermission;
 import com.rabbiter.market.common.web.response.JsonResult;
 import com.rabbiter.market.goods.doamin.PointGoods;
-import com.rabbiter.market.sale.domain.PointRedemptionHistory;
+import com.rabbiter.market.sale.domain.PointRedemption;
 import com.rabbiter.market.inventory.qo.QueryExchangePointProductsRecords;
-import com.rabbiter.market.sale.service.IPointRedemptionHistoryService;
+import com.rabbiter.market.sale.service.IPointRedemptionService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -19,14 +19,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 积分兑换历史
+ * 积分兑换记录
  */
 @RestController
 @Validated
-@RequestMapping("/sale/pointRedemptionHistory")
-public class PointRedemptionHistoryController {
+@RequestMapping("/sale/pointRedemption")
+public class PointRedemptionController {
     @Autowired
-    private IPointRedemptionHistoryService exchangePointProductsService;
+    private IPointRedemptionService exchangePointProductsService;
 
 
     @GetMapping("/queryPointProductBymemberId")
@@ -49,8 +49,8 @@ public class PointRedemptionHistoryController {
     }
 
     @PostMapping("/saveExchangePointProductRecords")
-    public JsonResult saveExchangePointProductRecords(PointRedemptionHistory pointRedemptionHistory, HttpServletRequest request) {
-        exchangePointProductsService.saveExchangePointProductRecords(pointRedemptionHistory, (String) request.getHeader("token"));
+    public JsonResult saveExchangePointProductRecords(PointRedemption pointRedemption, HttpServletRequest request) {
+        exchangePointProductsService.saveExchangePointProductRecords(pointRedemption, (String) request.getHeader("token"));
         return JsonResult.success();
     }
 
@@ -69,7 +69,7 @@ public class PointRedemptionHistoryController {
     @HasPermission("sale:pointRedemptionHistory")
     @PostMapping("/queryPageByQoExchangePointProducts")
     public JsonResult queryPageByQoExchangePointProducts(QueryExchangePointProductsRecords qo) {
-        Page<PointRedemptionHistory> page = exchangePointProductsService.queryPageByQoExchangePointProducts(qo);
+        Page<PointRedemption> page = exchangePointProductsService.queryPageByQoExchangePointProducts(qo);
 
         return JsonResult.success(page);
     }

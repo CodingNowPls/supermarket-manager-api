@@ -5,13 +5,13 @@ import com.rabbiter.market.goods.doamin.Goods;
 import com.rabbiter.market.goods.doamin.PointGoods;
 import com.rabbiter.market.member.domain.Member;
 import com.rabbiter.market.person.domain.Employee;
-import com.rabbiter.market.sale.domain.PointRedemptionHistory;
+import com.rabbiter.market.sale.domain.PointRedemption;
 import com.rabbiter.market.sale.mapper.PointRedemptionHistoryMapper;
 import com.rabbiter.market.inventory.qo.QueryExchangePointProductsRecords;
 import com.rabbiter.market.goods.service.IGoodsService;
 import com.rabbiter.market.goods.service.IPointGoodsService;
 import com.rabbiter.market.member.service.IMemberService;
-import com.rabbiter.market.sale.service.IPointRedemptionHistoryService;
+import com.rabbiter.market.sale.service.IPointRedemptionService;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -25,7 +25,7 @@ import org.springframework.util.StringUtils;
 import java.util.*;
 
 @Service
-public class PointRedemptionHistoryServiceImpl extends ServiceImpl<PointRedemptionHistoryMapper, PointRedemptionHistory> implements IPointRedemptionHistoryService {
+public class PointRedemptionServiceImpl extends ServiceImpl<PointRedemptionHistoryMapper, PointRedemption> implements IPointRedemptionService {
     @Autowired
     private IMemberService memberService;
     @Autowired
@@ -64,31 +64,31 @@ public class PointRedemptionHistoryServiceImpl extends ServiceImpl<PointRedempti
     }
 
     @Override
-    public void saveExchangePointProductRecords(PointRedemptionHistory pointRedemptionHistory, String token) {
+    public void saveExchangePointProductRecords(PointRedemption pointRedemption, String token) {
         Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
-        pointRedemptionHistory.setCn(IdWorker.getIdStr());//生成订单号
-        pointRedemptionHistory.setUpdateby(employee.getNickName());
-        pointRedemptionHistory.setUpdateId(employee.getId());
-        pointRedemptionHistory.setUpdateTime(new Date());
-        pointRedemptionHistory.setState(PointRedemptionHistory.STATE_NORMAL);
+        pointRedemption.setCn(IdWorker.getIdStr());//生成订单号
+        pointRedemption.setUpdateby(employee.getNickName());
+        pointRedemption.setUpdateId(employee.getId());
+        pointRedemption.setUpdateTime(new Date());
+        pointRedemption.setState(PointRedemption.STATE_NORMAL);
         /*修改会员的积分*/
-        Member member = memberService.getById(pointRedemptionHistory.getMemberId());
-        member.setIntegral(member.getIntegral() - pointRedemptionHistory.getIntegral());
+        Member member = memberService.getById(pointRedemption.getMemberId());
+        member.setIntegral(member.getIntegral() - pointRedemption.getIntegral());
         memberService.updateById(member);
-        super.save(pointRedemptionHistory);
+        super.save(pointRedemption);
 
     }
 
     @Override
     public List<Map<String, Object>> queryOptionsMemberPhone() {
-        QueryWrapper<PointRedemptionHistory> wrapper = new QueryWrapper<PointRedemptionHistory>()
+        QueryWrapper<PointRedemption> wrapper = new QueryWrapper<PointRedemption>()
                 .select("member_id")
-                .eq("state", PointRedemptionHistory.STATE_NORMAL)
+                .eq("state", PointRedemption.STATE_NORMAL)
                 .groupBy("member_id");
-        List<PointRedemptionHistory> list = super.list(wrapper);
+        List<PointRedemption> list = super.list(wrapper);
         List<Long> memberIds = new ArrayList<>();
-        for (PointRedemptionHistory pointRedemptionHistory : list) {
-            memberIds.add(pointRedemptionHistory.getMemberId());
+        for (PointRedemption pointRedemption : list) {
+            memberIds.add(pointRedemption.getMemberId());
         }
         if (memberIds == null || memberIds.size() <= 0) {
             return null;
@@ -107,23 +107,23 @@ public class PointRedemptionHistoryServiceImpl extends ServiceImpl<PointRedempti
 
     @Override
     public void delExchangePointProducts(String cn) {
-        UpdateWrapper<PointRedemptionHistory> wrapper = new UpdateWrapper<PointRedemptionHistory>()
-                .set("state", PointRedemptionHistory.STATE_DEL)
+        UpdateWrapper<PointRedemption> wrapper = new UpdateWrapper<PointRedemption>()
+                .set("state", PointRedemption.STATE_DEL)
                 .eq("cn", cn);
         super.update(wrapper);
     }
 
     @Override
-    public Page<PointRedemptionHistory> queryPageByQoExchangePointProducts(QueryExchangePointProductsRecords qo) {
-        Page<PointRedemptionHistory> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        QueryWrapper<PointRedemptionHistory> queryWrapper = new QueryWrapper<PointRedemptionHistory>()
-                .eq("state", PointRedemptionHistory.STATE_NORMAL)
+    public Page<PointRedemption> queryPageByQoExchangePointProducts(QueryExchangePointProductsRecords qo) {
+        Page<PointRedemption> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
+        QueryWrapper<PointRedemption> queryWrapper = new QueryWrapper<PointRedemption>()
+                .eq("state", PointRedemption.STATE_NORMAL)
                 .eq(qo.getMemberId() != null, "member_id", qo.getMemberId())
                 .ge(StringUtils.hasText(qo.getStartTime()), "update_time", qo.getStartTime())
                 .le(StringUtils.hasText(qo.getEndTime()), "update_time", qo.getEndTime())
                 .likeRight(StringUtils.hasText(qo.getCn()), "cn", qo.getCn());
         super.page(page, queryWrapper);
-        for (PointRedemptionHistory record : page.getRecords()) {
+        for (PointRedemption record : page.getRecords()) {
             Member member = memberService.getById(record.getMemberId());
             record.setMemberPhone(member.getPhone());
             Goods goods = goodsService.getById(record.getGoodsId());

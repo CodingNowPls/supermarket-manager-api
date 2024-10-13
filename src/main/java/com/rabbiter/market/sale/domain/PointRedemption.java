@@ -13,7 +13,7 @@ import java.util.Date;
  */
 @Data
 @TableName("exchange_point_products_records")
-public class PointRedemptionHistory implements Serializable {
+public class PointRedemption implements Serializable {
 
     public static final String STATE_NORMAL = "0";
 

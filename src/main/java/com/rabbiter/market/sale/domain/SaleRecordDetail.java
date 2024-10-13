@@ -7,11 +7,11 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- *
+ * 销售记录详细
  */
 @Data
 @TableName("detail_sale_records")
-public class DetailSaleRecords implements Serializable {
+public class SaleRecordDetail implements Serializable {
     /**
      *
      */

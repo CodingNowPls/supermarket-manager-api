@@ -4,7 +4,7 @@ import com.rabbiter.market.common.redis.service.RedisTemplateService;
 import com.rabbiter.market.goods.doamin.Goods;
 import com.rabbiter.market.member.domain.Member;
 import com.rabbiter.market.person.domain.Employee;
-import com.rabbiter.market.sale.domain.DetailSaleRecords;
+import com.rabbiter.market.sale.domain.SaleRecordDetail;
 import com.rabbiter.market.sale.domain.SaleRecords;
 import com.rabbiter.market.sale.mapper.SaleRecordsMapper;
 import com.rabbiter.market.sale.qo.QuerySaleRecords;
@@ -61,7 +61,7 @@ public class SaleRecordsServiceImpl extends ServiceImpl<SaleRecordsMapper, SaleR
         saleRecords.setSellTime(new Date());
         saleRecords.setSellby(employee.getNickName());
         saleRecords.setState(SaleRecords.STATE_NORMAL);
-        for (DetailSaleRecords detailSaleRecord : saleRecords.getDetailSaleRecords()) {
+        for (SaleRecordDetail detailSaleRecord : saleRecords.getSaleRecords()) {
             detailSaleRecord.setSellCn(saleRecords.getCn());
             Goods goods = goodsService.getById(detailSaleRecord.getGoodsId());
             UpdateWrapper<Goods> wrapper = new UpdateWrapper<Goods>()
@@ -70,7 +70,7 @@ public class SaleRecordsServiceImpl extends ServiceImpl<SaleRecordsMapper, SaleR
                     .eq("id", goods.getId());
             goodsService.update(wrapper);
         }
-        detailSaleRecordsService.saveBatch(saleRecords.getDetailSaleRecords());
+        detailSaleRecordsService.saveBatch(saleRecords.getSaleRecords());
         super.save(saleRecords);
         if ("1".equals(saleRecords.getType())) {
             //为会员增加积分 积分规则：积分=总金额*5%取整
@@ -101,9 +101,9 @@ public class SaleRecordsServiceImpl extends ServiceImpl<SaleRecordsMapper, SaleR
         List<SaleRecords> records = page.getRecords();
         if (records != null && records.size() > 0) {
             for (SaleRecords record : records) {
-                QueryWrapper<DetailSaleRecords> sellCnWrapper = new QueryWrapper<DetailSaleRecords>().eq("sell_cn", record.getCn());
-                List<DetailSaleRecords> list = detailSaleRecordsService.list(sellCnWrapper);
-                record.setDetailSaleRecords(list);
+                QueryWrapper<SaleRecordDetail> sellCnWrapper = new QueryWrapper<SaleRecordDetail>().eq("sell_cn", record.getCn());
+                List<SaleRecordDetail> list = detailSaleRecordsService.list(sellCnWrapper);
+                record.setSaleRecords(list);
             }
         }
         return page;

@@ -51,7 +51,7 @@ public class SaleRecords implements Serializable {
     private String type;
 
     @TableField(exist = false)
-    private List<DetailSaleRecords> detailSaleRecords = new ArrayList<>();
+    private List<SaleRecordDetail> saleRecords = new ArrayList<>();
 
     //会员账号
     @TableField("member_phone")

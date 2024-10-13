@@ -90,8 +90,8 @@ public class RoleController {
      * @return
      */
     @HasPermission("system:role:saveRolePermissons")
-    @GetMapping("/checkPermissons")
-    public JsonResult checkPermissons(@NotNull(message = "角色不能为空") Long rid) {
+    @GetMapping("/checkPermissions")
+    public JsonResult checkPermissions(@NotNull(message = "角色不能为空") Long rid) {
         RolePermissionVo vo = roleService.checkPermissons(rid);
         return JsonResult.success(vo);
     }
@@ -103,8 +103,8 @@ public class RoleController {
      * @param menuIds
      * @return
      */
-    @HasPermission("system:role:saveRolePermissons")
-    @PostMapping("/saveRolePermissons")
+    @HasPermission("system:role:saveRolePermissions")
+    @PostMapping("/saveRolePermissions")
     public JsonResult saveRolePermissons(@NotNull(message = "角色不能为空") @RequestParam("rid") Long rid, @RequestParam("menuIds") Long[] menuIds) {
         roleService.saveRolePermissons(rid, menuIds);
 

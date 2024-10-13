@@ -1,5 +1,8 @@
 package com.rabbiter.market.member.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.rabbiter.market.common.exception.BusinessException;
 import com.rabbiter.market.member.domain.Member;
 import com.rabbiter.market.member.mapper.MemberMapper;
@@ -17,26 +20,29 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
     @Override
     public Page<Member> queryPageByQo(QueryMember qo) {
         Page<Member> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        QueryWrapper<Member> wrapper = new QueryWrapper<>();
-        wrapper.like(StringUtils.hasText(qo.getPhone()), "phone", qo.getPhone());
-        wrapper.like(StringUtils.hasText(qo.getName()), "name", qo.getName());
-        wrapper.eq(StringUtils.hasText(qo.getState()), "state", qo.getState());
+        LambdaQueryWrapper<Member> wrapper = Wrappers.lambdaQuery(Member.class)
+                .like(StringUtils.hasText(qo.getPhone()), Member::getPhone, qo.getPhone())
+                .like(StringUtils.hasText(qo.getName()), Member::getName, qo.getName())
+                .eq(StringUtils.hasText(qo.getState()), Member::getState, qo.getState());
         super.page(page, wrapper);
         return page;
     }
 
     @Override
     public void delMember(Long id) {
-        UpdateWrapper<Member> wrapper = new UpdateWrapper<Member>()
-                .set("state", Member.STATE_BAN)
-                .set("integral", 0L)
-                .eq("id", id);
+        LambdaUpdateWrapper<Member> wrapper = Wrappers.lambdaUpdate(Member.class)
+                .set(Member::getState, Member.STATE_BAN)
+                .set(Member::getIntegral, 0L)
+                .eq(Member::getId, id);
+
         super.update(wrapper);
     }
 
     @Override
     public void saveMember(Member member) {
-        QueryWrapper<Member> wrapper = new QueryWrapper<Member>().eq("phone", member.getPhone()).eq("state", Member.STATE_NORMAL);
+        LambdaQueryWrapper<Member> wrapper = Wrappers.lambdaQuery(Member.class)
+                .eq(Member::getPhone, member.getPhone())
+                .eq(Member::getState, Member.STATE_NORMAL);
         Member one = super.getOne(wrapper);
         if (one != null) {
             throw new BusinessException("该用户已注册过");
@@ -55,9 +61,11 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
     @Override
     public void updateMember(Member member) {
         if (Member.STATE_NORMAL.equals(member.getState())) {
-            QueryWrapper<Member> wrapper = new QueryWrapper<Member>().eq("phone", member.getPhone())
-                    .ne("id", member.getId())
-                    .eq("state", Member.STATE_NORMAL);
+            LambdaQueryWrapper<Member> wrapper = Wrappers.lambdaQuery(Member.class)
+                    .eq(Member::getPhone, member.getPhone())
+                    .ne(Member::getId, member.getId())
+                    .eq(Member::getState, Member.STATE_NORMAL);
+
             Member one = super.getOne(wrapper);
             if (one != null) {
                 throw new BusinessException("已被录入");
@@ -68,7 +76,9 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
 
     @Override
     public Member queryMemberByPhone(String phone) {
-        QueryWrapper<Member> wrapper = new QueryWrapper<Member>().eq("phone", phone).eq("state", Member.STATE_NORMAL);
+        LambdaQueryWrapper<Member> wrapper = Wrappers.lambdaQuery(Member.class)
+                .eq(Member::getPhone, phone)
+                .eq(Member::getState, Member.STATE_NORMAL);
         Member one = super.getOne(wrapper);
         if (one == null) {
             throw new BusinessException("该会员不存在");

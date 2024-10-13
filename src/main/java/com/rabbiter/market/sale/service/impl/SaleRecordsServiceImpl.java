@@ -1,5 +1,8 @@
 package com.rabbiter.market.sale.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.rabbiter.market.common.redis.service.RedisTemplateService;
 import com.rabbiter.market.goods.doamin.Goods;
 import com.rabbiter.market.member.domain.Member;
@@ -40,7 +43,8 @@ public class SaleRecordsServiceImpl extends ServiceImpl<SaleRecordsMapper, SaleR
 
     @Override
     public List<Map<String, Object>> getOptionSaleRecordsGoods() {
-        QueryWrapper<Goods> wrapper = new QueryWrapper<Goods>().gt("residue_num", 0L);
+        LambdaQueryWrapper<Goods> wrapper = Wrappers.lambdaQuery(Goods.class)
+                .gt(Goods::getResidueNum, 0L);
         List<Goods> list = goodsService.list(wrapper);
         List<Map<String, Object>> goodsList = new ArrayList<>();
         if (list != null && list.size() > 0) {
@@ -66,10 +70,11 @@ public class SaleRecordsServiceImpl extends ServiceImpl<SaleRecordsMapper, SaleR
         for (SaleRecordDetail detailSaleRecord : saleRecord.getSaleRecords()) {
             detailSaleRecord.setSellCn(saleRecord.getCn());
             Goods goods = goodsService.getById(detailSaleRecord.getGoodsId());
-            UpdateWrapper<Goods> wrapper = new UpdateWrapper<Goods>()
-                    .set("sales_volume", goods.getSalesVolume() != null ? goods.getSalesVolume() + detailSaleRecord.getGoodsNum() : detailSaleRecord.getGoodsNum())
-                    .set("residue_num", goods.getResidueNum() - detailSaleRecord.getGoodsNum())
-                    .eq("id", goods.getId());
+            LambdaUpdateWrapper<Goods> wrapper = Wrappers.lambdaUpdate(Goods.class)
+                    .set(Goods::getSalesVolume,
+                            goods.getSalesVolume() != null ? goods.getSalesVolume() + detailSaleRecord.getGoodsNum() : detailSaleRecord.getGoodsNum())
+                    .set(Goods::getResidueNum, goods.getResidueNum() - detailSaleRecord.getGoodsNum())
+                    .eq(Goods::getId, goods.getId());
             goodsService.update(wrapper);
         }
         detailSaleRecordsService.saveBatch(saleRecord.getSaleRecords());
@@ -78,12 +83,13 @@ public class SaleRecordsServiceImpl extends ServiceImpl<SaleRecordsMapper, SaleR
             //为会员增加积分 积分规则：积分=总金额*5%取整
             String s = saleRecord.getSellTotalmoney() * 0.05 + "";
             long integral = Long.parseLong(s.split("\\.")[0]);
-            QueryWrapper<Member> memberQueryWrapper = new QueryWrapper<Member>().eq("phone", saleRecord.getMemberPhone());
+            LambdaQueryWrapper<Member> memberQueryWrapper = Wrappers.lambdaQuery(Member.class)
+                    .eq(Member::getPhone, saleRecord.getMemberPhone());
             Member member = memberService.getOne(memberQueryWrapper);
-            UpdateWrapper<Member> memberUpdateWrapper = new UpdateWrapper<Member>()
-                    .set("integral", member.getIntegral() != null ? member.getIntegral() +
-                            integral : integral)
-                    .eq("phone", saleRecord.getMemberPhone());
+            LambdaUpdateWrapper<Member> memberUpdateWrapper = Wrappers.lambdaUpdate(Member.class)
+                    .set(Member::getIntegral,
+                            member.getIntegral() != null ? member.getIntegral() + integral : integral)
+                    .eq(Member::getPhone, saleRecord.getMemberPhone());
             memberService.update(memberUpdateWrapper);
         }
         return saleRecord;
@@ -92,19 +98,22 @@ public class SaleRecordsServiceImpl extends ServiceImpl<SaleRecordsMapper, SaleR
     @Override
     public Page<SaleRecord> queryPageByQoSaleRecords(QuerySaleRecords qo) {
         Page<SaleRecord> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        QueryWrapper<SaleRecord> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("state", SaleRecord.STATE_NORMAL);
-        queryWrapper.eq(StringUtils.hasText(qo.getType()), "type", qo.getType());
-        queryWrapper.likeRight(StringUtils.hasText(qo.getCn()), "cn", qo.getCn());
-        queryWrapper.ge(StringUtils.hasText(qo.getStartSellTime()), "sell_time", qo.getStartSellTime());
-        queryWrapper.le(StringUtils.hasText(qo.getEndSellTime()), "sell_time", qo.getEndSellTime());
-        queryWrapper.eq(StringUtils.hasText(qo.getSellway()), "sellway", qo.getSellway());
+        LambdaQueryWrapper<SaleRecord> queryWrapper = Wrappers.lambdaQuery(SaleRecord.class)
+                .eq(SaleRecord::getState, SaleRecord.STATE_NORMAL)
+                .eq(StringUtils.hasText(qo.getType()), SaleRecord::getType, qo.getType())
+                .likeRight(StringUtils.hasText(qo.getCn()), SaleRecord::getCn, qo.getCn())
+                .ge(StringUtils.hasText(qo.getStartSellTime()), SaleRecord::getSellTime, qo.getStartSellTime())
+                .le(StringUtils.hasText(qo.getEndSellTime()), SaleRecord::getSellTime, qo.getEndSellTime())
+                .eq(StringUtils.hasText(qo.getSellway()), SaleRecord::getSellway, qo.getSellway());
         super.page(page, queryWrapper);
+
         List<SaleRecord> records = page.getRecords();
         if (records != null && records.size() > 0) {
             for (SaleRecord record : records) {
-                QueryWrapper<SaleRecordDetail> sellCnWrapper = new QueryWrapper<SaleRecordDetail>().eq("sell_cn", record.getCn());
+                LambdaQueryWrapper<SaleRecordDetail> sellCnWrapper = Wrappers.lambdaQuery(SaleRecordDetail.class)
+                        .eq(SaleRecordDetail::getSellCn, record.getCn());
                 List<SaleRecordDetail> list = detailSaleRecordsService.list(sellCnWrapper);
+
                 record.setSaleRecords(list);
             }
         }
@@ -113,10 +122,11 @@ public class SaleRecordsServiceImpl extends ServiceImpl<SaleRecordsMapper, SaleR
 
     @Override
     public void delSaleRecords(String cn) {
-        UpdateWrapper<SaleRecord> wrapper = new UpdateWrapper<>();
-        wrapper.eq("cn", cn);
-        wrapper.set("state", SaleRecord.STATE_DEL);
+        LambdaUpdateWrapper<SaleRecord> wrapper = Wrappers.lambdaUpdate(SaleRecord.class)
+                .eq(SaleRecord::getCn, cn)
+                .set(SaleRecord::getState, SaleRecord.STATE_DEL);
         super.update(wrapper);
+
     }
 
 }

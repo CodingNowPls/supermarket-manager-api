@@ -1,5 +1,7 @@
 package com.rabbiter.market.person.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.rabbiter.market.common.exception.BusinessException;
 import com.rabbiter.market.person.domain.Dept;
 import com.rabbiter.market.person.domain.Employee;
@@ -34,12 +36,15 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
     @Transactional
     @Override
     public void forbiddenRole(Long id) {
-        QueryWrapper<Employee> empWrapper = new QueryWrapper<Employee>().eq(id != null, "deptId", id);
+        LambdaQueryWrapper<Employee> empWrapper = Wrappers.lambdaQuery(Employee.class)
+                .eq(id != null, Employee::getDeptId, id);
         List<Employee> list = employeeService.list(empWrapper);
         if (list != null && list.size() > 0) {
             throw new BusinessException("操作失败，该部门正在使用");
         }
-        UpdateWrapper<Dept> wrapper = new UpdateWrapper<Dept>().set("state", Dept.STATE_BAN).eq("id", id);
+        LambdaUpdateWrapper<Dept> wrapper = Wrappers.lambdaUpdate(Dept.class)
+                .set(Dept::getState, Dept.STATE_BAN)
+                .eq(Dept::getId, id);
         super.update(wrapper);
     }
 
@@ -47,7 +52,8 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
     @Override
     public void saveDept(Dept dept) {
         //判断是否有被创建
-        QueryWrapper<Dept> wrapper = new QueryWrapper<Dept>().eq(StringUtils.hasText(dept.getName()), "name", dept.getName());
+        LambdaQueryWrapper<Dept> wrapper = Wrappers.lambdaQuery(Dept.class)
+                .eq(StringUtils.hasText(dept.getName()), Dept::getName, dept.getName());
         if (super.getOne(wrapper) != null) {
             throw new BusinessException("操作失败，该部门已存在");
         }

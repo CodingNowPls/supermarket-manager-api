@@ -1,5 +1,7 @@
 package com.rabbiter.market.sale.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.rabbiter.market.common.redis.service.RedisTemplateService;
 import com.rabbiter.market.goods.doamin.Goods;
 import com.rabbiter.market.goods.doamin.PointGoods;
@@ -39,12 +41,11 @@ public class PointRedemptionServiceImpl extends ServiceImpl<PointRedemptionHisto
     @Override
     public List<Map<String, Object>> queryPointProductBymemberId(Long memberId) {
         Member member = memberService.getById(memberId);
-
-        QueryWrapper<PointGoods> pointProductsQueryWrapper = new QueryWrapper<PointGoods>();
+        LambdaQueryWrapper<PointGoods> pointProductsQueryWrapper = Wrappers.lambdaQuery(PointGoods.class);
         if (memberId == null) {
-            pointProductsQueryWrapper.gt("integral", 0L);
+            pointProductsQueryWrapper.gt(PointGoods::getIntegral, 0L);
         } else {
-            pointProductsQueryWrapper.le("integral", member.getIntegral());
+            pointProductsQueryWrapper.le(PointGoods::getIntegral, member.getIntegral());
         }
 
         List<PointGoods> list = pointProductsService.list(pointProductsQueryWrapper);
@@ -60,7 +61,9 @@ public class PointRedemptionServiceImpl extends ServiceImpl<PointRedemptionHisto
 
     @Override
     public PointGoods queryPointProductByGoodsId(Long goodsId) {
-        PointGoods pointGoods = pointProductsService.getOne(new QueryWrapper<PointGoods>().eq(goodsId != null, "goods_id", goodsId));
+        LambdaQueryWrapper<PointGoods> lqw = Wrappers.lambdaQuery(PointGoods.class);
+        lqw.eq(goodsId != null, PointGoods::getGoodsId, goodsId);
+        PointGoods pointGoods = pointProductsService.getOne(lqw);
         return pointGoods;
     }
 
@@ -83,11 +86,12 @@ public class PointRedemptionServiceImpl extends ServiceImpl<PointRedemptionHisto
 
     @Override
     public List<Map<String, Object>> queryOptionsMemberPhone() {
-        QueryWrapper<PointRedemption> wrapper = new QueryWrapper<PointRedemption>()
-                .select("member_id")
-                .eq("state", PointRedemption.STATE_NORMAL)
-                .groupBy("member_id");
-        List<PointRedemption> list = super.list(wrapper);
+        LambdaQueryWrapper<PointRedemption> lqw = Wrappers.lambdaQuery(PointRedemption.class)
+                .select(PointRedemption::getMemberId)
+                .eq(PointRedemption::getState, PointRedemption.STATE_NORMAL)
+                .groupBy(PointRedemption::getMemberId);
+
+        List<PointRedemption> list = super.list(lqw);
         List<Long> memberIds = new ArrayList<>();
         for (PointRedemption pointRedemption : list) {
             memberIds.add(pointRedemption.getMemberId());
@@ -118,12 +122,12 @@ public class PointRedemptionServiceImpl extends ServiceImpl<PointRedemptionHisto
     @Override
     public Page<PointRedemption> queryPageByQoExchangePointProducts(QueryExchangePointProductsRecords qo) {
         Page<PointRedemption> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        QueryWrapper<PointRedemption> queryWrapper = new QueryWrapper<PointRedemption>()
-                .eq("state", PointRedemption.STATE_NORMAL)
-                .eq(qo.getMemberId() != null, "member_id", qo.getMemberId())
-                .ge(StringUtils.hasText(qo.getStartTime()), "update_time", qo.getStartTime())
-                .le(StringUtils.hasText(qo.getEndTime()), "update_time", qo.getEndTime())
-                .likeRight(StringUtils.hasText(qo.getCn()), "cn", qo.getCn());
+        LambdaQueryWrapper<PointRedemption> queryWrapper = Wrappers.lambdaQuery(PointRedemption.class)
+                .eq(PointRedemption::getState, PointRedemption.STATE_NORMAL)
+                .eq(qo.getMemberId() != null, PointRedemption::getMemberId, qo.getMemberId())
+                .ge(StringUtils.hasText(qo.getStartTime()), PointRedemption::getUpdateTime, qo.getStartTime())
+                .le(StringUtils.hasText(qo.getEndTime()), PointRedemption::getUpdateTime, qo.getEndTime())
+                .likeRight(StringUtils.hasText(qo.getCn()), PointRedemption::getCn, qo.getCn());
         super.page(page, queryWrapper);
         for (PointRedemption record : page.getRecords()) {
             Member member = memberService.getById(record.getMemberId());
@@ -153,9 +157,9 @@ public class PointRedemptionServiceImpl extends ServiceImpl<PointRedemptionHisto
     @Override
     public List<Map<String, Object>> queryOptionsMember() {
         List<Map<String, Object>> vos = new ArrayList<>();
-        QueryWrapper<Member> wrapper = new QueryWrapper<Member>()
-                .groupBy("id")
-                .eq("state", Member.STATE_NORMAL);
+        LambdaQueryWrapper<Member> wrapper = Wrappers.lambdaQuery(Member.class)
+                .groupBy(Member::getId)
+                .eq(Member::getState, Member.STATE_NORMAL);
         List<Member> list = memberService.list(wrapper);
         for (Member member : list) {
             Map<String, Object> map = new HashMap<>();
@@ -168,17 +172,23 @@ public class PointRedemptionServiceImpl extends ServiceImpl<PointRedemptionHisto
 
     @Override
     public List<Map<String, Object>> queryMemberByGoodsId(Long goodsId) {
-        List<Member> members = new ArrayList<>();
-        QueryWrapper<Member> memberQueryWrapper = new QueryWrapper<Member>();
-        memberQueryWrapper.eq("state", Member.STATE_NORMAL);
+        List<Member> members;
+        LambdaQueryWrapper<Member> memberQueryWrapper = Wrappers.lambdaQuery(Member.class)
+                .eq(Member::getState, Member.STATE_NORMAL);
+
         if (goodsId != null) {
-            PointGoods pointGoods = pointProductsService.getOne(new QueryWrapper<PointGoods>()
-                    .eq("goods_id", goodsId)
-                    .eq("state", PointGoods.STATE_NORMAL));
-            memberQueryWrapper.ge("integral", pointGoods.getIntegral());
+            // 获取 PointGoods 对象
+            LambdaQueryWrapper<PointGoods> pointGoodsQueryWrapper = Wrappers.lambdaQuery(PointGoods.class)
+                    .eq(PointGoods::getGoodsId, goodsId)
+                    .eq(PointGoods::getState, PointGoods.STATE_NORMAL);
+            PointGoods pointGoods = pointProductsService.getOne(pointGoodsQueryWrapper);
+            if (pointGoods != null) {
+                memberQueryWrapper.ge(Member::getIntegral, pointGoods.getIntegral());
+            }
         } else {
-            memberQueryWrapper.gt("integral", 0);
+            memberQueryWrapper.gt(Member::getIntegral, 0);
         }
+
         members = memberService.list(memberQueryWrapper);
         List<Map<String, Object>> vos = new ArrayList<>();
         for (Member member : members) {

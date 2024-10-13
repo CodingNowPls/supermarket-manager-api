@@ -1,5 +1,8 @@
 package com.rabbiter.market.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.rabbiter.market.member.domain.Member;
 import com.rabbiter.market.system.domain.Menu;
 import com.rabbiter.market.system.mapper.MenuMapper;
 import com.rabbiter.market.system.qo.MenuQuery;
@@ -20,25 +23,32 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 
     @Override
     public List<Menu> findAll() {
-
-        //查询目录菜单
+        // 查询目录菜单
         // select * from t_menu where type='0' and state='0'
-        QueryWrapper<Menu> wrapper1 = new QueryWrapper<Menu>().eq("type", Menu.TYPE_CATALOGUE).eq("state", Menu.STATE_NORMAL);
+        LambdaQueryWrapper<Menu> wrapper1 = Wrappers.lambdaQuery(Menu.class)
+                .eq(Menu::getType, Menu.TYPE_CATALOGUE)
+                .eq(Menu::getState, Menu.STATE_NORMAL);
         List<Menu> catalogs = super.list(wrapper1);
         if (catalogs.isEmpty()) {
             return null;
         }
-        //得到目录下的菜单信息
+
+        // 得到目录下的菜单信息
         for (Menu catalog : catalogs) {
-            //select * from t_menu where type='1' and parent_id=#{id} and state='0'
-            QueryWrapper<Menu> wrapper2 = new QueryWrapper<Menu>().eq("type", Menu.TYPE_MENU).eq("state", Menu.STATE_NORMAL)
-                    .eq("parent_id", catalog.getId());
+            // select * from t_menu where type='1' and parent_id=#{id} and state='0'
+            LambdaQueryWrapper<Menu> wrapper2 = Wrappers.lambdaQuery(Menu.class)
+                    .eq(Menu::getType, Menu.TYPE_MENU)
+                    .eq(Menu::getState, Menu.STATE_NORMAL)
+                    .eq(Menu::getParentId, catalog.getId());
             List<Menu> menus = super.list(wrapper2);
-            //获取菜单下的按钮
+
+            // 获取菜单下的按钮
             for (Menu menu : menus) {
-                //select * from t_menu where type='2' and parent_id=#{id} and state='0'
-                QueryWrapper<Menu> wrapper3 = new QueryWrapper<Menu>().eq("type", Menu.TYPE_BUTTON).eq("state", Menu.STATE_NORMAL)
-                        .eq("parent_id", menu.getId());
+                // select * from t_menu where type='2' and parent_id=#{id} and state='0'
+                LambdaQueryWrapper<Menu> wrapper3 = Wrappers.lambdaQuery(Menu.class)
+                        .eq(Menu::getType, Menu.TYPE_BUTTON)
+                        .eq(Menu::getState, Menu.STATE_NORMAL)
+                        .eq(Menu::getParentId, menu.getId());
                 List<Menu> buttons = super.list(wrapper3);
                 if (!buttons.isEmpty()) {
                     menu.setChildren(buttons);
@@ -47,6 +57,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
             catalog.setChildren(menus);
         }
         return catalogs;
+
     }
 
     @Override
@@ -108,10 +119,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     public Page<Menu> queryPageByQo(MenuQuery qo) {
         Page<Menu> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         //查询目录
-        QueryWrapper<Menu> wrapper = new QueryWrapper<>();
-        wrapper.eq("type", Menu.TYPE_CATALOGUE);
-        wrapper.like(StringUtils.hasText(qo.getName()), "label", qo.getName());
-
+        LambdaQueryWrapper<Menu> wrapper = Wrappers.lambdaQuery(Menu.class)
+                .eq(Menu::getType, Menu.TYPE_CATALOGUE)
+                .like(StringUtils.hasText(qo.getName()), Menu::getLabel, qo.getName());
         Page<Menu> page1 = super.page(page, wrapper);
         //补全目录的子集
         List<Menu> catalogs = page1.getRecords();
@@ -120,18 +130,18 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         }
         /*补全目录下的菜单*/
         for (Menu catalog : catalogs) {
-            QueryWrapper<Menu> wrapper_menu = new QueryWrapper<Menu>()
-                    .eq("type", Menu.TYPE_MENU)
-                    .eq("parent_id", catalog.getId());
+            LambdaQueryWrapper<Menu> wrapper_menu = Wrappers.lambdaQuery(Menu.class)
+                    .eq(Menu::getType, Menu.TYPE_MENU)
+                    .eq(Menu::getParentId, catalog.getId());
             List<Menu> menus = super.list(wrapper_menu);
             if (menus == null || menus.isEmpty()) {
                 continue;
             }
             /*补全菜单下的按钮*/
             for (Menu menu : menus) {
-                QueryWrapper<Menu> wrapper_button = new QueryWrapper<Menu>()
-                        .eq("type", Menu.TYPE_BUTTON)
-                        .eq("parent_id", menu.getId());
+                LambdaQueryWrapper<Menu> wrapper_button = Wrappers.lambdaQuery(Menu.class)
+                        .eq(Menu::getState, Menu.TYPE_BUTTON)
+                        .eq(Menu::getParentId, menu.getId());
                 List<Menu> buttons = super.list(wrapper_button);
                 if (buttons == null || buttons.isEmpty()) {
                     continue;
@@ -147,8 +157,10 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     public List<Long> listParentByIds(List<Long> ids) {
         List<Long> parentIds = new ArrayList<>();
         ArrayList<Long> btnIds = new ArrayList<>();
-        QueryWrapper<Menu> wrapper = new QueryWrapper<Menu>().in("id", ids);
+        LambdaQueryWrapper<Menu> wrapper = Wrappers.lambdaQuery(Menu.class)
+                .in(Menu::getId, ids);
         List<Menu> list = super.list(wrapper);
+
         if (list == null) {
             return parentIds;
         }

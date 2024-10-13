@@ -1,5 +1,7 @@
 package com.rabbiter.market.inventory.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.rabbiter.market.common.exception.BusinessException;
 import com.rabbiter.market.common.redis.service.RedisTemplateService;
 import com.rabbiter.market.goods.doamin.Goods;
@@ -54,7 +56,9 @@ public class GoodsStockServiceImpl extends ServiceImpl<GoodsStockMapper, GoodsSt
 
     @Override
     public void goodsInStore(Long goodsId, Long goodsNum, Long storeId) {
-        QueryWrapper<GoodsStock> wrapper = new QueryWrapper<GoodsStock>().eq("goods_id", goodsId).eq("store_id", storeId);
+        LambdaQueryWrapper<GoodsStock> wrapper = Wrappers.lambdaQuery(GoodsStock.class)
+                .eq(GoodsStock::getGoodsId, goodsId)
+                .eq(GoodsStock::getStoreId, storeId);
         GoodsStock goodsStock1 = super.getOne(wrapper);
         if (goodsStock1 != null) {
             goodsStockMapper.goodsInStore(goodsId, goodsNum, storeId);

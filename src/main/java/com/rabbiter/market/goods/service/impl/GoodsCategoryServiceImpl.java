@@ -1,5 +1,7 @@
 package com.rabbiter.market.goods.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.rabbiter.market.common.exception.BusinessException;
 import com.rabbiter.market.goods.doamin.Goods;
 import com.rabbiter.market.goods.doamin.GoodsCategory;
@@ -28,14 +30,16 @@ public class GoodsCategoryServiceImpl extends ServiceImpl<GoodsCategoryMapper, G
 
     @Override
     public void updateGoodsCategory(GoodsCategory goodsCategory) {
-        QueryWrapper<GoodsCategory> queryWrapper = new QueryWrapper<GoodsCategory>()
-                .ne("id", goodsCategory.getId())
-                .eq("name", goodsCategory.getName())
-                .eq("state", goodsCategory.getState());
+        LambdaQueryWrapper<GoodsCategory> queryWrapper = Wrappers.lambdaQuery(GoodsCategory.class)
+                .ne(GoodsCategory::getId, goodsCategory.getId())
+                .eq(GoodsCategory::getName, goodsCategory.getName())
+                .eq(GoodsCategory::getState, goodsCategory.getState());
         GoodsCategory category = super.getOne(queryWrapper);
         if (GoodsCategory.STATE_BAN.equals(goodsCategory.getState())) {
             //查看是否有上架商品正在使用
-            QueryWrapper<Goods> wrapper = new QueryWrapper<Goods>().eq("category_id", goodsCategory.getId()).eq("state", Goods.STATE_UP);
+            LambdaQueryWrapper<Goods> wrapper = Wrappers.lambdaQuery(Goods.class)
+                    .eq(Goods::getCategoryId, goodsCategory.getId())
+                    .eq(Goods::getState, Goods.STATE_UP);
             List<Goods> list = goodsService.list(wrapper);
             if (list != null && list.size() > 0) {
                 throw new BusinessException("该分类正在被某个上架商品使用，请解除关系后，再操作");
@@ -55,43 +59,47 @@ public class GoodsCategoryServiceImpl extends ServiceImpl<GoodsCategoryMapper, G
     @Override
     public void deactivate(Long cid) {
         //查看是否有上架商品正在使用
-        QueryWrapper<Goods> wrapper = new QueryWrapper<Goods>()
-                .eq("category_id", cid)
-                .eq("state", Goods.STATE_UP);
+        LambdaQueryWrapper<Goods> wrapper = Wrappers.lambdaQuery(Goods.class)
+                .eq(Goods::getCategoryId, cid)
+                .eq(Goods::getState, Goods.STATE_UP);
         List<Goods> list = goodsService.list(wrapper);
         if (list != null && list.size() > 0) {
             throw new BusinessException("该分类正在被某个上架商品使用，请解除关系后，再操作");
         }
         /*查看删除中是否有*/
         GoodsCategory goodsCategory = super.getById(cid);
-        QueryWrapper<GoodsCategory> queryWrapper = new QueryWrapper<GoodsCategory>()
-                .ne("id", cid)
-                .eq("name", goodsCategory.getName())
-                .eq("state", GoodsCategory.STATE_BAN);
+        LambdaQueryWrapper<GoodsCategory> queryWrapper = Wrappers.lambdaQuery(GoodsCategory.class)
+                .ne(GoodsCategory::getId, cid)
+                .eq(GoodsCategory::getName, goodsCategory.getName())
+                .eq(GoodsCategory::getState, GoodsCategory.STATE_BAN);
         GoodsCategory one = super.getOne(queryWrapper);
         if (one != null) {
-            super.remove(new QueryWrapper<GoodsCategory>()
-                    .eq("name", goodsCategory.getName())
-                    .eq("state", GoodsCategory.STATE_BAN));
+            super.remove(Wrappers.lambdaQuery(GoodsCategory.class)
+                    .eq(GoodsCategory::getName, goodsCategory.getName())
+                    .eq(GoodsCategory::getState, GoodsCategory.STATE_BAN));
+
         }
-        super.update(new UpdateWrapper<GoodsCategory>().eq("id", cid).set("state", GoodsCategory.STATE_BAN));
+        super.update(Wrappers.lambdaUpdate(GoodsCategory.class)
+                .eq(GoodsCategory::getId, cid)
+                .set(GoodsCategory::getState, GoodsCategory.STATE_BAN));
     }
 
     @Override
     public Page<GoodsCategory> queryPageByQo(QueryGoodsCategory qo) {
         Page<GoodsCategory> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        QueryWrapper<GoodsCategory> wrapper = new QueryWrapper<>();
-        wrapper.like(StringUtils.hasText(qo.getName()), "name", qo.getName());
-        wrapper.eq(StringUtils.hasText(qo.getState()), "state", qo.getState());
+        LambdaQueryWrapper<GoodsCategory> wrapper = Wrappers.lambdaQuery(GoodsCategory.class)
+                .like(StringUtils.hasText(qo.getName()), GoodsCategory::getName, qo.getName())
+                .eq(StringUtils.hasText(qo.getState()), GoodsCategory::getState, qo.getState());
         return super.page(page, wrapper);
     }
 
     @Override
     public void saveGoodsCategory(GoodsCategory category) {
         //判断数据库是否保存过这个分类信息
-        QueryWrapper<GoodsCategory> wrapper = new QueryWrapper<GoodsCategory>()
-                .eq(StringUtils.hasText(category.getName()), "name", category.getName())
-                .eq("state", GoodsCategory.STATE_NORMAL);
+        LambdaQueryWrapper<GoodsCategory> wrapper = Wrappers.lambdaQuery(GoodsCategory.class)
+                .eq(StringUtils.hasText(category.getName()), GoodsCategory::getName, category.getName())
+                .eq(GoodsCategory::getState, GoodsCategory.STATE_NORMAL);
+
         GoodsCategory category1 = super.getOne(wrapper);
         if (category1 != null) {
             throw new BusinessException("该分类已被创建");
@@ -104,7 +112,10 @@ public class GoodsCategoryServiceImpl extends ServiceImpl<GoodsCategoryMapper, G
     @Override
     public List<Map<String, Object>> getNormalCategoryAll() {
         List<Map<String, Object>> list = new ArrayList<>();
-        List<GoodsCategory> categories = super.list(new QueryWrapper<GoodsCategory>().eq("state", GoodsCategory.STATE_NORMAL));
+        List<GoodsCategory> categories = super.list(
+                Wrappers.lambdaQuery(GoodsCategory.class)
+                        .eq(GoodsCategory::getState, GoodsCategory.STATE_NORMAL)
+        );
         for (GoodsCategory category : categories) {
             Map<String, Object> map = new HashMap<>();
             map.put("id", category.getId());

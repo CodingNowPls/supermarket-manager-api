@@ -1,5 +1,8 @@
 package com.rabbiter.market.person.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.rabbiter.market.common.exception.BusinessException;
 import com.rabbiter.market.common.redis.constants.RedisKeys;
 import com.rabbiter.market.common.redis.service.RedisTemplateService;
@@ -64,8 +67,10 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         if (editPwd.getOldPwd().equals(editPwd.getNewPwd())) {
             throw new BusinessException("新密码和旧密码一致");
         }
-        UpdateWrapper<Employee> wrapper = new UpdateWrapper<Employee>().set("password", editPwd.getNewPwd())
-                .eq("phone", editPwd.getUsername());
+        LambdaUpdateWrapper<Employee> wrapper = Wrappers.lambdaUpdate(Employee.class)
+                .set(Employee::getPassword, editPwd.getNewPwd())
+                .eq(Employee::getUsername, editPwd.getUsername());
+
         super.update(wrapper);
     }
 
@@ -73,14 +78,15 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
     @Override
     public Page<Employee> pageByQo(QueryEmp qo) {
         Page<Employee> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        QueryWrapper<Employee> wrapper = new QueryWrapper<>();
-        wrapper.like(StringUtils.hasText(qo.getUsername()), "phone", qo.getUsername())
-                .eq(StringUtils.hasText(qo.getAge()), "age", qo.getAge())
-                .like(StringUtils.hasText(qo.getNickName()), "nick_name", qo.getNickName())
-                .like(StringUtils.hasText(qo.getAddress()), "address", qo.getAddress())
-                .eq(StringUtils.hasText(qo.getSex()), "sex", qo.getSex())
-                .ne("id", 1L)
-                .eq(qo.getDeptId() != null, "deptId", qo.getDeptId());
+        LambdaQueryWrapper<Employee> wrapper = Wrappers.lambdaQuery(Employee.class)
+                .like(StringUtils.hasText(qo.getUsername()), Employee::getUsername, qo.getUsername())
+                .eq(StringUtils.hasText(qo.getAge()), Employee::getAge, qo.getAge())
+                .like(StringUtils.hasText(qo.getNickName()), Employee::getNickName, qo.getNickName())
+                .like(StringUtils.hasText(qo.getAddress()), Employee::getAddress, qo.getAddress())
+                .eq(StringUtils.hasText(qo.getSex()), Employee::getSex, qo.getSex())
+                .ne(Employee::getId, 1L)
+                .eq(qo.getDeptId() != null, Employee::getDeptId, qo.getDeptId());
+
         super.page(page, wrapper);
         //补全部门信息
         List<Dept> depts = deptService.listByQo(new QueryDept());
@@ -145,7 +151,8 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
             throw new BusinessException("年龄值有误");
         }
         //校验用户是否已注册
-        QueryWrapper<Employee> wrapper = new QueryWrapper<Employee>().eq("phone", employee.getUsername());
+        LambdaQueryWrapper<Employee> wrapper = Wrappers.lambdaQuery(Employee.class)
+                .eq(Employee::getUsername, employee.getUsername());
         Employee one = super.getOne(wrapper);
         if (one != null) {
             throw new BusinessException("系统中已存在该账户");
@@ -180,10 +187,12 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
                 throw new BusinessException("不可以给系统管理者办理离职");
             }
         }
-        QueryWrapper<Employee> wrapper = new QueryWrapper<Employee>().having("id!=" + employee.getId())
-                .eq(StringUtils.hasText(employee.getUsername()), "phone", employee.getUsername())
+        LambdaQueryWrapper<Employee> wrapper = Wrappers.lambdaQuery(Employee.class)
+                .ne(Employee::getId, employee.getId())
+                .eq(StringUtils.hasText(employee.getUsername()), Employee::getUsername, employee.getUsername())
                 .or()
-                .eq(StringUtils.hasText(employee.getIdCard()), "id_card", employee.getIdCard());
+                .eq(StringUtils.hasText(employee.getIdCard()), Employee::getIdCard, employee.getIdCard());
+
         List<Employee> list = super.list(wrapper);
         if (list != null && list.size() > 0) {
             throw new BusinessException("系统已存在相同的用户名或身份证号");
@@ -208,7 +217,9 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         if (Employee.STATE_DEL.equals(employee.getState())) {
             throw new BusinessException("已是离职状态");
         }
-        UpdateWrapper<Employee> wrapper = new UpdateWrapper<Employee>().set("state", Employee.STATE_DEL).eq("id", id);
+        LambdaUpdateWrapper<Employee> wrapper = Wrappers.lambdaUpdate(Employee.class)
+                .set(Employee::getState, Employee.STATE_DEL)
+                .eq(Employee::getId, id);
         super.update(wrapper);
     }
 
@@ -221,14 +232,18 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         }
         if (employee.getIsAdmin()) {
             if (code.equals("123456")) {
-                UpdateWrapper<Employee> wrapper = new UpdateWrapper<Employee>().set("password", Employee.DEFAULT_PWD).eq("id", eid);
+                LambdaUpdateWrapper<Employee> wrapper = Wrappers.lambdaUpdate(Employee.class)
+                        .set(Employee::getPassword, Employee.DEFAULT_PWD)
+                        .eq(Employee::getId, eid);
                 super.update(wrapper);
             } else {
                 throw new BusinessException("密钥错误");
             }
         } else {
             if (code.equals("456789")) {
-                UpdateWrapper<Employee> wrapper = new UpdateWrapper<Employee>().set("password", Employee.DEFAULT_PWD).eq("id", eid);
+                LambdaUpdateWrapper<Employee> wrapper = Wrappers.lambdaUpdate(Employee.class)
+                        .set(Employee::getPassword, Employee.DEFAULT_PWD)
+                        .eq(Employee::getId, eid);
                 super.update(wrapper);
             } else {
                 throw new BusinessException("密钥错误");

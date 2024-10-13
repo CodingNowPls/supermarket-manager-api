@@ -1,5 +1,7 @@
 package com.rabbiter.market.person.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.rabbiter.market.common.exception.BusinessException;
 import com.rabbiter.market.common.redis.constants.RedisKeys;
 import com.rabbiter.market.common.redis.service.RedisTemplateService;
@@ -31,7 +33,9 @@ public class LoginServiceImpl extends ServiceImpl<EmployeeMapper, Employee> impl
     @Override
     public Map<String, Object> login(String username, String password) {
         //根据电话号码查询用户
-        QueryWrapper<Employee> wrapper = new QueryWrapper<Employee>().eq("phone", username).eq("state", Employee.STATE_NORMAL);
+        LambdaQueryWrapper<Employee> wrapper = Wrappers.lambdaQuery(Employee.class)
+                .eq(Employee::getUsername, username)
+                .eq(Employee::getState, Employee.STATE_NORMAL);
         Employee employee = super.getOne(wrapper);
         if (employee == null) {
             throw new BusinessException("账号不存在");
@@ -137,7 +141,6 @@ public class LoginServiceImpl extends ServiceImpl<EmployeeMapper, Employee> impl
             map.put("employee", null);
         }
         map.put("token", token);
-
         return map;
     }
 }

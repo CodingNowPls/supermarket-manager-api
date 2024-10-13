@@ -1,5 +1,7 @@
 package com.rabbiter.market.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.rabbiter.market.common.exception.BusinessException;
 import com.rabbiter.market.common.redis.service.RedisTemplateService;
 import com.rabbiter.market.person.domain.Employee;
@@ -42,11 +44,12 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 
     @Override
     public List<Role> listByQo(RoleQuery qo) {
-        QueryWrapper<Role> wrapper = new QueryWrapper<>();
-        wrapper.like(StringUtils.hasText(qo.getName()), "name", qo.getName());
-        wrapper.eq(StringUtils.hasText(qo.getState()), "state", qo.getState());
-        wrapper.ne("id", Role.SYS_ID);
-        wrapper.ne("id", 2L);
+        LambdaQueryWrapper<Role> wrapper = Wrappers.lambdaQuery(Role.class)
+                .like(StringUtils.hasText(qo.getName()), Role::getName, qo.getName())
+                .eq(StringUtils.hasText(qo.getState()), Role::getState, qo.getState())
+                .ne(Role::getId, Role.SYS_ID)
+                .ne(Role::getId, 2L);
+
         List<Role> list = super.list(wrapper);
         return list;
     }
@@ -54,7 +57,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Override
     public void forbiddenRole(Long rid) {
         Role role = super.getById(rid);
-        if (Role.SYS_ID == role.getId() || 2L == role.getId()) {
+        if (Role.SYS_ID.equals(role.getId()) || 2L == role.getId()) {
             throw new BusinessException("不能停用系统拥有者");
         }
         UpdateWrapper<Role> wrapper = new UpdateWrapper<Role>()
@@ -70,7 +73,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         }
         if (StringUtils.hasText(role.getName())) {
             //查询是否保存过
-            Role role1 = super.getOne(new QueryWrapper<Role>().eq("name", role.getName()));
+            Role role1 = super.getOne(Wrappers.lambdaQuery(Role.class)
+                    .eq(Role::getName, role.getName()));
             if (role1 != null) {
                 throw new BusinessException("操作失败，角色名重复");
             } else {
@@ -179,14 +183,16 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
                 }
 
                 Set<Long> totalIds = new HashSet<>();
-                QueryWrapper<Menu> qoWrapper = new QueryWrapper<Menu>().in("id", ids);
+                LambdaQueryWrapper<Menu> qoWrapper = Wrappers.lambdaQuery(Menu.class)
+                        .in(Menu::getId, ids);
                 List<Menu> list1 = menuService.list(qoWrapper);
                 for (Menu menu : list1) {
                     //按钮
                     if (menu.getParentId() != null && Menu.TYPE_BUTTON.equals(menu.getType())) {
                         totalIds.add(menu.getId());
-                        QueryWrapper<Menu> btnWrapper = new QueryWrapper<Menu>().eq("id", menu.getParentId())
-                                .eq("type", Menu.TYPE_MENU);
+                        LambdaQueryWrapper<Menu> btnWrapper = Wrappers.lambdaQuery(Menu.class)
+                                .eq(Menu::getId, menu.getParentId())
+                                .eq(Menu::getType, Menu.TYPE_MENU);
                         Menu menu1 = menuService.getOne(btnWrapper);
                         totalIds.add(menu1.getId());
                         totalIds.add(menu1.getParentId());
@@ -217,7 +223,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Override
     public List<Map<String, Object>> getRoleAll() {
         List<Map<String, Object>> list = new ArrayList<>();
-        QueryWrapper<Role> wrapper = new QueryWrapper<Role>().eq("state", Role.STATE_NORMAL).ne("id", Role.SYS_ID).ne("id", 2L);
+        LambdaQueryWrapper<Role> wrapper = Wrappers.lambdaQuery(Role.class)
+                .eq(Role::getState, Role.STATE_NORMAL)
+                .ne(Role::getId, Role.SYS_ID)
+                .ne(Role::getId, 2L);
         List<Role> roles = super.list(wrapper);
         for (Role role : roles) {
             Map<String, Object> map = new HashMap<>();

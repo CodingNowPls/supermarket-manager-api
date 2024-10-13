@@ -10,6 +10,7 @@ import java.io.Serializable;
 
 /**
  *
+ * @author gao
  */
 @Data
 @TableName("t_member")
@@ -50,7 +51,5 @@ public class Member implements Serializable {
      */
     private String info;
 
-    public Member() {
-    }
 
 }

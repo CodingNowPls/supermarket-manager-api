@@ -2,7 +2,7 @@ server:
   port: 9291
 spring:
   application:
-    name: market-server
+    name: market-api
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -16,9 +16,9 @@ spring:
   mvc:
     async:
       request-timeout: 20000
+    static-path-pattern: /**
 mybatis-plus:
   mapper-locations: classpath:mapper/*/*Mapper.xml
 logging:
   level:
     cn.dingli.market.mapper: debug
-

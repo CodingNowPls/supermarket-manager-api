@@ -3,8 +3,9 @@
 <mapper namespace="com.rabbiter.market.goods.mapper.GoodsMapper">
 
     <select id="getNoticeInTotalCount" resultType="java.lang.Integer">
-        select count(g.id) from goods g
-        join (SELECT g.id,IFNULL(SUM(gs.residue_num),0) sum from goods g left join t_goods_stock gs on g.id=gs.goods_id
+        select count(g.id) from t_goods g
+        join (SELECT g.id,IFNULL(SUM(gs.residue_num),0) sum from t_goods g left join t_goods_stock gs on
+        g.id=gs.goods_id
         GROUP BY g.id) temp on g.id=temp.id
         <where>
             g.inventory !=0 and IFNULL(g.inventory,0)-temp.sum>0 and g.state='0'
@@ -15,8 +16,9 @@
     </select>
     <select id="getNoticePageList" resultType="com.rabbiter.market.inventory.domain.NoticeIn">
         select g.id,g.name,g.purchash_price purchashPrice,g.cover_url
-        coverUrl,(IFNULL(g.inventory,0)-IFNULL(temp.sum,0)) goodsNum from goods g
-        join (SELECT g.id,IFNULL(SUM(gs.residue_num),0) sum from goods g left join t_goods_stock gs on g.id=gs.goods_id
+        coverUrl,(IFNULL(g.inventory,0)-IFNULL(temp.sum,0)) goodsNum from t_goods g
+        join (SELECT g.id,IFNULL(SUM(gs.residue_num),0) sum from t_goods g left join t_goods_stock gs on
+        g.id=gs.goods_id
         GROUP BY g.id) temp
         on g.id=temp.id
         <where>
@@ -28,7 +30,7 @@
         LIMIT #{start},#{size}
     </select>
     <select id="getNoticeOutShelvesTotalCount" resultType="java.lang.Integer">
-        select count(id) from goods
+        select count(id) from t_goods
         <where>
             IFNULL(shelves,0)-IFNULL(residue_num,0)>0 and state='0'
             <if test="name !=null">
@@ -38,7 +40,7 @@
     </select>
     <select id="getNoticeShelvesPageList"
             resultType="com.rabbiter.market.inventory.domain.NoticeOut">
-        select id,name,cover_url coverUrl, (IFNULL(shelves,0)-IFNULL(residue_num,0)) goodsNum from goods
+        select id,name,cover_url coverUrl, (IFNULL(shelves,0)-IFNULL(residue_num,0)) goodsNum from t_goods
         <where>
             IFNULL(shelves,0)-IFNULL(residue_num,0)>0 and state='0'
             <if test="name !=null">
@@ -47,7 +49,9 @@
         </where>
     </select>
     <select id="queryPageStatisticSaleByQo" resultType="java.lang.Long">
-        select sum(sales_volume) from goods where state='0'
+        select sum(sales_volume)
+        from t_goods
+        where state = '0'
 
     </select>
 </mapper>

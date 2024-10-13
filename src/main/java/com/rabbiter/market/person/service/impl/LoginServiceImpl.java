@@ -39,7 +39,7 @@ public class LoginServiceImpl extends ServiceImpl<EmployeeMapper, Employee> impl
         RedisKeys disableuser = RedisKeys.DISABLEUSER;
 
         if (redisTemplateService.hasKey(disableuser.join(username))) {
-            throw new BusinessException("该账户已被冻结，请" + disableuser.getTimeout() + "小时后再来登录");
+            throw new BusinessException("该账户已被冻结，请" + disableuser.getExpireTime() + "小时后再来登录");
         }
         //比对密码是否一致
         if (!password.equals(employee.getPassword())) {
@@ -47,11 +47,11 @@ public class LoginServiceImpl extends ServiceImpl<EmployeeMapper, Employee> impl
             RedisKeys loginErroPwdnum = RedisKeys.LOGIN_ERRO_PWDNUM;
             int errornum = redisTemplateService.hasKey(loginErroPwdnum.join(username)) ? (Integer) redisTemplateService.getCacheObject(loginErroPwdnum.join(username)) + 1 : 1;
             if (errornum == 6) {
-                redisTemplateService.setCacheObject(disableuser.join(username), true, disableuser.getTimeout(), disableuser.getTimeUnit());
+                redisTemplateService.setCacheObject(disableuser.join(username), true, disableuser.getExpireTime(), disableuser.getTimeUnit());
                 redisTemplateService.deleteObject(loginErroPwdnum.join(username));
                 throw new BusinessException("账户被冻结6小时");
             } else {
-                redisTemplateService.setCacheObject(loginErroPwdnum.join(username), errornum, loginErroPwdnum.getTimeout(), loginErroPwdnum.getTimeUnit());
+                redisTemplateService.setCacheObject(loginErroPwdnum.join(username), errornum, loginErroPwdnum.getExpireTime(), loginErroPwdnum.getTimeUnit());
                 throw new BusinessException("账号或密码错误,错误剩余" + (6 - errornum) + "次");
             }
         }
@@ -79,7 +79,7 @@ public class LoginServiceImpl extends ServiceImpl<EmployeeMapper, Employee> impl
         String key = RedisKeys.LOGIN_USER.join(username);
         String value = JSONObject.toJSONString(employee);
         //存入redis缓存中
-        redisTemplateService.setCacheObject(key, value, RedisKeys.LOGIN_USER.getTimeout(), RedisKeys.LOGIN_USER.getTimeUnit());
+        redisTemplateService.setCacheObject(key, value, RedisKeys.LOGIN_USER.getExpireTime(), RedisKeys.LOGIN_USER.getTimeUnit());
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("token", key);
         map.put("employee", employee);

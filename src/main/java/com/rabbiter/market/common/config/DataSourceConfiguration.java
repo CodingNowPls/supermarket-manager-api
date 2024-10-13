@@ -10,11 +10,10 @@ import org.springframework.context.annotation.Configuration;
 import java.sql.SQLException;
 import java.util.Properties;
 
+
 /**
- * Description
- * Author: rabbiter
- * Date: 2020/2/26 23:39
- **/
+ * @author gao
+ */
 @Configuration
 public class DataSourceConfiguration {
     @Value("${spring.datasource.druid.driver-class-name}")

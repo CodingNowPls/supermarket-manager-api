@@ -11,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * 解决：1.跨域问题
+ * @author gao
  */
 @Configuration
 public class BaseWebConfig implements WebMvcConfigurer {

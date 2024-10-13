@@ -51,7 +51,7 @@ public class EmpLoginInterceptor implements HandlerInterceptor {
                     return false;
                 } else {
                     //缓存有值,延长存储时间
-                    redisTemplateService.expire(token, RedisKeys.LOGIN_USER.getTimeout(), RedisKeys.LOGIN_USER.getTimeUnit());
+                    redisTemplateService.expire(token, RedisKeys.LOGIN_USER.getExpireTime(), RedisKeys.LOGIN_USER.getTimeUnit());
                 }
             } else {
                 //没有token

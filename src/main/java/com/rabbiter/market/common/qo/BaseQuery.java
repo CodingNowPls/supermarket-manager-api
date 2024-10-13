@@ -8,6 +8,7 @@ import java.util.Map;
 
 /**
  *
+ * @author gao
  */
 @Data
 public class BaseQuery implements Serializable {

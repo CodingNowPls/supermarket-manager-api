@@ -1,7 +1,14 @@
 package com.rabbiter.market.common.redis.constants;
 
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.concurrent.TimeUnit;
+
+/**
+ * @author gao
+ */
 
 public enum RedisKeys {
     //用户注册
@@ -12,16 +19,30 @@ public enum RedisKeys {
     GOODS_CATEGORY("GOODS_CATEGORY", 24L, TimeUnit.HOURS),
     //账户冻结6小时
     DISABLEUSER("DISABLEUSER", 6L, TimeUnit.HOURS);
+    @Getter
+    @Setter
+    private String prefix;
+    /**
+     * 失效时间
+     */
+    @Getter
+    @Setter
+    private Long expireTime;
+    /**
+     * 时间单位
+     */
+    @Getter
+    @Setter
+    private TimeUnit timeUnit;
+    /**
+     * key分隔符
+     */
+    @Getter
+    private final String keySeparator = ":";
 
-    private String prefix; //前缀
-    private Long timeout; //失效时间
-    private TimeUnit timeUnit; //时间单位
-
-    private final String SEP = ":";//key分隔符
-
-    RedisKeys(String prefix, Long timeout, TimeUnit timeUnit) {
+    RedisKeys(String prefix, Long expireTime, TimeUnit timeUnit) {
         this.prefix = prefix;
-        this.timeout = timeout;
+        this.expireTime = expireTime;
         this.timeUnit = timeUnit;
     }
 
@@ -38,36 +59,10 @@ public enum RedisKeys {
         StringBuilder sb = new StringBuilder(80);
         sb.append(this.prefix);
         for (String s : suffix) {
-            sb.append(getSEP()).append(s);
+            sb.append(getKeySeparator()).append(s);
         }
         return sb.toString();
     }
 
-    public String getPrefix() {
-        return prefix;
-    }
 
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
-    }
-
-    public Long getTimeout() {
-        return timeout;
-    }
-
-    public void setTimeout(Long timeout) {
-        this.timeout = timeout;
-    }
-
-    public TimeUnit getTimeUnit() {
-        return timeUnit;
-    }
-
-    public void setTimeUnit(TimeUnit timeUnit) {
-        this.timeUnit = timeUnit;
-    }
-
-    public String getSEP() {
-        return SEP;
-    }
 }

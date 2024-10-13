@@ -1,5 +1,8 @@
 package com.rabbiter.market.common.constants;
 
+/**
+ * @author gao
+ */
 public interface HttpStatus {
     /**
      * 操作成功

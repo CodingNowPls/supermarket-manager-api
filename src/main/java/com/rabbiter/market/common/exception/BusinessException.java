@@ -2,6 +2,9 @@ package com.rabbiter.market.common.exception;
 
 import com.rabbiter.market.common.constants.HttpStatus;
 
+/**
+ * @author gao
+ */
 public class BusinessException extends SysException {
     public BusinessException(String message, Integer code) {
         super(message, code);

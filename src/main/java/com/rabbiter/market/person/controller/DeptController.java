@@ -9,10 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * @author gao
+ */
 @RestController
 @Validated
 @RequestMapping("/person/dept")
 public class DeptController {
+
     @Autowired
     private IDeptService deptService;
 
@@ -42,7 +46,7 @@ public class DeptController {
 
     /*查询信息*/
     @GetMapping("/list")
-    public JsonResult listByQo(@RequestBody QueryDept qo) {
+    public JsonResult listByQo(QueryDept qo) {
         return JsonResult.success(deptService.listByQo(qo));
     }
 }

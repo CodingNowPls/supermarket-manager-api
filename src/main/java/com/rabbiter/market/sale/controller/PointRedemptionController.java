@@ -74,7 +74,6 @@ public class PointRedemptionController {
     @PostMapping("/queryPageByQoExchangePointProducts")
     public JsonResult queryPageByQoExchangePointProducts(@RequestBody QueryExchangePointProductsRecords qo) {
         Page<PointRedemption> page = exchangePointProductsService.queryPageByQoExchangePointProducts(qo);
-
         return JsonResult.success(page);
     }
 

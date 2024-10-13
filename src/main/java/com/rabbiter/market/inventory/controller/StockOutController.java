@@ -57,8 +57,8 @@ public class StockOutController {
 
     @HasPermission("inventory:detail_store_goods_out:save")
     @PostMapping("/save")
-    public JsonResult saveOut(@RequestBody GoodsStockDetail goodsStockDetail, HttpServletRequest request) {
-        detailStoreGoodsService.saveOut(goodsStockDetail, (String) request.getHeader("token"));
+    public JsonResult saveOut(@RequestBody GoodsStockDetail goodsStockDetail) {
+        detailStoreGoodsService.saveOut(goodsStockDetail);
         return JsonResult.success();
     }
 

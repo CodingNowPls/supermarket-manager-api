@@ -16,9 +16,8 @@ public interface IEmployeeService extends IService<Employee> {
      * 修改个人密码业务
      *
      * @param editPwd
-     * @param token
      */
-    void edit_pwd(QueryEditPwd editPwd, String token);
+    void edit_pwd(QueryEditPwd editPwd);
 
     /**
      * 分页显示数据
@@ -30,11 +29,11 @@ public interface IEmployeeService extends IService<Employee> {
 
     DetailEmpVo detail(Long uid);
 
-    void saveEmp(Employee employee, String token);
+    void saveEmp(Employee employee);
 
     EditEmpVo editbtn(Long uid);
 
-    void updateEmp(Employee employee, String token);
+    void updateEmp(Employee employee);
 
     void deactivate(Long id);
 
@@ -46,5 +45,5 @@ public interface IEmployeeService extends IService<Employee> {
      */
     void resetPwd(Long eid, String code);
 
-    InformationVo information(String token);
+    InformationVo information();
 }

@@ -13,7 +13,7 @@ import java.util.Map;
 
 public interface IStockGoodsDetailService extends IService<GoodsStockDetail> {
 
-    void saveIn(GoodsStockDetail goodsStockDetail, String token);
+    void saveIn(GoodsStockDetail goodsStockDetail);
 
     Page<StockGoodsDetailVo> queryPageByQoIn(QueryDetailStoreGoods qo);
 
@@ -29,5 +29,5 @@ public interface IStockGoodsDetailService extends IService<GoodsStockDetail> {
 
     StockGoodsOutDetailVo queryOutGoods(Long goodsId, Long storeId);
 
-    void saveOut(GoodsStockDetail goodsStockDetail, String token);
+    void saveOut(GoodsStockDetail goodsStockDetail);
 }

@@ -11,7 +11,7 @@ import java.util.Map;
 public interface ISaleRecordsService extends IService<SaleRecord> {
     List<Map<String, Object>> getOptionSaleRecordsGoods();
 
-    SaleRecord saveSaleRecords(SaleRecord saleRecord, String token);
+    SaleRecord saveSaleRecords(SaleRecord saleRecord);
 
     Page<SaleRecord> queryPageByQoSaleRecords(QuerySaleRecords qo);
 

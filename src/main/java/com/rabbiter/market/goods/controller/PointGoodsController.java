@@ -46,8 +46,8 @@ public class PointGoodsController {
     }
 
     @PostMapping("/savePointGoods")
-    public JsonResult savePointGoods(@RequestBody PointGoods pointGoods, HttpServletRequest request) {
-        pointProductsService.savePointGoods(pointGoods, (String) request.getHeader("token"));
+    public JsonResult savePointGoods(@RequestBody PointGoods pointGoods) {
+        pointProductsService.savePointGoods(pointGoods);
         return JsonResult.success();
     }
 
@@ -58,8 +58,8 @@ public class PointGoodsController {
     }
 
     @PostMapping("/updatePointGoods")
-    public JsonResult updatePointGoods(@RequestBody PointGoods pointGoods, HttpServletRequest request) {
-        pointProductsService.updatePointGoods(pointGoods, (String) request.getHeader("token"));
+    public JsonResult updatePointGoods(@RequestBody PointGoods pointGoods) {
+        pointProductsService.updatePointGoods(pointGoods);
         return JsonResult.success();
     }
 

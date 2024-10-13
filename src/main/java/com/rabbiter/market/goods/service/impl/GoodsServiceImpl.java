@@ -30,6 +30,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.rabbiter.market.util.HttpRequestUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,7 +82,8 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     }
 
     @Override
-    public void saveGoods(Goods goods, String token) {
+    public void saveGoods(Goods goods) {
+        String token = HttpRequestUtil.getToken();
         Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
         goods.setState(Goods.STATE_UP);
         goods.setCreateby(employee.getNickName());
@@ -108,7 +110,8 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 
     @Transactional
     @Override
-    public void upOrdown(Long gid, String state, String token) {
+    public void upOrdown(Long gid, String state) {
+        String token = HttpRequestUtil.getToken();
         UpdateWrapper<Goods> wrapper = new UpdateWrapper<>();
         wrapper.eq("id", gid);
         if (Goods.STATE_UP.equals(state)) {
@@ -147,7 +150,8 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     }
 
     @Override
-    public void updateGoods(Goods goods, String token) {
+    public void updateGoods(Goods goods) {
+        String token = HttpRequestUtil.getToken();
         Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
         goods.setUpdateby(employee.getNickName());
         goods.setUpdateTime(new Date());
@@ -204,7 +208,8 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     }
 
     @Override
-    public void returnGoods(GoodsStockDetail goodsStockDetail, String token) {
+    public void returnGoods(GoodsStockDetail goodsStockDetail) {
+        String token = HttpRequestUtil.getToken();
         Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
         Goods goods = super.getById(goodsStockDetail.getGoodsId());
 
@@ -355,7 +360,8 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     }
 
     @Override
-    public void saveOut_shelves(GoodsStockDetail goodsStockDetail, String token) {
+    public void saveOut_shelves(GoodsStockDetail goodsStockDetail) {
+        String token = HttpRequestUtil.getToken();
         Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
         QueryWrapper<GoodsStock> detailStoreGoodsQueryWrapper = new QueryWrapper<GoodsStock>().eq("goods_id", goodsStockDetail.getGoodsId())
                 .eq("store_id", goodsStockDetail.getStoreId());
@@ -462,7 +468,8 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     }
 
     @Override
-    public void resolveOutUntreatedForm(NoticeInNotNormalVo vo, String token) {
+    public void resolveOutUntreatedForm(NoticeInNotNormalVo vo) {
+        String token = HttpRequestUtil.getToken();
         Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
         QueryWrapper<GoodsStockDetail> queryWrapper = new QueryWrapper<GoodsStockDetail>()
                 .eq("cn", vo.getCn())

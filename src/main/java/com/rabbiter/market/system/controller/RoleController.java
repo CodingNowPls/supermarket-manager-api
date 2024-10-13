@@ -127,9 +127,9 @@ public class RoleController {
 
     @HasPermission("person:employee:queryRoleIdsByEid")
     @PostMapping("/saveRoleEmp")
-    public JsonResult saveRoleEmp(Long eid, Long[] empRoleIds, HttpServletRequest request) {
-        String token = request.getHeader("token");
-        roleService.saveRoleEmp(eid, empRoleIds, token);
+    public JsonResult saveRoleEmp(Long eid, Long[] empRoleIds) {
+
+        roleService.saveRoleEmp(eid, empRoleIds);
         return JsonResult.success();
 
     }

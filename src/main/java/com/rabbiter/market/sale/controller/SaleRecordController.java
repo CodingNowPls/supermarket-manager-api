@@ -37,8 +37,8 @@ public class SaleRecordController {
     }
 
     @PostMapping("/saveSaleRecords")
-    public JsonResult saveSaleRecords(@RequestBody SaleRecord saleRecord, HttpServletRequest request) {
-        saleRecord = saleRecordsService.saveSaleRecords(saleRecord, (String) request.getHeader("token"));
+    public JsonResult saveSaleRecords(@RequestBody SaleRecord saleRecord) {
+        saleRecord = saleRecordsService.saveSaleRecords(saleRecord);
         return JsonResult.success(saleRecord);
     }
 

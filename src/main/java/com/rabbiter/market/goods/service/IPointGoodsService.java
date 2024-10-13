@@ -13,9 +13,9 @@ public interface IPointGoodsService extends IService<PointGoods> {
 
     List<Map<String, Object>> queryOptionGoods();
 
-    void savePointGoods(PointGoods pointGoods, String token);
+    void savePointGoods(PointGoods pointGoods);
 
-    void updatePointGoods(PointGoods pointGoods, String token);
+    void updatePointGoods(PointGoods pointGoods);
 
     void del(Long id);
 }

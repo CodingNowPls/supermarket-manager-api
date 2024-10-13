@@ -13,6 +13,7 @@ import com.rabbiter.market.system.service.IRoleService;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.rabbiter.market.util.HttpRequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -87,7 +88,8 @@ public class LoginServiceImpl extends ServiceImpl<EmployeeMapper, Employee> impl
     }
 
     @Override
-    public void exit(String token) {
+    public void exit() {
+        String token = HttpRequestUtil.getToken();
         if (redisTemplateService.hasKey(token)) {
             String str = redisTemplateService.getCacheObject(token);
             Employee employee = JSONObject.parseObject(str, Employee.class);
@@ -98,7 +100,8 @@ public class LoginServiceImpl extends ServiceImpl<EmployeeMapper, Employee> impl
     }
 
     @Override
-    public void logout(String token, String content) {
+    public void logout(String content) {
+        String token = HttpRequestUtil.getToken();
         if ("本人确定注销".equals(content)) {
             //判断是否是系统管理员
             String str = redisTemplateService.getCacheObject(token);
@@ -118,7 +121,8 @@ public class LoginServiceImpl extends ServiceImpl<EmployeeMapper, Employee> impl
     }
 
     @Override
-    public List<Menu> empMenu(String token) {
+    public List<Menu> empMenu() {
+        String token = HttpRequestUtil.getToken();
         String str = redisTemplateService.getCacheObject(token);
         Employee employee = JSONObject.parseObject(str, Employee.class);
         return employee.getMenus();

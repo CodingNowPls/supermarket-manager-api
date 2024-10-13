@@ -23,25 +23,22 @@ public interface ILoginService extends IService<Employee> {
     /**
      * 退出功能
      *
-     * @param token
      */
-    void exit(String token);
+    void exit();
 
     /**
      * 注销账户功能
      *
-     * @param token
      * @param content
      */
-    void logout(String token, String content);
+    void logout(String content);
 
     /**
      * 登录者拥有的菜单信息
      *
-     * @param token
      * @return
      */
-    List<Menu> empMenu(String token);
+    List<Menu> empMenu();
 
     Map<String, Object> checkedToken(String token);
 }

@@ -72,15 +72,15 @@ public class GoodsController {
 
     /*保存*/
     @PostMapping("/save")
-    public JsonResult saveGoods(@RequestBody Goods goods, HttpServletRequest request) {
-        goodsService.saveGoods(goods, request.getHeader("token"));
+    public JsonResult saveGoods(@RequestBody Goods goods) {
+        goodsService.saveGoods(goods);
         return JsonResult.success();
     }
     /*上/下架*/
 
     @PostMapping("/upOrdown")
-    public JsonResult upOrdown(@NotNull(message = "商品编号不能为空") Long gid, String state, HttpServletRequest request) {
-        goodsService.upOrdown(gid, state, request.getHeader("token"));
+    public JsonResult upOrdown(@NotNull(message = "商品编号不能为空") Long gid, String state) {
+        goodsService.upOrdown(gid, state);
         return JsonResult.success();
     }
 
@@ -90,8 +90,8 @@ public class GoodsController {
     }
 
     @PostMapping("/update")
-    public JsonResult update(@RequestBody Goods goods, HttpServletRequest request) {
-        goodsService.updateGoods(goods, (String) request.getHeader("token"));
+    public JsonResult update(@RequestBody Goods goods) {
+        goodsService.updateGoods(goods);
         return JsonResult.success();
     }
 
@@ -110,8 +110,8 @@ public class GoodsController {
 
     /*退还商品入库*/
     @PostMapping("/returnGoods")
-    public JsonResult returnGoods(@RequestBody GoodsStockDetail goodsStockDetail, HttpServletRequest request) {
-        goodsService.returnGoods(goodsStockDetail, (String) request.getHeader("token"));
+    public JsonResult returnGoods(@RequestBody GoodsStockDetail goodsStockDetail) {
+        goodsService.returnGoods(goodsStockDetail);
         return JsonResult.success();
     }
 

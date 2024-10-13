@@ -14,7 +14,7 @@ public interface IPointRedemptionService extends IService<PointRedemption> {
 
     PointGoods queryPointProductByGoodsId(Long goodsId);
 
-    void saveExchangePointProductRecords(PointRedemption pointRedemption, String token);
+    void saveExchangePointProductRecords(PointRedemption pointRedemption);
 
     List<Map<String, Object>> queryOptionsMemberPhone();
 

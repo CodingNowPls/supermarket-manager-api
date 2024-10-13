@@ -60,7 +60,7 @@ public interface IRoleService extends IService<Role> {
 
     List<Long> queryRoleIdsByEid(Long eid);
 
-    void saveRoleEmp(Long eid, Long[] roleIds, String token);
+    void saveRoleEmp(Long eid, Long[] roleIds);
 
     void clearEmpPermission(Long id);
 }

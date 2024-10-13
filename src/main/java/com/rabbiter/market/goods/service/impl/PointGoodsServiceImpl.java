@@ -14,6 +14,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.rabbiter.market.util.HttpRequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -59,7 +60,8 @@ public class PointGoodsServiceImpl extends ServiceImpl<PointProductsMapper, Poin
     }
 
     @Override
-    public void savePointGoods(PointGoods pointGoods, String token) {
+    public void savePointGoods(PointGoods pointGoods) {
+        String token = HttpRequestUtil.getToken();
         Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
         QueryWrapper<PointGoods> wrapper = new QueryWrapper<PointGoods>().eq("goods_id", pointGoods.getGoodsId());
         PointGoods one = super.getOne(wrapper);
@@ -74,7 +76,8 @@ public class PointGoodsServiceImpl extends ServiceImpl<PointProductsMapper, Poin
     }
 
     @Override
-    public void updatePointGoods(PointGoods pointGoods, String token) {
+    public void updatePointGoods(PointGoods pointGoods) {
+        String token = HttpRequestUtil.getToken();
         Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
         pointGoods.setUpdateby(employee.getNickName());
         pointGoods.setUpdateTime(new Date());

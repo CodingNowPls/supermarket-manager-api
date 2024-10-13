@@ -45,8 +45,8 @@ public class StockDetailNoticeController {
 
     @HasPermission("inventory:stockDetailOut:notice:saveOut_shelves")
     @PostMapping("/saveOut_shelves")
-    public JsonResult saveOut_shelves(@RequestBody GoodsStockDetail goodsStockDetail, HttpServletRequest request) {
-        goodsService.saveOut_shelves(goodsStockDetail, (String) request.getHeader("token"));
+    public JsonResult saveOut_shelves(@RequestBody GoodsStockDetail goodsStockDetail) {
+        goodsService.saveOut_shelves(goodsStockDetail);
         return JsonResult.success();
     }
 
@@ -59,8 +59,8 @@ public class StockDetailNoticeController {
 
     @HasPermission("inventory:stockDetailOut:notice:resolveOutUntreatedForm")
     @PostMapping("/resolveOutUntreatedForm")
-    public JsonResult resolveOutUntreatedForm(@RequestBody NoticeInNotNormalVo vo, HttpServletRequest request) {
-        goodsService.resolveOutUntreatedForm(vo, (String) request.getHeader("token"));
+    public JsonResult resolveOutUntreatedForm(@RequestBody NoticeInNotNormalVo vo) {
+        goodsService.resolveOutUntreatedForm(vo);
         return JsonResult.success();
     }
 

@@ -21,6 +21,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.rabbiter.market.util.HttpRequestUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,8 +43,9 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
     private IRoleService roleService;
 
     @Override
-    public void edit_pwd(QueryEditPwd editPwd, String token) {
+    public void edit_pwd(QueryEditPwd editPwd) {
         //获取缓存中的登录员工信息
+        String token = HttpRequestUtil.getToken();
         String str = redisTemplateService.getCacheObject(token);
         Employee employee = JSONObject.parseObject(str, Employee.class);
         if (employee.getId() == 1L) {
@@ -87,7 +89,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
             for (Employee record : records) {
                 if (depts != null) {
                     for (Dept dept : depts) {
-                        if (dept.getId() == record.getDeptId()) {
+                        if (dept.getId().equals(record.getDeptId())) {
                             record.setDeptName(dept.getName());
                             break;
                         }
@@ -125,7 +127,8 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
     }
 
     @Override
-    public void saveEmp(Employee employee, String token) {
+    public void saveEmp(Employee employee) {
+        String token = HttpRequestUtil.getToken();
         //校验参数是否有误
         if (!StringUtils.hasLength(employee.getPassword())) {
             employee.setPassword(Employee.DEFAULT_PWD);
@@ -170,7 +173,8 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
     }
 
     @Override
-    public void updateEmp(Employee employee, String token) {
+    public void updateEmp(Employee employee) {
+        String token = HttpRequestUtil.getToken();
         if (Employee.STATE_DEL.equals(employee.getState())) {
             if (employee.getIsAdmin()) {
                 throw new BusinessException("不可以给系统管理者办理离职");
@@ -236,7 +240,8 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
     }
 
     @Override
-    public InformationVo information(String token) {
+    public InformationVo information() {
+        String token = HttpRequestUtil.getToken();
         Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
         DetailEmpVo detail = detail(employee.getId());
         InformationVo vo = new InformationVo();

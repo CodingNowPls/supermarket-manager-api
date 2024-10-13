@@ -28,18 +28,18 @@ public interface IGoodsService extends IService<Goods> {
      */
     Page<GoodsListVo> queryPageByQo(QueryGoods qo);
 
-    void saveGoods(Goods goods, String token);
+    void saveGoods(Goods goods);
 
-    void upOrdown(Long gid, String state, String token);
+    void upOrdown(Long gid, String state);
 
-    void updateGoods(Goods goods, String token);
+    void updateGoods(Goods goods);
 
     List<Map<String, Object>> selected_goodsAll();
 
     List<Map<String, Object>> selected_storeAll();
 
 
-    void returnGoods(GoodsStockDetail goodsStockDetail, String token);
+    void returnGoods(GoodsStockDetail goodsStockDetail);
 
     Page<GoodsStockVo> queryPageGoodsStore(QueryGoodsStore qo);
 
@@ -51,11 +51,11 @@ public interface IGoodsService extends IService<Goods> {
 
     Page<NoticeOut> queryPageNoticeOut_shelves(QueryNoticeOut qo);
 
-    void saveOut_shelves(GoodsStockDetail goodsStockDetail, String token);
+    void saveOut_shelves(GoodsStockDetail goodsStockDetail);
 
     SalesStatisticsVo queryPageStatisticSaleByQo(QueryStatisticSale qo);
 
     Page<NoticeInNotNormalVo> queryPageNoticeOut_untreated(QueryNoticeOut qo);
 
-    void resolveOutUntreatedForm(NoticeInNotNormalVo vo, String token);
+    void resolveOutUntreatedForm(NoticeInNotNormalVo vo);
 }

@@ -15,6 +15,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.rabbiter.market.util.HttpRequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -129,7 +130,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         vo.setMenus(menus1);
 
         //步骤2：是否是系统管理员
-        if (rid == Role.SYS_ID) {
+        if (rid.equals(Role.SYS_ID)) {
             //系统管理员
             //封装角色拥有的菜单id集合
             for (Menu menu : menus) {
@@ -163,7 +164,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Override
     public void saveRolePermissons(Long rid, Long[] menuIds) {
         //判断是否是系统管理员
-        if (rid == Role.SYS_ID || rid == 2L) {
+        if (rid.equals(Role.SYS_ID) || rid == 2L) {
             //系统管理员
             throw new BusinessException("系统管理员的权限不可操作");
         } else {
@@ -238,9 +239,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     }
 
     @Override
-    public void saveRoleEmp(Long eid, Long[] roleIds, String token) {
+    public void saveRoleEmp(Long eid, Long[] roleIds) {
+        String token = HttpRequestUtil.getToken();
         Employee emp = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
-        if (emp.getId() == eid) {
+        if (emp.getId().equals(eid)) {
             throw new BusinessException("无法为自己赋予职务");
         }
         //查询用户的信息，判断是否是系统管理员

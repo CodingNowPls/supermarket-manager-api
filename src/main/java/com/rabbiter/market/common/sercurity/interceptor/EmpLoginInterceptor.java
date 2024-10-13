@@ -9,6 +9,7 @@ import com.rabbiter.market.common.sercurity.annotation.NoRequireLogin;
 import com.rabbiter.market.common.web.response.JsonResult;
 import com.rabbiter.market.person.domain.Employee;
 import com.alibaba.fastjson.JSONObject;
+import com.rabbiter.market.util.HttpRequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
@@ -32,7 +33,8 @@ public class EmpLoginInterceptor implements HandlerInterceptor {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
         //获取token
-        String token = request.getHeader("token");
+        String token = HttpRequestUtil.getToken();
+        ;
         //是否贴有不必登录的注解
         HandlerMethod handler1 = (HandlerMethod) handler;
         NoRequireLogin noRequireLogin = handler1.getMethodAnnotation(NoRequireLogin.class);

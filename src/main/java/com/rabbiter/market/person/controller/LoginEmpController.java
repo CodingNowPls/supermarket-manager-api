@@ -4,6 +4,7 @@ import com.rabbiter.market.common.sercurity.annotation.NoRequireLogin;
 import com.rabbiter.market.common.web.response.JsonResult;
 import com.rabbiter.market.system.domain.Menu;
 import com.rabbiter.market.person.service.ILoginService;
+import com.rabbiter.market.util.HttpRequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -45,29 +46,25 @@ public class LoginEmpController {
      */
     @NoRequireLogin
     @GetMapping("/exit")
-    public JsonResult exit(HttpServletRequest request) {
-        String token = request.getHeader("token");
-        if (StringUtils.hasLength(token)) {
-            loginService.exit(token);
-        }
+    public JsonResult exit() {
+        loginService.exit();
         return JsonResult.success();
     }
 
     @PostMapping("/logout")
-    public JsonResult logout(@NotEmpty(message = "内容不能为空") String content, HttpServletRequest request) {
-        loginService.logout(request.getHeader("token"), content);
+    public JsonResult logout(@NotEmpty(message = "内容不能为空") String content) {
+        loginService.logout(content);
         return JsonResult.success();
     }
 
     /**
      * 查询登录者的拥有的菜单
      *
-     * @param request
      * @return
      */
     @GetMapping("/empMenu")
-    public JsonResult empMenu(HttpServletRequest request) {
-        List<Menu> menus = loginService.empMenu(request.getHeader("token"));
+    public JsonResult empMenu() {
+        List<Menu> menus = loginService.empMenu();
         return JsonResult.success(menus);
     }
 

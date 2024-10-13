@@ -24,6 +24,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.rabbiter.market.util.HttpRequestUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,8 @@ public class StockGoodsDetailServiceImpl extends ServiceImpl<StockGoodsDetailMap
     private ISupplierService supplierService;
 
     @Override
-    public void saveIn(GoodsStockDetail goodsStockDetail, String token) {
+    public void saveIn(GoodsStockDetail goodsStockDetail) {
+        String token = HttpRequestUtil.getToken();
         Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
         goodsStockDetail.setType(GoodsStockDetail.TYPE_IN);
         goodsStockDetail.setState(GoodsStockDetail.STATE_NORMAL);
@@ -225,7 +227,8 @@ public class StockGoodsDetailServiceImpl extends ServiceImpl<StockGoodsDetailMap
     }
 
     @Override
-    public void saveOut(GoodsStockDetail goodsStockDetail, String token) {
+    public void saveOut(GoodsStockDetail goodsStockDetail) {
+        String token = HttpRequestUtil.getToken();
         Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
         goodsStockDetail.setType(GoodsStockDetail.TYPE_OUT);
         goodsStockDetail.setState1(GoodsStockDetail.STATE1_NORMAL);

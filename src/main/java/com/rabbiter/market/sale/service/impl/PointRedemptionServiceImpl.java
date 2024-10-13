@@ -18,6 +18,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.rabbiter.market.util.HttpRequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -64,7 +65,8 @@ public class PointRedemptionServiceImpl extends ServiceImpl<PointRedemptionHisto
     }
 
     @Override
-    public void saveExchangePointProductRecords(PointRedemption pointRedemption, String token) {
+    public void saveExchangePointProductRecords(PointRedemption pointRedemption) {
+        String token = HttpRequestUtil.getToken();
         Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
         pointRedemption.setCn(IdWorker.getIdStr());//生成订单号
         pointRedemption.setUpdateby(employee.getNickName());

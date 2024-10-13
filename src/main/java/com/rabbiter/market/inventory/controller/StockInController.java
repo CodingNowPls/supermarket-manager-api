@@ -28,8 +28,8 @@ public class StockInController {
 
     @HasPermission("inventory:detail_store_goods_in:save")
     @PostMapping("/save")
-    public JsonResult saveIn(@RequestBody GoodsStockDetail goodsStockDetail, HttpServletRequest request) {
-        detailStoreGoodsService.saveIn(goodsStockDetail, (String) request.getHeader("token"));
+    public JsonResult saveIn(@RequestBody GoodsStockDetail goodsStockDetail) {
+        detailStoreGoodsService.saveIn(goodsStockDetail);
         return JsonResult.success();
     }
 

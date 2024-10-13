@@ -4,6 +4,7 @@ package com.rabbiter.market.common.sercurity.resolver;
 import com.rabbiter.market.common.redis.service.RedisTemplateService;
 import com.rabbiter.market.person.domain.Employee;
 import com.alibaba.fastjson.JSON;
+import com.rabbiter.market.util.HttpRequestUtil;
 import org.springframework.core.MethodParameter;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -36,9 +37,8 @@ public class UserInfoArgumentResolver implements HandlerMethodArgumentResolver {
                                   ModelAndViewContainer modelAndViewContainer,
                                   NativeWebRequest nativeWebRequest,
                                   WebDataBinderFactory webDataBinderFactory) throws Exception {
-        //token--request--
         HttpServletRequest request = nativeWebRequest.getNativeRequest(HttpServletRequest.class);
-        String token = request.getHeader("token");
+        String token = HttpRequestUtil.getToken();
         String userStr = redisService.getCacheObject(token);
         if (!StringUtils.hasText(userStr)) {
             return null;

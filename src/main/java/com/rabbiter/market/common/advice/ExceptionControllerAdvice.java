@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 /**
  * 统一异常处理类的基类
  */
-//@RestControllerAdvice
+@RestControllerAdvice
 public class ExceptionControllerAdvice {
     @ExceptionHandler(RuntimeException.class)
     public JsonResult<?> commonExceptionHandler(RuntimeException ex) {

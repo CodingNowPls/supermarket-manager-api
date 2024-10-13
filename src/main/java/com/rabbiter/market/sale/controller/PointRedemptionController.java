@@ -48,7 +48,14 @@ public class PointRedemptionController {
         return JsonResult.success(pointGoods);
     }
 
-    @PostMapping("/saveExchangePointProductRecords")
+    /**
+     * 兑换积分商品
+     *
+     * @param pointRedemption
+     * @param request
+     * @return
+     */
+    @PostMapping("/savePointRedemptionRecords")
     public JsonResult saveExchangePointProductRecords(PointRedemption pointRedemption, HttpServletRequest request) {
         exchangePointProductsService.saveExchangePointProductRecords(pointRedemption, (String) request.getHeader("token"));
         return JsonResult.success();

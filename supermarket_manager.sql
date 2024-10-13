@@ -182,10 +182,11 @@ INSERT INTO `point_products` VALUES (11, '变形金刚玩具套装', 50, '张三
 INSERT INTO `point_products` VALUES (10, '短袖', 60, '张三', '2023-09-11 12:59:57', 1, '/files/1694434945440_02.jpg', '0');
 
 -- ----------------------------
--- Table structure for store
+-- Table structure for warehouse
 -- ----------------------------
-DROP TABLE IF EXISTS `store`;
-CREATE TABLE `store`  (
+DROP TABLE IF EXISTS `warehouse`;
+CREATE TABLE `warehouse`
+(
   `id` bigint(0) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '仓库名称',
   `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '仓库地址',
@@ -195,9 +196,10 @@ CREATE TABLE `store`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
 
 -- ----------------------------
--- Records of store
+-- Records of warehouse
 -- ----------------------------
-INSERT INTO `store` VALUES (5, '一号仓库', '北京市海淀区', '0', '超市一号仓库');
+INSERT INTO `warehouse`
+VALUES (5, '一号仓库', '北京市海淀区', '0', '超市一号仓库');
 
 -- ----------------------------
 -- Table structure for supplier
@@ -355,10 +357,15 @@ INSERT INTO `t_menu` VALUES (10, '修改角色', NULL, '2', 8, '角色管理', N
 INSERT INTO `t_menu` VALUES (11, '停用角色', NULL, '2', 8, '角色管理', NULL, '0', 'system:role:forbiddenRole', NULL, NULL);
 INSERT INTO `t_menu` VALUES (12, '角色授权', NULL, '2', 8, '角色管理', NULL, '0', 'system:role:saveRolePermissons', NULL, NULL);
 INSERT INTO `t_menu` VALUES (14, '菜单管理', '/system/menu/list', '1', 6, '系统管理', NULL, '0', 'system:menu:list', 'iconfont icon-r-list', 'views/system/menu/List');
-INSERT INTO `t_menu` VALUES (15, '仓库管理', '/inventory_management/store/list', '1', 4, '库存管理', NULL, '0', 'inventory_management:store:list', 'iconfont icon-r-building', 'views/inventory_management/store/List');
-INSERT INTO `t_menu` VALUES (16, '新创仓库', '', '2', 15, '仓库管理', NULL, '0', 'inventory_management:store:save', NULL, '');
-INSERT INTO `t_menu` VALUES (17, '修改仓库', '', '2', 15, '仓库管理', NULL, '0', 'inventory_management:store:update', NULL, '');
-INSERT INTO `t_menu` VALUES (18, '停用仓库', '', '2', 15, '仓库管理', NULL, '0', 'inventory_management:store:deactivate', NULL, '');
+INSERT INTO `t_menu`
+VALUES (15, '仓库管理', '/inventory_management/warehouse/list', '1', 4, '库存管理', NULL, '0',
+        'inventory_management:warehouse:list', 'iconfont icon-r-building', 'views/inventory_management/warehouse/List');
+INSERT INTO `t_menu`
+VALUES (16, '新创仓库', '', '2', 15, '仓库管理', NULL, '0', 'inventory_management:warehouse:save', NULL, '');
+INSERT INTO `t_menu`
+VALUES (17, '修改仓库', '', '2', 15, '仓库管理', NULL, '0', 'inventory_management:warehouse:update', NULL, '');
+INSERT INTO `t_menu`
+VALUES (18, '停用仓库', '', '2', 15, '仓库管理', NULL, '0', 'inventory_management:warehouse:deactivate', NULL, '');
 INSERT INTO `t_menu` VALUES (19, '商品管理', NULL, '0', NULL, NULL, NULL, '0', 'goods_management:goods_category', 'iconfont icon-r-mark2', NULL);
 INSERT INTO `t_menu` VALUES (20, '分类管理', '/goods_management/goods_category/list', '1', 19, '商品管理', NULL, '0', 'goods_management:goods_category:list', 'iconfont icon-r-list', 'views/goods_management/goods_category/List');
 INSERT INTO `t_menu` VALUES (21, '创建商品分类', '', '2', 20, '商品分类管理', NULL, '0', 'goods_management:goods_category:save', NULL, NULL);
@@ -379,7 +386,10 @@ INSERT INTO `t_menu` VALUES (36, '销售记录', '/sale_management/sale_records/
 INSERT INTO `t_menu` VALUES (37, '供货商信息', '/inventory_management/supplier/list', '1', 4, '库存管理', NULL, '0', 'inventory_management:supplier:list', 'iconfont icon-r-mark3', 'views/inventory_management/supplier/List');
 INSERT INTO `t_menu` VALUES (41, '积分商品', '/goods_management/point_products/list', '1', 19, '商品管理', NULL, '0', 'goods_management:point_products:list', 'iconfont icon-r-mark1', 'views/goods_management/point_products/List');
 INSERT INTO `t_menu` VALUES (42, '销售统计', '/goods_management/statistic_sale/list', '1', 19, '商品管理', NULL, '0', 'goods_management:statistic_sale:list', 'iconfont icon-r-add', 'views/goods_management/statistic_sale/List');
-INSERT INTO `t_menu` VALUES (43, '库存统计', '/inventory_management/store/storage_situation', '1', 4, '库存管理', NULL, '0', 'inventory_management:store:storage_situation', 'iconfont icon-r-add', 'views/inventory_management/store/StorageSituation');
+INSERT INTO `t_menu`
+VALUES (43, '库存统计', '/inventory_management/warehouse/storage_situation', '1', 4, '库存管理', NULL, '0',
+        'inventory_management:warehouse:storage_situation', 'iconfont icon-r-add',
+        'views/inventory_management/warehouse/StorageSituation');
 INSERT INTO `t_menu` VALUES (44, '积分兑换记录', '/sale_management/exchange_point_products_records/list', '1', 1, '销售管理', NULL, '0', 'sale_management:exchange_point_products_records:list', 'iconfont icon-r-paper', 'views//sale_management/exchange_point_products_records/List');
 INSERT INTO `t_menu` VALUES (45, '员工创建', NULL, '2', 28, '员工管理', NULL, '0', 'personnel_management:employee:save', NULL, NULL);
 INSERT INTO `t_menu` VALUES (46, '员工修改', NULL, '2', 28, '员工管理', NULL, '0', 'personnel_management:employee:update', NULL, NULL);

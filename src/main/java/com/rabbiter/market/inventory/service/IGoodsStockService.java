@@ -1,13 +1,13 @@
 package com.rabbiter.market.inventory.service;
 
-import com.rabbiter.market.inventory.domain.GoodsStore;
+import com.rabbiter.market.inventory.domain.GoodsStock;
 import com.rabbiter.market.inventory.qo.QueryDetailStorageSituation;
 import com.rabbiter.market.inventory.qo.QueryStorageSituation;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.Map;
 
-public interface IGoodsStoreService extends IService<GoodsStore> {
+public interface IGoodsStockService extends IService<GoodsStock> {
 
     Long storeUsed(Long id);
 

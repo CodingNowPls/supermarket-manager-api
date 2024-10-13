@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.rabbiter.market.inventory.mapper.GoodsStoreMapper">
+<mapper namespace="com.rabbiter.market.inventory.mapper.GoodsStockMapper">
     <update id="goodsInStore">
         update t_goods_store set residue_num=residue_num+#{goodsNum},in_num=in_num+#{goodsNum} where goods_id=#{goodsId} and store_id=#{storeId}
     </update>

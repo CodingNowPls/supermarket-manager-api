@@ -21,19 +21,19 @@ import java.util.Map;
 
 @RestController
 @Validated
-@RequestMapping("/personnel_management/employee")
+@RequestMapping("/person/employee")
 public class EmployeeController {
     @Autowired
     private IEmployeeService employeeService;
 
-    @HasPermission("personnel_management:employee:list")
+    @HasPermission("person:employee:list")
     @PostMapping("/list")
     public JsonResult pageByQo(QueryEmp qo) {
         Page<Employee> page = employeeService.pageByQo(qo);
         return JsonResult.success(page);
     }
 
-    @HasPermission("personnel_management:employee:list")
+    @HasPermission("person:employee:list")
     @GetMapping("/detail")
     public JsonResult detail(Long uid) {
         DetailEmpVo vo = employeeService.detail(uid);
@@ -74,7 +74,7 @@ public class EmployeeController {
     }
 
     /*保存*/
-    @HasPermission("personnel_management:employee:save")
+    @HasPermission("person:employee:save")
     @PostMapping("/save")
     public JsonResult saveEmp(Employee employee, HttpServletRequest request) {
         employeeService.saveEmp(employee, (String) request.getHeader("token"));
@@ -82,7 +82,7 @@ public class EmployeeController {
     }
 
     /*修改按钮*/
-    @HasPermission("personnel_management:employee:update")
+    @HasPermission("person:employee:update")
     @GetMapping("/editbtn")
     public JsonResult editbtn(Long uid) {
         EditEmpVo vo = employeeService.editbtn(uid);
@@ -90,7 +90,7 @@ public class EmployeeController {
     }
 
     /*修改员工业务*/
-    @HasPermission("personnel_management:employee:update")
+    @HasPermission("person:employee:update")
     @PostMapping("/update")
     public JsonResult updateEmp(Employee employee, HttpServletRequest request) {
         employeeService.updateEmp(employee, (String) request.getHeader("token"));
@@ -98,7 +98,7 @@ public class EmployeeController {
     }
 
     /*离职业务*/
-    @HasPermission("personnel_management:employee:update")
+    @HasPermission("person:employee:update")
     @PostMapping("/deactivate")
     public JsonResult deactivate(Long id) {
         employeeService.deactivate(id);
@@ -106,7 +106,7 @@ public class EmployeeController {
     }
 
     /*更改密码*/
-    @HasPermission("personnel_management:employee:resetPwd")
+    @HasPermission("person:employee:resetPwd")
     @PostMapping("/resetPwd")
     public JsonResult resetPwd(Long eid, String code) {
         employeeService.resetPwd(eid, code);

@@ -2,7 +2,7 @@ package com.rabbiter.market.inventory.controller;
 
 import com.rabbiter.market.common.sercurity.annotation.HasPermission;
 import com.rabbiter.market.common.web.response.JsonResult;
-import com.rabbiter.market.inventory.domain.DetailStoreGoods;
+import com.rabbiter.market.inventory.domain.StockDetailGoods;
 import com.rabbiter.market.inventory.domain.NoticeIn;
 import com.rabbiter.market.inventory.domain.NoticeOut;
 import com.rabbiter.market.inventory.qo.QueryNoticeIn;
@@ -18,42 +18,45 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ *
+ */
 @RestController
 @Validated
-@RequestMapping("/inventory_management/detail_store_goods/notice")
-public class NoticeController {
+@RequestMapping("/inventory/stockDetail/notice")
+public class StockDetailNoticeController {
     @Autowired
     private IGoodsService goodsService;
 
-    @HasPermission("inventory_management:detail_store_goods_in:notice:list")
+    @HasPermission("inventory:stockDetailIn:notice:list")
     @PostMapping("/queryPageNoticeIn")
     public JsonResult queryPageNoticeIn(QueryNoticeIn qo) {
         Page<NoticeIn> page = goodsService.queryPageNoticeIn(qo);
         return JsonResult.success(page);
     }
 
-    @HasPermission("inventory_management:detail_store_goods_out:notice:list")
+    @HasPermission("inventory:stockDetailOut:notice:list")
     @PostMapping("/queryPageNoticeOut_shelves")
     public JsonResult queryPageNoticeOut_shelves(QueryNoticeOut qo) {
         Page<NoticeOut> page = goodsService.queryPageNoticeOut_shelves(qo);
         return JsonResult.success(page);
     }
 
-    @HasPermission("inventory_management:detail_store_goods_out:notice:saveOut_shelves")
+    @HasPermission("inventory:stockDetailOut:notice:saveOut_shelves")
     @PostMapping("/saveOut_shelves")
-    public JsonResult saveOut_shelves(DetailStoreGoods detailStoreGoods, HttpServletRequest request) {
-        goodsService.saveOut_shelves(detailStoreGoods, (String) request.getHeader("token"));
+    public JsonResult saveOut_shelves(StockDetailGoods stockDetailGoods, HttpServletRequest request) {
+        goodsService.saveOut_shelves(stockDetailGoods, (String) request.getHeader("token"));
         return JsonResult.success();
     }
 
-    @HasPermission("inventory_management:detail_store_goods_out:notice:list")
+    @HasPermission("inventory:stockDetailOut:notice:list")
     @PostMapping("/queryPageNoticeOut_untreated")
     public JsonResult queryPageNoticeOut_untreated(QueryNoticeOut qo) {
         Page<NoticeInNotNormalVo> page = goodsService.queryPageNoticeOut_untreated(qo);
         return JsonResult.success(page);
     }
 
-    @HasPermission("inventory_management:detail_store_goods_out:notice:resolveOutUntreatedForm")
+    @HasPermission("inventory:stockDetailOut:notice:resolveOutUntreatedForm")
     @PostMapping("/resolveOutUntreatedForm")
     public JsonResult resolveOutUntreatedForm(NoticeInNotNormalVo vo, HttpServletRequest request) {
         goodsService.resolveOutUntreatedForm(vo, (String) request.getHeader("token"));

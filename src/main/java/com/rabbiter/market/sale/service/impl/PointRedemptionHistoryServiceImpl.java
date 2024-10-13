@@ -2,14 +2,14 @@ package com.rabbiter.market.sale.service.impl;
 
 import com.rabbiter.market.common.redis.service.RedisTemplateService;
 import com.rabbiter.market.goods.doamin.Goods;
-import com.rabbiter.market.goods.doamin.PointProducts;
+import com.rabbiter.market.goods.doamin.PointGoods;
 import com.rabbiter.market.member.domain.Member;
 import com.rabbiter.market.person.domain.Employee;
 import com.rabbiter.market.sale.domain.PointRedemptionHistory;
 import com.rabbiter.market.sale.mapper.PointRedemptionHistoryMapper;
 import com.rabbiter.market.inventory.qo.QueryExchangePointProductsRecords;
 import com.rabbiter.market.goods.service.IGoodsService;
-import com.rabbiter.market.goods.service.IPointProductsService;
+import com.rabbiter.market.goods.service.IPointGoodsService;
 import com.rabbiter.market.member.service.IMemberService;
 import com.rabbiter.market.sale.service.IPointRedemptionHistoryService;
 import com.alibaba.fastjson.JSONObject;
@@ -29,7 +29,7 @@ public class PointRedemptionHistoryServiceImpl extends ServiceImpl<PointRedempti
     @Autowired
     private IMemberService memberService;
     @Autowired
-    private IPointProductsService pointProductsService;
+    private IPointGoodsService pointProductsService;
     @Autowired
     private RedisTemplateService redisTemplateService;
     @Autowired
@@ -39,28 +39,28 @@ public class PointRedemptionHistoryServiceImpl extends ServiceImpl<PointRedempti
     public List<Map<String, Object>> queryPointProductBymemberId(Long memberId) {
         Member member = memberService.getById(memberId);
 
-        QueryWrapper<PointProducts> pointProductsQueryWrapper = new QueryWrapper<PointProducts>();
+        QueryWrapper<PointGoods> pointProductsQueryWrapper = new QueryWrapper<PointGoods>();
         if (memberId == null) {
             pointProductsQueryWrapper.gt("integral", 0L);
         } else {
             pointProductsQueryWrapper.le("integral", member.getIntegral());
         }
 
-        List<PointProducts> list = pointProductsService.list(pointProductsQueryWrapper);
+        List<PointGoods> list = pointProductsService.list(pointProductsQueryWrapper);
         List<Map<String, Object>> mapArrayList = new ArrayList<>();
-        for (PointProducts pointProducts : list) {
+        for (PointGoods pointGoods : list) {
             Map<String, Object> map = new HashMap<>();
-            map.put("id", pointProducts.getGoodsId());
-            map.put("name", pointProducts.getGoodsName());
+            map.put("id", pointGoods.getGoodsId());
+            map.put("name", pointGoods.getGoodsName());
             mapArrayList.add(map);
         }
         return mapArrayList;
     }
 
     @Override
-    public PointProducts queryPointProductByGoodsId(Long goodsId) {
-        PointProducts pointProducts = pointProductsService.getOne(new QueryWrapper<PointProducts>().eq(goodsId != null, "goods_id", goodsId));
-        return pointProducts;
+    public PointGoods queryPointProductByGoodsId(Long goodsId) {
+        PointGoods pointGoods = pointProductsService.getOne(new QueryWrapper<PointGoods>().eq(goodsId != null, "goods_id", goodsId));
+        return pointGoods;
     }
 
     @Override
@@ -135,14 +135,14 @@ public class PointRedemptionHistoryServiceImpl extends ServiceImpl<PointRedempti
 
     @Override
     public List<Map<String, Object>> queryOptionsPointProducts() {
-        QueryWrapper<PointProducts> wrapper = new QueryWrapper<PointProducts>()
-                .eq("state", PointProducts.STATE_NORMAL);
-        List<PointProducts> list = pointProductsService.list(wrapper);
+        QueryWrapper<PointGoods> wrapper = new QueryWrapper<PointGoods>()
+                .eq("state", PointGoods.STATE_NORMAL);
+        List<PointGoods> list = pointProductsService.list(wrapper);
         List<Map<String, Object>> vos = new ArrayList<>();
-        for (PointProducts pointProducts : list) {
+        for (PointGoods pointGoods : list) {
             Map<String, Object> map = new HashMap<>();
-            map.put("id", pointProducts.getGoodsId());
-            map.put("name", pointProducts.getGoodsName());
+            map.put("id", pointGoods.getGoodsId());
+            map.put("name", pointGoods.getGoodsName());
             vos.add(map);
         }
         return vos;
@@ -170,10 +170,10 @@ public class PointRedemptionHistoryServiceImpl extends ServiceImpl<PointRedempti
         QueryWrapper<Member> memberQueryWrapper = new QueryWrapper<Member>();
         memberQueryWrapper.eq("state", Member.STATE_NORMAL);
         if (goodsId != null) {
-            PointProducts pointProducts = pointProductsService.getOne(new QueryWrapper<PointProducts>()
+            PointGoods pointGoods = pointProductsService.getOne(new QueryWrapper<PointGoods>()
                     .eq("goods_id", goodsId)
-                    .eq("state", PointProducts.STATE_NORMAL));
-            memberQueryWrapper.ge("integral", pointProducts.getIntegral());
+                    .eq("state", PointGoods.STATE_NORMAL));
+            memberQueryWrapper.ge("integral", pointGoods.getIntegral());
         } else {
             memberQueryWrapper.gt("integral", 0);
         }

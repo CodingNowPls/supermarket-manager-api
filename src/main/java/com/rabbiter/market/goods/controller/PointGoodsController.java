@@ -2,9 +2,9 @@ package com.rabbiter.market.goods.controller;
 
 import com.rabbiter.market.common.sercurity.annotation.HasPermission;
 import com.rabbiter.market.common.web.response.JsonResult;
-import com.rabbiter.market.goods.doamin.PointProducts;
+import com.rabbiter.market.goods.doamin.PointGoods;
 import com.rabbiter.market.goods.qo.QueryPointProducts;
-import com.rabbiter.market.goods.service.IPointProductsService;
+import com.rabbiter.market.goods.service.IPointGoodsService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,18 +18,21 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 积分商品
+ */
 @RestController
 @Validated
-@RequestMapping("/goods_management/point_products")
-public class PointProductController {
+@RequestMapping("/goods/pointGoods")
+public class PointGoodsController {
     @Autowired
-    private IPointProductsService pointProductsService;
+    private IPointGoodsService pointProductsService;
 
     /*查询信息*/
-    @HasPermission("goods_management:point_products:list")
+    @HasPermission("goods:pointGoods:list")
     @PostMapping("/queryPageByQo")
     public JsonResult queryPageByQo(QueryPointProducts qo) {
-        Page<PointProducts> page = pointProductsService.queryPageByQo(qo);
+        Page<PointGoods> page = pointProductsService.queryPageByQo(qo);
         return JsonResult.success(page);
     }
 
@@ -46,20 +49,20 @@ public class PointProductController {
     }
 
     @PostMapping("/savePointGoods")
-    public JsonResult savePointGoods(PointProducts pointProducts, HttpServletRequest request) {
-        pointProductsService.savePointGoods(pointProducts, (String) request.getHeader("token"));
+    public JsonResult savePointGoods(PointGoods pointGoods, HttpServletRequest request) {
+        pointProductsService.savePointGoods(pointGoods, (String) request.getHeader("token"));
         return JsonResult.success();
     }
 
     @GetMapping("/queryPointGoodsById")
     public JsonResult queryPointGoodsById(Long goodsId) {
-        PointProducts pointProducts = pointProductsService.getOne(new QueryWrapper<PointProducts>().eq("goods_id", goodsId));
-        return JsonResult.success(pointProducts);
+        PointGoods pointGoods = pointProductsService.getOne(new QueryWrapper<PointGoods>().eq("goods_id", goodsId));
+        return JsonResult.success(pointGoods);
     }
 
     @PostMapping("/updatePointGoods")
-    public JsonResult updatePointGoods(PointProducts pointProducts, HttpServletRequest request) {
-        pointProductsService.updatePointGoods(pointProducts, (String) request.getHeader("token"));
+    public JsonResult updatePointGoods(PointGoods pointGoods, HttpServletRequest request) {
+        pointProductsService.updatePointGoods(pointGoods, (String) request.getHeader("token"));
         return JsonResult.success();
     }
 

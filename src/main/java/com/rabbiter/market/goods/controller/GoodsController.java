@@ -4,7 +4,7 @@ import com.rabbiter.market.common.sercurity.annotation.NoRequireLogin;
 import com.rabbiter.market.common.util.PathUtils;
 import com.rabbiter.market.common.web.response.JsonResult;
 import com.rabbiter.market.goods.doamin.Goods;
-import com.rabbiter.market.inventory.domain.DetailStoreGoods;
+import com.rabbiter.market.inventory.domain.StockDetailGoods;
 import com.rabbiter.market.goods.qo.QueryGoods;
 import com.rabbiter.market.goods.service.IGoodsService;
 import com.rabbiter.market.goods.vo.GoodsListVo;
@@ -20,9 +20,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 商品列表
+ */
 @RestController
 @Validated
-@RequestMapping("/goods_management/goods")
+@RequestMapping("/goods/goods")
 public class GoodsController {
     @Autowired
     private IGoodsService goodsService;
@@ -107,8 +110,8 @@ public class GoodsController {
 
     /*退还商品入库*/
     @PostMapping("/returnGoods")
-    public JsonResult returnGoods(DetailStoreGoods detailStoreGoods, HttpServletRequest request) {
-        goodsService.returnGoods(detailStoreGoods, (String) request.getHeader("token"));
+    public JsonResult returnGoods(StockDetailGoods stockDetailGoods, HttpServletRequest request) {
+        goodsService.returnGoods(stockDetailGoods, (String) request.getHeader("token"));
         return JsonResult.success();
     }
 

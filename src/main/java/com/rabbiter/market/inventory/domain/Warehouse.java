@@ -12,7 +12,7 @@ import java.io.Serializable;
  */
 @Data
 @TableName("store")
-public class Store implements Serializable {
+public class Warehouse implements Serializable {
     public static final String STATE_NORMAL = "0";
     public static final String STATE_BAN = "-1";
 

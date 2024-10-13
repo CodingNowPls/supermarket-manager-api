@@ -2,7 +2,7 @@ package com.rabbiter.market.sale.controller;
 
 import com.rabbiter.market.common.sercurity.annotation.HasPermission;
 import com.rabbiter.market.common.web.response.JsonResult;
-import com.rabbiter.market.goods.doamin.PointProducts;
+import com.rabbiter.market.goods.doamin.PointGoods;
 import com.rabbiter.market.sale.domain.PointRedemptionHistory;
 import com.rabbiter.market.inventory.qo.QueryExchangePointProductsRecords;
 import com.rabbiter.market.sale.service.IPointRedemptionHistoryService;
@@ -23,7 +23,7 @@ import java.util.Map;
  */
 @RestController
 @Validated
-@RequestMapping("/sale_management/exchange_point_products_records")
+@RequestMapping("/sale/pointRedemptionHistory")
 public class PointRedemptionHistoryController {
     @Autowired
     private IPointRedemptionHistoryService exchangePointProductsService;
@@ -44,8 +44,8 @@ public class PointRedemptionHistoryController {
 
     @GetMapping("/queryPointProductByGoodsId")
     public JsonResult queryPointProductByGoodsId(Long goodsId) {
-        PointProducts pointProducts = exchangePointProductsService.queryPointProductByGoodsId(goodsId);
-        return JsonResult.success(pointProducts);
+        PointGoods pointGoods = exchangePointProductsService.queryPointProductByGoodsId(goodsId);
+        return JsonResult.success(pointGoods);
     }
 
     @PostMapping("/saveExchangePointProductRecords")
@@ -66,7 +66,7 @@ public class PointRedemptionHistoryController {
         return JsonResult.success();
     }
 
-    @HasPermission("sale_management:exchange_point_products_records:list")
+    @HasPermission("sale:pointRedemptionHistory")
     @PostMapping("/queryPageByQoExchangePointProducts")
     public JsonResult queryPageByQoExchangePointProducts(QueryExchangePointProductsRecords qo) {
         Page<PointRedemptionHistory> page = exchangePointProductsService.queryPageByQoExchangePointProducts(qo);

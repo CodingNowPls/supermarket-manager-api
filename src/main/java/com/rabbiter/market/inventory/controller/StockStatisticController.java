@@ -4,21 +4,24 @@ import com.rabbiter.market.common.sercurity.annotation.HasPermission;
 import com.rabbiter.market.common.web.response.JsonResult;
 import com.rabbiter.market.inventory.qo.QueryDetailStorageSituation;
 import com.rabbiter.market.inventory.qo.QueryStorageSituation;
-import com.rabbiter.market.inventory.service.IGoodsStoreService;
+import com.rabbiter.market.inventory.service.IGoodsStockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+/**
+ *
+ */
 @RestController
 @Validated
-@RequestMapping("/inventory_management/store/storage_situation")
-public class StorageSituationController {
+@RequestMapping("/inventory/stock/statistic")
+public class StockStatisticController {
     @Autowired
-    private IGoodsStoreService goodsStoreService;
+    private IGoodsStockService goodsStoreService;
 
-    @HasPermission("inventory_management:store:storage_situation")
+    @HasPermission("inventory:stock:statistic:list")
     @PostMapping("/queryPageByQo")
     public JsonResult queryPageByQo(QueryStorageSituation qo) {
         Map<String, Object> map = goodsStoreService.queryPageStorageSituationByQo(qo);
@@ -26,7 +29,7 @@ public class StorageSituationController {
 
     }
 
-    @HasPermission("inventory_management:store:storage_situation")
+    @HasPermission("inventory:stock:statistic")
     @PostMapping("/queryStoreGoodsByStoreId")
     public JsonResult queryStoreGoodsByStoreId(QueryDetailStorageSituation qo) {
         Map<String, Object> map = goodsStoreService.queryStoreGoodsByStoreId(qo);

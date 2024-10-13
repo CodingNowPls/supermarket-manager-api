@@ -11,14 +11,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 销售统计
+ */
 @RestController
 @Validated
-@RequestMapping("/goods_management/statistic_sale")
-public class StatisticSaleController {
+@RequestMapping("/goods/saleStatistic")
+public class SaleStatisticController {
+
     @Autowired
     private IGoodsService goodsService;
 
-    @HasPermission("goods_management:statistic_sale:list")
+    @HasPermission("goods:saleStatistic:list")
     @PostMapping("/queryPageByQo")
     public JsonResult queryPageByQo(QueryStatisticSale qo) {
         SalesStatisticsVo vo = goodsService.queryPageStatisticSaleByQo(qo);

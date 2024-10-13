@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @Validated
-@RequestMapping("/personal")
+@RequestMapping("/person")
 public class PersonalController {
     @Autowired
     private IEmployeeService employeeService;
@@ -28,7 +28,7 @@ public class PersonalController {
      * @param editPwd
      * @return
      */
-    @HasPermission("personal:edit_pwd")
+    @HasPermission("person:edit_pwd")
     @PostMapping("/edit_pwd")
     public JsonResult edit_pwd(HttpServletRequest request, QueryEditPwd editPwd) {
         String token = request.getHeader("token");
@@ -36,7 +36,7 @@ public class PersonalController {
         return JsonResult.success();
     }
 
-    @HasPermission("personnel_management:employee:update")
+    @HasPermission("person:employee:update")
     @GetMapping("/information")
     public JsonResult information(HttpServletRequest request) {
         String token = request.getHeader("token");

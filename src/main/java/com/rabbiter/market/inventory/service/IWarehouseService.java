@@ -1,16 +1,16 @@
 package com.rabbiter.market.inventory.service;
 
-import com.rabbiter.market.inventory.domain.Store;
+import com.rabbiter.market.inventory.domain.Warehouse;
 import com.baomidou.mybatisplus.extension.service.IService;
 
-public interface IStoreService extends IService<Store> {
+public interface IWarehouseService extends IService<Warehouse> {
 
     /**
      * 更改仓库信息的业务
      *
-     * @param store
+     * @param warehouse
      */
-    void updateStore(Store store);
+    void updateStore(Warehouse warehouse);
 
     /**
      * 停用仓库业务
@@ -21,6 +21,6 @@ public interface IStoreService extends IService<Store> {
 
     Long getResidueNumByGoodsId(Long id);
 
-    void saveStore(Store store);
+    void saveStore(Warehouse warehouse);
 
 }

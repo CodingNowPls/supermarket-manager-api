@@ -16,6 +16,7 @@ import java.util.Objects;
 @Data
 @TableName("t_menu")
 public class Menu implements Serializable {
+
     public static final String TYPE_CATALOGUE = "0";//目录
     public static final String TYPE_MENU = "1"; //菜单
     public static final String TYPE_BUTTON = "2";//按钮

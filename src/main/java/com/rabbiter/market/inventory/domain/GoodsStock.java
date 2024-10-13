@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 @Data
 @TableName("t_goods_store")
-public class GoodsStore implements Serializable {
+public class GoodsStock implements Serializable {
     /**
      *
      */

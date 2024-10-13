@@ -1,11 +1,11 @@
 package com.rabbiter.market.inventory.service.impl;
 
 import com.rabbiter.market.common.exception.BusinessException;
-import com.rabbiter.market.inventory.domain.DetailStoreGoods;
+import com.rabbiter.market.inventory.domain.StockDetailGoods;
 import com.rabbiter.market.inventory.domain.Supplier;
 import com.rabbiter.market.inventory.mapper.SupplierMapper;
 import com.rabbiter.market.inventory.qo.QuerySupplier;
-import com.rabbiter.market.inventory.service.IDetailStoreGoodsService;
+import com.rabbiter.market.inventory.service.IStockGoodsDetailService;
 import com.rabbiter.market.inventory.service.ISupplierService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -26,16 +26,16 @@ import java.util.Map;
 @Service
 public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> implements ISupplierService {
     @Autowired
-    private IDetailStoreGoodsService detailStoreGoodsService;
+    private IStockGoodsDetailService detailStoreGoodsService;
 
     @Override
     public void deactivate(Long cn) {
-        QueryWrapper<DetailStoreGoods> detailStoreGoodsQueryWrapper = new QueryWrapper<DetailStoreGoods>()
-                .eq("state1", DetailStoreGoods.STATE1_NORMAL)
-                .eq("type", DetailStoreGoods.TYPE_IN)
-                .eq("state", DetailStoreGoods.STATE_NORMAL)
+        QueryWrapper<StockDetailGoods> detailStoreGoodsQueryWrapper = new QueryWrapper<StockDetailGoods>()
+                .eq("state1", StockDetailGoods.STATE1_NORMAL)
+                .eq("type", StockDetailGoods.TYPE_IN)
+                .eq("state", StockDetailGoods.STATE_NORMAL)
                 .eq("supplier_id", cn);
-        List<DetailStoreGoods> list = detailStoreGoodsService.list(detailStoreGoodsQueryWrapper);
+        List<StockDetailGoods> list = detailStoreGoodsService.list(detailStoreGoodsQueryWrapper);
         if (list != null && list.size() > 0) {
             throw new BusinessException("该供货商正在被入库订单使用，请解除关系之后在停用");
         }

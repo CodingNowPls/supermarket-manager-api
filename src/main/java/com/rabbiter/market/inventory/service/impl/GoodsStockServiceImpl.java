@@ -3,15 +3,15 @@ package com.rabbiter.market.inventory.service.impl;
 import com.rabbiter.market.common.exception.BusinessException;
 import com.rabbiter.market.common.redis.service.RedisTemplateService;
 import com.rabbiter.market.goods.doamin.Goods;
-import com.rabbiter.market.inventory.domain.GoodsStore;
-import com.rabbiter.market.inventory.domain.Store;
-import com.rabbiter.market.inventory.mapper.GoodsStoreMapper;
+import com.rabbiter.market.inventory.domain.GoodsStock;
+import com.rabbiter.market.inventory.domain.Warehouse;
+import com.rabbiter.market.inventory.mapper.GoodsStockMapper;
 import com.rabbiter.market.inventory.qo.QueryDetailStorageSituation;
 import com.rabbiter.market.inventory.qo.QueryStorageSituation;
 import com.rabbiter.market.goods.service.IGoodsService;
-import com.rabbiter.market.inventory.service.IDetailStoreGoodsService;
-import com.rabbiter.market.inventory.service.IGoodsStoreService;
-import com.rabbiter.market.inventory.service.IStoreService;
+import com.rabbiter.market.inventory.service.IStockGoodsDetailService;
+import com.rabbiter.market.inventory.service.IGoodsStockService;
+import com.rabbiter.market.inventory.service.IWarehouseService;
 import com.rabbiter.market.sale.vo.DetailStorageSituationVo;
 import com.rabbiter.market.sale.vo.StorageSituationVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -29,65 +29,65 @@ import java.util.*;
  */
 @Service
 @Transactional
-public class GoodsStoreServiceImpl extends ServiceImpl<GoodsStoreMapper, GoodsStore> implements IGoodsStoreService {
+public class GoodsStockServiceImpl extends ServiceImpl<GoodsStockMapper, GoodsStock> implements IGoodsStockService {
 
     @Autowired
-    private GoodsStoreMapper goodsStoreMapper;
+    private GoodsStockMapper goodsStockMapper;
     @Autowired
-    private IDetailStoreGoodsService detailStoreGoodsService;
+    private IStockGoodsDetailService detailStoreGoodsService;
     @Autowired
     private RedisTemplateService redisTemplateService;
     @Autowired
     private IGoodsService goodsService;
     @Autowired
-    private IStoreService storeService;
+    private IWarehouseService storeService;
 
     @Override
     public Long storeUsed(Long id) {
-        return goodsStoreMapper.storeUsed(id);
+        return goodsStockMapper.storeUsed(id);
     }
 
     @Override
     public Long getResidueNumByGoodsId(Long id) {
-        return goodsStoreMapper.getResidueNumByGoodsId(id);
+        return goodsStockMapper.getResidueNumByGoodsId(id);
     }
 
     @Override
     public void goodsInStore(Long goodsId, Long goodsNum, Long storeId) {
-        QueryWrapper<GoodsStore> wrapper = new QueryWrapper<GoodsStore>().eq("goods_id", goodsId).eq("store_id", storeId);
-        GoodsStore goodsStore1 = super.getOne(wrapper);
-        if (goodsStore1 != null) {
-            goodsStoreMapper.goodsInStore(goodsId, goodsNum, storeId);
+        QueryWrapper<GoodsStock> wrapper = new QueryWrapper<GoodsStock>().eq("goods_id", goodsId).eq("store_id", storeId);
+        GoodsStock goodsStock1 = super.getOne(wrapper);
+        if (goodsStock1 != null) {
+            goodsStockMapper.goodsInStore(goodsId, goodsNum, storeId);
         } else {
-            GoodsStore goodsStore = new GoodsStore();
-            goodsStore.setGoodsId(goodsId);
-            goodsStore.setInNum(goodsNum);
-            goodsStore.setResidueNum(goodsNum);
-            goodsStore.setStoreId(storeId);
-            Store one = storeService.getById(storeId);
-            goodsStore.setStoreName(one.getName());
-            super.save(goodsStore);
+            GoodsStock goodsStock = new GoodsStock();
+            goodsStock.setGoodsId(goodsId);
+            goodsStock.setInNum(goodsNum);
+            goodsStock.setResidueNum(goodsNum);
+            goodsStock.setStoreId(storeId);
+            Warehouse one = storeService.getById(storeId);
+            goodsStock.setStoreName(one.getName());
+            super.save(goodsStock);
         }
     }
 
     @Override
     public void goodsOutStore(Long goodsId, Long goodsNum, Long storeId) {
-        goodsStoreMapper.goodsOutStore(goodsId, goodsNum, storeId);
+        goodsStockMapper.goodsOutStore(goodsId, goodsNum, storeId);
     }
 
     @Override
     public Map<String, Object> queryPageStorageSituationByQo(QueryStorageSituation qo) {
         HashMap<String, Object> map = new HashMap<>();
-        Long totalStoreNum = goodsStoreMapper.totalStoreNum();
+        Long totalStoreNum = goodsStockMapper.totalStoreNum();
         map.put("totalStoreNum", totalStoreNum != null ? totalStoreNum : 0L);
-        Page<GoodsStore> goodsStorePage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        QueryWrapper<GoodsStore> goodsStoreQueryWrapper = new QueryWrapper<GoodsStore>().select("store_id,store_name,SUM(residue_num) residue_num")
+        Page<GoodsStock> goodsStorePage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
+        QueryWrapper<GoodsStock> goodsStoreQueryWrapper = new QueryWrapper<GoodsStock>().select("store_id,store_name,SUM(residue_num) residue_num")
                 .like(StringUtils.hasText(qo.getName()), "store_name", qo.getName())
                 .groupBy("store_id", "store_name");
         super.page(goodsStorePage, goodsStoreQueryWrapper);
         Page<StorageSituationVo> situationVoPage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         List<StorageSituationVo> vos = new ArrayList<>();
-        for (GoodsStore record : goodsStorePage.getRecords()) {
+        for (GoodsStock record : goodsStorePage.getRecords()) {
             StorageSituationVo vo = new StorageSituationVo();
             vo.setStoreId(record.getStoreId());
             vo.setStoreName(record.getStoreName());
@@ -103,16 +103,16 @@ public class GoodsStoreServiceImpl extends ServiceImpl<GoodsStoreMapper, GoodsSt
     @Override
     public Map<String, Object> queryStoreGoodsByStoreId(QueryDetailStorageSituation qo) {
         Map<String, Object> map = new HashMap<>();
-        Long totalStoreNum1 = goodsStoreMapper.getTotalStoreNum1(qo.getStoreId());
+        Long totalStoreNum1 = goodsStockMapper.getTotalStoreNum1(qo.getStoreId());
         map.put("totalStoreNum1", totalStoreNum1);//该仓库的存储量
 
-        QueryWrapper<GoodsStore> wrapper = new QueryWrapper<GoodsStore>()
+        QueryWrapper<GoodsStock> wrapper = new QueryWrapper<GoodsStock>()
                 .gt("residue_num", 0)
                 .eq("store_id", qo.getStoreId());
-        List<GoodsStore> list = super.list(wrapper);
+        List<GoodsStock> list = super.list(wrapper);
         Set<Long> goodsIds = new HashSet<>();
-        for (GoodsStore goodsStore : list) {
-            goodsIds.add(goodsStore.getGoodsId());
+        for (GoodsStock goodsStock : list) {
+            goodsIds.add(goodsStock.getGoodsId());
         }
         if (goodsIds.size() <= 0) {
             throw new BusinessException("该仓库没有存放任何的商品");
@@ -126,8 +126,8 @@ public class GoodsStoreServiceImpl extends ServiceImpl<GoodsStoreMapper, GoodsSt
             optionsStoreGoods.add(options);
         }
         map.put("optionsStoreGoods", optionsStoreGoods);//选择框
-        Page<GoodsStore> goodsStorePage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        QueryWrapper<GoodsStore> goodsStoreQueryWrapper = new QueryWrapper<GoodsStore>()
+        Page<GoodsStock> goodsStorePage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
+        QueryWrapper<GoodsStock> goodsStoreQueryWrapper = new QueryWrapper<GoodsStock>()
                 .eq("store_id", qo.getStoreId())
                 .gt("residue_num", 0)
                 .eq(qo.getId() != null, "goods_id", qo.getId());
@@ -136,7 +136,7 @@ public class GoodsStoreServiceImpl extends ServiceImpl<GoodsStoreMapper, GoodsSt
         Page<DetailStorageSituationVo> voPage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         voPage.setTotal(goodsStorePage.getTotal());
         List<DetailStorageSituationVo> detailStorageSituationVoList = new ArrayList<>();
-        for (GoodsStore record : goodsStorePage.getRecords()) {
+        for (GoodsStock record : goodsStorePage.getRecords()) {
             DetailStorageSituationVo vo = new DetailStorageSituationVo();
             vo.setGoodsId(record.getGoodsId());
             vo.setResidueNum(record.getResidueNum());

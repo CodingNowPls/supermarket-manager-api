@@ -1,12 +1,12 @@
 package com.rabbiter.market.inventory.mapper;
 
-import com.rabbiter.market.inventory.domain.GoodsStore;
+import com.rabbiter.market.inventory.domain.GoodsStock;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 @Mapper
-public interface GoodsStoreMapper extends BaseMapper<GoodsStore> {
+public interface GoodsStockMapper extends BaseMapper<GoodsStock> {
     Long storeUsed(Long id);
 
     Long getResidueNumByGoodsId(Long goodsId);

@@ -12,27 +12,27 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Validated
-@RequestMapping("/member_management/member")
+@RequestMapping("/member/member")
 public class MemberController {
     @Autowired
     private IMemberService memberService;
 
     /*查询信息*/
-    @HasPermission("member_management:member:list")
+    @HasPermission("member:member:list")
     @PostMapping("/queryPageByQo")
     public JsonResult queryPageByQo(QueryMember qo) {
         Page<Member> page = memberService.queryPageByQo(qo);
         return JsonResult.success(page);
     }
 
-    @HasPermission("member_management:member:delMember")
+    @HasPermission("member:member:delMember")
     @PostMapping("/delMember")
     public JsonResult delMember(Long id) {
         memberService.delMember(id);
         return JsonResult.success();
     }
 
-    @HasPermission("member_management:member:save")
+    @HasPermission("member:member:save")
     @PostMapping("/save")
     public JsonResult save(Member member) {
         memberService.saveMember(member);
@@ -46,7 +46,7 @@ public class MemberController {
         return JsonResult.success(member);
     }
 
-    @HasPermission("member_management:member:update")
+    @HasPermission("member:member:update")
     @PostMapping("/update")
     public JsonResult updateMember(Member member) {
         memberService.updateMember(member);

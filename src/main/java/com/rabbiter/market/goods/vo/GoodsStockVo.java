@@ -8,7 +8,7 @@ import java.io.Serializable;
  *
  */
 @Data
-public class GoodsStoreVo implements Serializable {
+public class GoodsStockVo implements Serializable {
     private Long id;
     /**
      * 商品名

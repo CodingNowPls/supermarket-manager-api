@@ -15,19 +15,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Validated
-@RequestMapping("/inventory_management/supplier")
+@RequestMapping("/inventory/supplier")
 public class SupplierController {
     @Autowired
     private ISupplierService supplierService;
 
-    @HasPermission("inventory_management:supplier:list")
+    @HasPermission("inventory:supplier:list")
     @PostMapping("/queryPageByQo")
     public JsonResult queryPageByQo(QuerySupplier qo) {
         Page<Supplier> page = supplierService.queryPageByQo(qo);
         return JsonResult.success(page);
     }
 
-    @HasPermission("inventory_management:supplier:save")
+    @HasPermission("inventory:supplier:save")
     @PostMapping("/save")
     public JsonResult saveSupplier(Supplier supplier) {
         supplierService.saveSupplier(supplier);
@@ -35,20 +35,20 @@ public class SupplierController {
     }
 
     /*修改接口*/
-    @HasPermission("inventory_management:supplier:update")
+    @HasPermission("inventory:supplier:update")
     @PostMapping("/update")
     public JsonResult updateSupplier(Supplier supplier) {
         supplierService.updateSupplier(supplier);
         return JsonResult.success();
     }
 
-    @HasPermission("inventory_management:supplier:update")
+    @HasPermission("inventory:supplier:update")
     @GetMapping("/queryByCn")
     public JsonResult queryByCn(Long cn) {
         return JsonResult.success(supplierService.getById(cn));
     }
 
-    @HasPermission("inventory_management:supplier:deactivate")
+    @HasPermission("inventory:supplier:deactivate")
     @PostMapping("/deactivate")
     public JsonResult deactivate(Long cn) {
         supplierService.deactivate(cn);

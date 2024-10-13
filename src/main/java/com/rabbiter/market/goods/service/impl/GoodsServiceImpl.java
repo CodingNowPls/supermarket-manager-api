@@ -5,11 +5,8 @@ import com.rabbiter.market.common.redis.constants.RedisKeys;
 import com.rabbiter.market.common.redis.service.RedisTemplateService;
 import com.rabbiter.market.goods.doamin.Goods;
 import com.rabbiter.market.goods.doamin.GoodsCategory;
-import com.rabbiter.market.inventory.domain.DetailStoreGoods;
-import com.rabbiter.market.inventory.domain.NoticeIn;
-import com.rabbiter.market.inventory.domain.NoticeOut;
-import com.rabbiter.market.inventory.domain.GoodsStore;
-import com.rabbiter.market.inventory.domain.Store;
+import com.rabbiter.market.inventory.domain.*;
+import com.rabbiter.market.inventory.domain.Warehouse;
 import com.rabbiter.market.person.domain.Employee;
 import com.rabbiter.market.goods.mapper.GoodsMapper;
 import com.rabbiter.market.goods.qo.QueryGoods;
@@ -19,12 +16,12 @@ import com.rabbiter.market.inventory.qo.QueryNoticeIn;
 import com.rabbiter.market.inventory.qo.QueryNoticeOut;
 import com.rabbiter.market.goods.service.IGoodsService;
 import com.rabbiter.market.goods.service.IGoodsCategoryService;
-import com.rabbiter.market.inventory.service.IDetailStoreGoodsService;
-import com.rabbiter.market.inventory.service.IGoodsStoreService;
-import com.rabbiter.market.inventory.service.IStoreService;
+import com.rabbiter.market.inventory.service.IStockGoodsDetailService;
+import com.rabbiter.market.inventory.service.IGoodsStockService;
+import com.rabbiter.market.inventory.service.IWarehouseService;
 import com.rabbiter.market.goods.vo.NoticeInNotNormalVo;
 import com.rabbiter.market.goods.vo.GoodsListVo;
-import com.rabbiter.market.goods.vo.GoodsStoreVo;
+import com.rabbiter.market.goods.vo.GoodsStockVo;
 import com.rabbiter.market.sale.vo.SaleGoodsVo;
 import com.rabbiter.market.sale.vo.SalesStatisticsVo;
 import com.alibaba.fastjson.JSONObject;
@@ -49,11 +46,11 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     private IGoodsCategoryService goodsCategoryService;
 
     @Autowired
-    private IStoreService storeService;
+    private IWarehouseService storeService;
     @Autowired
-    private IDetailStoreGoodsService detailStoreGoodsService;
+    private IStockGoodsDetailService detailStoreGoodsService;
     @Autowired
-    private IGoodsStoreService goodsStoreService;
+    private IGoodsStockService goodsStoreService;
     @Autowired
     private GoodsMapper goodsMapper;
 
@@ -118,31 +115,31 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
             Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
             wrapper.set("state", Goods.STATE_DOWN);
             Goods goods = super.getById(gid);
-            QueryWrapper<GoodsStore> goodsStoreQueryWrapper = new QueryWrapper<GoodsStore>().eq("goods_id", gid);
-            List<GoodsStore> list = goodsStoreService.list(goodsStoreQueryWrapper);
-            for (GoodsStore goodsStore : list) {
-                DetailStoreGoods detailStoreGoods = new DetailStoreGoods();
-                detailStoreGoods.setCreateid(employee.getId());
-                detailStoreGoods.setCreateby(employee.getNickName());
-                detailStoreGoods.setCreateTime(new Date());
-                detailStoreGoods.setGoodsId(gid);
-                detailStoreGoods.setGoodsName(goods.getName());
-                detailStoreGoods.setType(DetailStoreGoods.TYPE_IN);
-                detailStoreGoods.setState1(DetailStoreGoods.STATE1_UNTREATED);
-                detailStoreGoods.setState(DetailStoreGoods.STATE_DOWN);
-                detailStoreGoods.setCn(IdWorker.getIdStr());
-                detailStoreGoods.setInfo(goods.getName() + "下架处理");
-                detailStoreGoods.setGoodsNum(goodsStore.getResidueNum());
-                detailStoreGoods.setUntreatedNum(goodsStore.getResidueNum());
-                detailStoreGoods.setStoreId(goodsStore.getStoreId());
-                detailStoreGoodsService.save(detailStoreGoods);
+            QueryWrapper<GoodsStock> goodsStoreQueryWrapper = new QueryWrapper<GoodsStock>().eq("goods_id", gid);
+            List<GoodsStock> list = goodsStoreService.list(goodsStoreQueryWrapper);
+            for (GoodsStock goodsStock : list) {
+                StockDetailGoods stockDetailGoods = new StockDetailGoods();
+                stockDetailGoods.setCreateid(employee.getId());
+                stockDetailGoods.setCreateby(employee.getNickName());
+                stockDetailGoods.setCreateTime(new Date());
+                stockDetailGoods.setGoodsId(gid);
+                stockDetailGoods.setGoodsName(goods.getName());
+                stockDetailGoods.setType(StockDetailGoods.TYPE_IN);
+                stockDetailGoods.setState1(StockDetailGoods.STATE1_UNTREATED);
+                stockDetailGoods.setState(StockDetailGoods.STATE_DOWN);
+                stockDetailGoods.setCn(IdWorker.getIdStr());
+                stockDetailGoods.setInfo(goods.getName() + "下架处理");
+                stockDetailGoods.setGoodsNum(goodsStock.getResidueNum());
+                stockDetailGoods.setUntreatedNum(goodsStock.getResidueNum());
+                stockDetailGoods.setStoreId(goodsStock.getStoreId());
+                detailStoreGoodsService.save(stockDetailGoods);
             }
         } else {
             wrapper.set("residue_num", 0);
             wrapper.set("state", Goods.STATE_UP);
-            QueryWrapper<DetailStoreGoods> queryWrapper = new QueryWrapper<DetailStoreGoods>().eq("goods_id", gid)
-                    .eq("state", DetailStoreGoods.STATE_DOWN)
-                    .eq("state1", DetailStoreGoods.STATE1_UNTREATED);
+            QueryWrapper<StockDetailGoods> queryWrapper = new QueryWrapper<StockDetailGoods>().eq("goods_id", gid)
+                    .eq("state", StockDetailGoods.STATE_DOWN)
+                    .eq("state1", StockDetailGoods.STATE1_UNTREATED);
             detailStoreGoodsService.remove(queryWrapper);
         }
         super.update(wrapper);
@@ -193,13 +190,13 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     @Override
     public List<Map<String, Object>> selected_storeAll() {
         List<Map<String, Object>> list = new ArrayList<>();
-        QueryWrapper<Store> wrapper = new QueryWrapper<Store>().eq("state", Store.STATE_NORMAL);
-        List<Store> list1 = storeService.list(wrapper);
+        QueryWrapper<Warehouse> wrapper = new QueryWrapper<Warehouse>().eq("state", Warehouse.STATE_NORMAL);
+        List<Warehouse> list1 = storeService.list(wrapper);
         if (list1 != null && list1.size() > 0) {
-            for (Store store : list1) {
+            for (Warehouse warehouse : list1) {
                 Map<String, Object> map = new HashMap<>();
-                map.put("id", store.getId());
-                map.put("name", store.getName());
+                map.put("id", warehouse.getId());
+                map.put("name", warehouse.getName());
                 list.add(map);
             }
         }
@@ -207,76 +204,76 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     }
 
     @Override
-    public void returnGoods(DetailStoreGoods detailStoreGoods, String token) {
+    public void returnGoods(StockDetailGoods stockDetailGoods, String token) {
         Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
-        Goods goods = super.getById(detailStoreGoods.getGoodsId());
+        Goods goods = super.getById(stockDetailGoods.getGoodsId());
 
         /*补全入库订单信息*/
-        detailStoreGoods.setCn(IdWorker.getIdStr());
-        detailStoreGoods.setCreateby(employee.getNickName());
-        detailStoreGoods.setCreateid(employee.getId());
-        detailStoreGoods.setType(DetailStoreGoods.TYPE_IN);
-        if (DetailStoreGoods.STATE_EXPIRY.equals(detailStoreGoods.getState())) {
+        stockDetailGoods.setCn(IdWorker.getIdStr());
+        stockDetailGoods.setCreateby(employee.getNickName());
+        stockDetailGoods.setCreateid(employee.getId());
+        stockDetailGoods.setType(StockDetailGoods.TYPE_IN);
+        if (StockDetailGoods.STATE_EXPIRY.equals(stockDetailGoods.getState())) {
             //如果是过期，将入库订单的state1修改成2：待处理的状态
-            detailStoreGoods.setState1(DetailStoreGoods.STATE1_UNTREATED);
+            stockDetailGoods.setState1(StockDetailGoods.STATE1_UNTREATED);
         } else {
-            detailStoreGoods.setState1(DetailStoreGoods.STATE1_NORMAL);
+            stockDetailGoods.setState1(StockDetailGoods.STATE1_NORMAL);
         }
 
 
         /*获取仓库的信息*/
-        QueryWrapper<GoodsStore> goodsStoreQueryWrapper = new QueryWrapper<GoodsStore>()
-                .eq("goods_id", detailStoreGoods.getGoodsId())
-                .eq("store_id", detailStoreGoods.getStoreId());
-        GoodsStore goodsStore = goodsStoreService.getOne(goodsStoreQueryWrapper);
-        if (goodsStore == null) {
-            goodsStore = new GoodsStore();
-            goodsStore.setGoodsId(detailStoreGoods.getGoodsId());
-            goodsStore.setStoreId(detailStoreGoods.getStoreId());
-            Store store = storeService.getById(detailStoreGoods.getStoreId());
-            goodsStore.setStoreName(store.getName());
-            goodsStore.setInNum(0L);
-            goodsStore.setResidueNum(0L);
-            goodsStoreService.save(goodsStore);
+        QueryWrapper<GoodsStock> goodsStoreQueryWrapper = new QueryWrapper<GoodsStock>()
+                .eq("goods_id", stockDetailGoods.getGoodsId())
+                .eq("store_id", stockDetailGoods.getStoreId());
+        GoodsStock goodsStock = goodsStoreService.getOne(goodsStoreQueryWrapper);
+        if (goodsStock == null) {
+            goodsStock = new GoodsStock();
+            goodsStock.setGoodsId(stockDetailGoods.getGoodsId());
+            goodsStock.setStoreId(stockDetailGoods.getStoreId());
+            Warehouse warehouse = storeService.getById(stockDetailGoods.getStoreId());
+            goodsStock.setStoreName(warehouse.getName());
+            goodsStock.setInNum(0L);
+            goodsStock.setResidueNum(0L);
+            goodsStoreService.save(goodsStock);
         }
-        long num = goods.getResidueNum() - detailStoreGoods.getGoodsNum();
+        long num = goods.getResidueNum() - stockDetailGoods.getGoodsNum();
         if (num >= 0) {
             //货架还有商品数量
             /*更改商品信息*/
             UpdateWrapper<Goods> goodsUpdateWrapper = new UpdateWrapper<Goods>()
                     .set("residue_num", num)
-                    .eq("id", detailStoreGoods.getGoodsId());
+                    .eq("id", stockDetailGoods.getGoodsId());
             super.update(goodsUpdateWrapper);
             /*更改商品库存信息*/
-            UpdateWrapper<GoodsStore> goodsStoreUpdateWrapper = new UpdateWrapper<GoodsStore>()
-                    .set("residue_num", goodsStore.getResidueNum() + detailStoreGoods.getGoodsNum())
-                    .eq("goods_id", detailStoreGoods.getGoodsId())
-                    .eq("store_id", detailStoreGoods.getStoreId());
+            UpdateWrapper<GoodsStock> goodsStoreUpdateWrapper = new UpdateWrapper<GoodsStock>()
+                    .set("residue_num", goodsStock.getResidueNum() + stockDetailGoods.getGoodsNum())
+                    .eq("goods_id", stockDetailGoods.getGoodsId())
+                    .eq("store_id", stockDetailGoods.getStoreId());
             goodsStoreService.update(goodsStoreUpdateWrapper);
-            detailStoreGoods.setUntreatedNum(detailStoreGoods.getGoodsNum());
+            stockDetailGoods.setUntreatedNum(stockDetailGoods.getGoodsNum());
 
         } else {
             //货架没有商品数量
             /*更改商品信息*/
             UpdateWrapper<Goods> goodsUpdateWrapper = new UpdateWrapper<Goods>()
                     .set("residue_num", 0)
-                    .eq("id", detailStoreGoods.getGoodsId());
+                    .eq("id", stockDetailGoods.getGoodsId());
             super.update(goodsUpdateWrapper);
             /*更改商品库存信息*/
-            UpdateWrapper<GoodsStore> goodsStoreUpdateWrapper = new UpdateWrapper<GoodsStore>()
-                    .set("residue_num", goodsStore.getResidueNum() + goods.getResidueNum())
-                    .eq("goods_id", detailStoreGoods.getGoodsId())
-                    .eq("store_id", detailStoreGoods.getStoreId());
+            UpdateWrapper<GoodsStock> goodsStoreUpdateWrapper = new UpdateWrapper<GoodsStock>()
+                    .set("residue_num", goodsStock.getResidueNum() + goods.getResidueNum())
+                    .eq("goods_id", stockDetailGoods.getGoodsId())
+                    .eq("store_id", stockDetailGoods.getStoreId());
             goodsStoreService.update(goodsStoreUpdateWrapper);
-            detailStoreGoods.setGoodsNum(goods.getResidueNum());
-            detailStoreGoods.setUntreatedNum(goods.getResidueNum());
+            stockDetailGoods.setGoodsNum(goods.getResidueNum());
+            stockDetailGoods.setUntreatedNum(goods.getResidueNum());
         }
-        detailStoreGoodsService.save(detailStoreGoods);
+        detailStoreGoodsService.save(stockDetailGoods);
     }
 
     @Override
-    public Page<GoodsStoreVo> queryPageGoodsStore(QueryGoodsStore qo) {
-        Page<GoodsStoreVo> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
+    public Page<GoodsStockVo> queryPageGoodsStore(QueryGoodsStore qo) {
+        Page<GoodsStockVo> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         Page<Goods> goodsPage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         QueryWrapper<Goods> wrapper = new QueryWrapper<Goods>().eq("state", Goods.STATE_UP)
                 .like(StringUtils.hasText(qo.getName()), "name", qo.getName());
@@ -286,9 +283,9 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
             page.setTotal(0);
             return page;
         }
-        List<GoodsStoreVo> list = new ArrayList<>();
+        List<GoodsStockVo> list = new ArrayList<>();
         for (Goods record : goodsPage.getRecords()) {
-            GoodsStoreVo vo = new GoodsStoreVo();
+            GoodsStockVo vo = new GoodsStockVo();
             BeanUtils.copyProperties(record, vo);
             list.add(vo);
         }
@@ -298,15 +295,15 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     }
 
     @Override
-    public GoodsStoreVo queryGoodsStoreById(Long id) {
-        GoodsStoreVo vo = new GoodsStoreVo();
+    public GoodsStockVo queryGoodsStoreById(Long id) {
+        GoodsStockVo vo = new GoodsStockVo();
         Goods goods = super.getById(id);
         BeanUtils.copyProperties(goods, vo);
         return vo;
     }
 
     @Override
-    public void updateInventory(GoodsStoreVo vo) {
+    public void updateInventory(GoodsStockVo vo) {
         if (vo.getInventory() == null) {
             vo.setInventory(0L);
         }
@@ -358,51 +355,51 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     }
 
     @Override
-    public void saveOut_shelves(DetailStoreGoods detailStoreGoods, String token) {
+    public void saveOut_shelves(StockDetailGoods stockDetailGoods, String token) {
         Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
-        QueryWrapper<GoodsStore> detailStoreGoodsQueryWrapper = new QueryWrapper<GoodsStore>().eq("goods_id", detailStoreGoods.getGoodsId())
-                .eq("store_id", detailStoreGoods.getStoreId());
-        GoodsStore goodsStore = goodsStoreService.getOne(detailStoreGoodsQueryWrapper);
-        if (goodsStore == null || goodsStore.getResidueNum() == null || goodsStore.getResidueNum() == 0) {
+        QueryWrapper<GoodsStock> detailStoreGoodsQueryWrapper = new QueryWrapper<GoodsStock>().eq("goods_id", stockDetailGoods.getGoodsId())
+                .eq("store_id", stockDetailGoods.getStoreId());
+        GoodsStock goodsStock = goodsStoreService.getOne(detailStoreGoodsQueryWrapper);
+        if (goodsStock == null || goodsStock.getResidueNum() == null || goodsStock.getResidueNum() == 0) {
             throw new BusinessException("出库失败，库存中没有该商品的库存");
         }
         /*补全出库单的信息*/
-        detailStoreGoods.setCn(IdWorker.getIdStr());
-        detailStoreGoods.setCreateby(employee.getNickName());
-        detailStoreGoods.setCreateid(employee.getId());
-        detailStoreGoods.setType(DetailStoreGoods.TYPE_OUT);
-        detailStoreGoods.setState1(DetailStoreGoods.STATE1_NORMAL);
-        long num = goodsStore.getResidueNum() - detailStoreGoods.getGoodsNum();
-        Goods goods = super.getById(detailStoreGoods.getGoodsId());
+        stockDetailGoods.setCn(IdWorker.getIdStr());
+        stockDetailGoods.setCreateby(employee.getNickName());
+        stockDetailGoods.setCreateid(employee.getId());
+        stockDetailGoods.setType(StockDetailGoods.TYPE_OUT);
+        stockDetailGoods.setState1(StockDetailGoods.STATE1_NORMAL);
+        long num = goodsStock.getResidueNum() - stockDetailGoods.getGoodsNum();
+        Goods goods = super.getById(stockDetailGoods.getGoodsId());
         if (num >= 0) {
             /*修改货架商品数量*/
             UpdateWrapper<Goods> goodsUpdateWrapper = new UpdateWrapper<Goods>()
-                    .set("residue_num", goods.getResidueNum() == null ? detailStoreGoods.getGoodsNum() : goods.getResidueNum() + detailStoreGoods.getGoodsNum())
-                    .eq("id", detailStoreGoods.getGoodsId());
+                    .set("residue_num", goods.getResidueNum() == null ? stockDetailGoods.getGoodsNum() : goods.getResidueNum() + stockDetailGoods.getGoodsNum())
+                    .eq("id", stockDetailGoods.getGoodsId());
             super.update(goodsUpdateWrapper);
             /*修改商品库存数量*/
-            UpdateWrapper<GoodsStore> goodsStoreUpdateWrapper = new UpdateWrapper<GoodsStore>()
-                    .set("residue_num", goodsStore.getResidueNum() - detailStoreGoods.getGoodsNum())
-                    .eq("goods_id", detailStoreGoods.getGoodsId())
-                    .eq("store_id", detailStoreGoods.getStoreId());
+            UpdateWrapper<GoodsStock> goodsStoreUpdateWrapper = new UpdateWrapper<GoodsStock>()
+                    .set("residue_num", goodsStock.getResidueNum() - stockDetailGoods.getGoodsNum())
+                    .eq("goods_id", stockDetailGoods.getGoodsId())
+                    .eq("store_id", stockDetailGoods.getStoreId());
             goodsStoreService.update(goodsStoreUpdateWrapper);
             /*添加出库记录*/
-            detailStoreGoodsService.save(detailStoreGoods);
+            detailStoreGoodsService.save(stockDetailGoods);
         } else {
             /*修改货架商品数量*/
             UpdateWrapper<Goods> goodsUpdateWrapper = new UpdateWrapper<Goods>()
-                    .set("residue_num", goods.getResidueNum() == null ? goodsStore.getResidueNum() : goods.getResidueNum() + goodsStore.getResidueNum())
-                    .eq("id", detailStoreGoods.getGoodsId());
+                    .set("residue_num", goods.getResidueNum() == null ? goodsStock.getResidueNum() : goods.getResidueNum() + goodsStock.getResidueNum())
+                    .eq("id", stockDetailGoods.getGoodsId());
             super.update(goodsUpdateWrapper);
             /*修改商品库存数量*/
-            UpdateWrapper<GoodsStore> goodsStoreUpdateWrapper = new UpdateWrapper<GoodsStore>()
+            UpdateWrapper<GoodsStock> goodsStoreUpdateWrapper = new UpdateWrapper<GoodsStock>()
                     .set("residue_num", 0L)
-                    .eq("goods_id", detailStoreGoods.getGoodsId())
-                    .eq("store_id", detailStoreGoods.getStoreId());
+                    .eq("goods_id", stockDetailGoods.getGoodsId())
+                    .eq("store_id", stockDetailGoods.getStoreId());
             goodsStoreService.update(goodsStoreUpdateWrapper);
             /*添加出库记录*/
-            detailStoreGoods.setGoodsNum(goodsStore.getResidueNum());
-            detailStoreGoodsService.save(detailStoreGoods);
+            stockDetailGoods.setGoodsNum(goodsStock.getResidueNum());
+            detailStoreGoodsService.save(stockDetailGoods);
         }
 
 
@@ -438,24 +435,24 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     public Page<NoticeInNotNormalVo> queryPageNoticeOut_untreated(QueryNoticeOut qo) {
         Page<NoticeInNotNormalVo> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         List<NoticeInNotNormalVo> vos = new ArrayList<>();
-        QueryWrapper<DetailStoreGoods> queryWrapper = new QueryWrapper<DetailStoreGoods>().eq("state1", DetailStoreGoods.STATE1_UNTREATED);
+        QueryWrapper<StockDetailGoods> queryWrapper = new QueryWrapper<StockDetailGoods>().eq("state1", StockDetailGoods.STATE1_UNTREATED);
         queryWrapper.eq(StringUtils.hasText(qo.getState()), "state", qo.getState());
         queryWrapper.like(StringUtils.hasText(qo.getName()), "goods_name", qo.getName());
-        queryWrapper.eq("type", DetailStoreGoods.TYPE_IN);
+        queryWrapper.eq("type", StockDetailGoods.TYPE_IN);
         queryWrapper.orderByDesc("create_time");
-        List<DetailStoreGoods> list = detailStoreGoodsService.list(queryWrapper);
-        for (DetailStoreGoods detailStoreGoods : list) {
+        List<StockDetailGoods> list = detailStoreGoodsService.list(queryWrapper);
+        for (StockDetailGoods stockDetailGoods : list) {
             NoticeInNotNormalVo vo = new NoticeInNotNormalVo();
-            vo.setCn(detailStoreGoods.getCn());
-            vo.setCreateTime(detailStoreGoods.getCreateTime());
-            vo.setGoodsId(detailStoreGoods.getGoodsId());
-            vo.setGoodsName(detailStoreGoods.getGoodsName());
-            vo.setUntreatedNum(detailStoreGoods.getUntreatedNum());
-            vo.setState(detailStoreGoods.getState());
-            vo.setStoreId(detailStoreGoods.getStoreId());
-            Store store = storeService.getById(detailStoreGoods.getStoreId());
-            vo.setStoreName(store.getName());
-            Goods goods = super.getById(detailStoreGoods.getGoodsId());
+            vo.setCn(stockDetailGoods.getCn());
+            vo.setCreateTime(stockDetailGoods.getCreateTime());
+            vo.setGoodsId(stockDetailGoods.getGoodsId());
+            vo.setGoodsName(stockDetailGoods.getGoodsName());
+            vo.setUntreatedNum(stockDetailGoods.getUntreatedNum());
+            vo.setState(stockDetailGoods.getState());
+            vo.setStoreId(stockDetailGoods.getStoreId());
+            Warehouse warehouse = storeService.getById(stockDetailGoods.getStoreId());
+            vo.setStoreName(warehouse.getName());
+            Goods goods = super.getById(stockDetailGoods.getGoodsId());
             vo.setCoverUrl(goods.getCoverUrl());
             vos.add(vo);
 
@@ -467,44 +464,44 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     @Override
     public void resolveOutUntreatedForm(NoticeInNotNormalVo vo, String token) {
         Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
-        QueryWrapper<DetailStoreGoods> queryWrapper = new QueryWrapper<DetailStoreGoods>()
+        QueryWrapper<StockDetailGoods> queryWrapper = new QueryWrapper<StockDetailGoods>()
                 .eq("cn", vo.getCn())
-                .eq("state1", DetailStoreGoods.STATE1_UNTREATED);
-        DetailStoreGoods detailStoreGoods = detailStoreGoodsService.getOne(queryWrapper);
-        if (detailStoreGoods == null) {
+                .eq("state1", StockDetailGoods.STATE1_UNTREATED);
+        StockDetailGoods stockDetailGoods = detailStoreGoodsService.getOne(queryWrapper);
+        if (stockDetailGoods == null) {
             throw new BusinessException("该订单已被处理");
         }
 
-        long num = detailStoreGoods.getUntreatedNum() - vo.getUntreatedNum();
-        QueryWrapper<GoodsStore> goodsStoreQueryWrapper = new QueryWrapper<GoodsStore>()
+        long num = stockDetailGoods.getUntreatedNum() - vo.getUntreatedNum();
+        QueryWrapper<GoodsStock> goodsStoreQueryWrapper = new QueryWrapper<GoodsStock>()
                 .eq("goods_id", vo.getGoodsId())
                 .eq("store_id", vo.getStoreId());
-        GoodsStore goodsStore = goodsStoreService.getOne(goodsStoreQueryWrapper);
+        GoodsStock goodsStock = goodsStoreService.getOne(goodsStoreQueryWrapper);
         if (num > 0) {
             //未处理完毕
-            UpdateWrapper<DetailStoreGoods> updateWrapper = new UpdateWrapper<DetailStoreGoods>()
-                    .eq("cn", detailStoreGoods.getCn())
+            UpdateWrapper<StockDetailGoods> updateWrapper = new UpdateWrapper<StockDetailGoods>()
+                    .eq("cn", stockDetailGoods.getCn())
                     .set("untreated_num", num);
             detailStoreGoodsService.update(updateWrapper);
             //改变库存
-            UpdateWrapper<GoodsStore> goodsStoreUpdateWrapper = new UpdateWrapper<GoodsStore>()
+            UpdateWrapper<GoodsStock> goodsStoreUpdateWrapper = new UpdateWrapper<GoodsStock>()
                     .eq("goods_id", vo.getGoodsId())
                     .eq("store_id", vo.getStoreId())
-                    .set("residue_num", goodsStore.getResidueNum() - vo.getUntreatedNum());
+                    .set("residue_num", goodsStock.getResidueNum() - vo.getUntreatedNum());
             goodsStoreService.update(goodsStoreUpdateWrapper);
         } else {
             //处理完毕
-            UpdateWrapper<DetailStoreGoods> updateWrapper = new UpdateWrapper<DetailStoreGoods>()
-                    .eq("cn", detailStoreGoods.getCn())
+            UpdateWrapper<StockDetailGoods> updateWrapper = new UpdateWrapper<StockDetailGoods>()
+                    .eq("cn", stockDetailGoods.getCn())
                     .set("untreated_num", 0L)
-                    .set("state1", DetailStoreGoods.STATE1_NORMAL)
+                    .set("state1", StockDetailGoods.STATE1_NORMAL)
                     .set("createid", employee.getId())
                     .set("createby", employee.getNickName())
                     .set("create_time", new Date())
-                    .set("type", DetailStoreGoods.TYPE_OUT);
+                    .set("type", StockDetailGoods.TYPE_OUT);
             detailStoreGoodsService.update(updateWrapper);
             //改变库存
-            UpdateWrapper<GoodsStore> goodsStoreUpdateWrapper = new UpdateWrapper<GoodsStore>()
+            UpdateWrapper<GoodsStock> goodsStoreUpdateWrapper = new UpdateWrapper<GoodsStock>()
                     .eq("goods_id", vo.getGoodsId())
                     .eq("store_id", vo.getStoreId())
                     .set("residue_num", 0L);

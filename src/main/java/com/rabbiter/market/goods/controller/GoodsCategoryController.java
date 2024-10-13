@@ -16,15 +16,18 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 商品分类
+ */
 @RestController
 @Validated
-@RequestMapping("/goods_management/goods_category")
+@RequestMapping("/goods/category")
 public class GoodsCategoryController {
     @Autowired
     private IGoodsCategoryService goodsCategoryService;
 
     /*保存信息接口*/
-    @HasPermission("goods_management:goods_category:save")
+    @HasPermission("goods:category:save")
     @PostMapping("/save")
     public JsonResult saveGoodsCategory(GoodsCategory category) {
         goodsCategoryService.saveGoodsCategory(category);
@@ -32,7 +35,7 @@ public class GoodsCategoryController {
     }
 
     /*修改接口*/
-    @HasPermission("goods_management:goods_category:update")
+    @HasPermission("goods:category:update")
     @PostMapping("/update")
     public JsonResult updateGoodsCategory(GoodsCategory category) {
         goodsCategoryService.updateGoodsCategory(category);
@@ -40,7 +43,7 @@ public class GoodsCategoryController {
     }
 
     /*停用*/
-    @HasPermission("goods_management:goods_category:deactivate")
+    @HasPermission("goods:category:deactivate")
     @PostMapping("/deactivate")
     public JsonResult deactivate(Long cid) {
         goodsCategoryService.deactivate(cid);
@@ -48,7 +51,7 @@ public class GoodsCategoryController {
     }
 
     /*查询信息*/
-    @HasPermission("goods_management:goods_category:list")
+    @HasPermission("goods:category:list")
     @PostMapping("/queryPageByQo")
     public JsonResult queryPageByQo(QueryGoodsCategory qo) {
         Page<GoodsCategory> page = goodsCategoryService.queryPageByQo(qo);

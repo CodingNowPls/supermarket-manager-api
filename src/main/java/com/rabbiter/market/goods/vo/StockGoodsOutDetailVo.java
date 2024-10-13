@@ -11,7 +11,7 @@ import java.util.Date;
  *
  */
 @Data
-public class DetailStoreGoodsOutVo implements Serializable {
+public class StockGoodsOutDetailVo implements Serializable {
 
     private String cn;
 

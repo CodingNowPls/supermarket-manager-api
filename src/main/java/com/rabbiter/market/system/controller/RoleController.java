@@ -115,7 +115,7 @@ public class RoleController {
         return JsonResult.success(list);
     }
 
-    @HasPermission("personnel_management:employee:queryRoleIdsByEid")
+    @HasPermission("person:employee:queryRoleIdsByEid")
     @GetMapping("/queryRoleIdsByEid")
     public JsonResult queryRoleIdsByEid(Long eid) {
 
@@ -123,7 +123,7 @@ public class RoleController {
         return JsonResult.success(list);
     }
 
-    @HasPermission("personnel_management:employee:queryRoleIdsByEid")
+    @HasPermission("person:employee:queryRoleIdsByEid")
     @PostMapping("/saveRoleEmp")
     public JsonResult saveRoleEmp(Long eid, Long[] empRoleIds, HttpServletRequest request) {
         String token = request.getHeader("token");

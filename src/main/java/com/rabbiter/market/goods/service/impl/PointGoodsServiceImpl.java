@@ -3,12 +3,12 @@ package com.rabbiter.market.goods.service.impl;
 import com.rabbiter.market.common.exception.BusinessException;
 import com.rabbiter.market.common.redis.service.RedisTemplateService;
 import com.rabbiter.market.goods.doamin.Goods;
-import com.rabbiter.market.goods.doamin.PointProducts;
+import com.rabbiter.market.goods.doamin.PointGoods;
 import com.rabbiter.market.person.domain.Employee;
 import com.rabbiter.market.goods.mapper.PointProductsMapper;
 import com.rabbiter.market.goods.qo.QueryPointProducts;
 import com.rabbiter.market.goods.service.IGoodsService;
-import com.rabbiter.market.goods.service.IPointProductsService;
+import com.rabbiter.market.goods.service.IPointGoodsService;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -21,24 +21,24 @@ import org.springframework.util.StringUtils;
 import java.util.*;
 
 @Service
-public class PointProductsServiceImpl extends ServiceImpl<PointProductsMapper, PointProducts> implements IPointProductsService {
+public class PointGoodsServiceImpl extends ServiceImpl<PointProductsMapper, PointGoods> implements IPointGoodsService {
     @Autowired
     private IGoodsService goodsService;
     @Autowired
     private RedisTemplateService redisTemplateService;
 
     @Override
-    public Page<PointProducts> queryPageByQo(QueryPointProducts qo) {
-        Page<PointProducts> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        QueryWrapper<PointProducts> wrapper = new QueryWrapper<PointProducts>().like(StringUtils.hasText(qo.getName()), "goods_name", qo.getName());
+    public Page<PointGoods> queryPageByQo(QueryPointProducts qo) {
+        Page<PointGoods> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
+        QueryWrapper<PointGoods> wrapper = new QueryWrapper<PointGoods>().like(StringUtils.hasText(qo.getName()), "goods_name", qo.getName());
         super.page(page, wrapper);
         return page;
     }
 
     @Override
     public List<Map<String, Object>> queryOptionGoods() {
-        QueryWrapper<PointProducts> pointProductsQueryWrapper = new QueryWrapper<PointProducts>().select("goods_id");
-        List<PointProducts> list = super.list();
+        QueryWrapper<PointGoods> pointProductsQueryWrapper = new QueryWrapper<PointGoods>().select("goods_id");
+        List<PointGoods> list = super.list();
         Set<Long> productGoodsIds = new HashSet<>();
         list.forEach(item -> {
             productGoodsIds.add(item.getGoodsId());
@@ -59,34 +59,34 @@ public class PointProductsServiceImpl extends ServiceImpl<PointProductsMapper, P
     }
 
     @Override
-    public void savePointGoods(PointProducts pointProducts, String token) {
+    public void savePointGoods(PointGoods pointGoods, String token) {
         Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
-        QueryWrapper<PointProducts> wrapper = new QueryWrapper<PointProducts>().eq("goods_id", pointProducts.getGoodsId());
-        PointProducts one = super.getOne(wrapper);
+        QueryWrapper<PointGoods> wrapper = new QueryWrapper<PointGoods>().eq("goods_id", pointGoods.getGoodsId());
+        PointGoods one = super.getOne(wrapper);
         if (one != null) {
             throw new BusinessException("该商品已经是积分商品");
         }
-        pointProducts.setUpdateby(employee.getNickName());
-        pointProducts.setUpdateTime(new Date());
-        pointProducts.setUpdateId(employee.getId());
-        pointProducts.setState(PointProducts.STATE_NORMAL);
-        super.save(pointProducts);
+        pointGoods.setUpdateby(employee.getNickName());
+        pointGoods.setUpdateTime(new Date());
+        pointGoods.setUpdateId(employee.getId());
+        pointGoods.setState(PointGoods.STATE_NORMAL);
+        super.save(pointGoods);
     }
 
     @Override
-    public void updatePointGoods(PointProducts pointProducts, String token) {
+    public void updatePointGoods(PointGoods pointGoods, String token) {
         Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
-        pointProducts.setUpdateby(employee.getNickName());
-        pointProducts.setUpdateTime(new Date());
-        pointProducts.setUpdateId(employee.getId());
-        UpdateWrapper<PointProducts> updateWrapper = new UpdateWrapper<PointProducts>().set("integral", pointProducts.getIntegral()).eq("goods_id", pointProducts.getGoodsId());
+        pointGoods.setUpdateby(employee.getNickName());
+        pointGoods.setUpdateTime(new Date());
+        pointGoods.setUpdateId(employee.getId());
+        UpdateWrapper<PointGoods> updateWrapper = new UpdateWrapper<PointGoods>().set("integral", pointGoods.getIntegral()).eq("goods_id", pointGoods.getGoodsId());
         super.update(updateWrapper);
     }
 
     @Override
     public void del(Long id) {
         // 直接物理删除
-        this.baseMapper.delete(new QueryWrapper<PointProducts>().eq("goods_id", id));
+        this.baseMapper.delete(new QueryWrapper<PointGoods>().eq("goods_id", id));
 //        UpdateWrapper<PointProducts> updateWrapper = new UpdateWrapper<PointProducts>()
 //                .set("state", PointProducts.STATE_DEL)
 //                .eq("goods_id", id);

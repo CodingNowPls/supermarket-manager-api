@@ -9,7 +9,7 @@ import com.rabbiter.market.sale.domain.SaleRecords;
 import com.rabbiter.market.sale.mapper.SaleRecordsMapper;
 import com.rabbiter.market.sale.qo.QuerySaleRecords;
 import com.rabbiter.market.goods.service.IGoodsService;
-import com.rabbiter.market.inventory.service.IGoodsStoreService;
+import com.rabbiter.market.inventory.service.IGoodsStockService;
 import com.rabbiter.market.member.service.IMemberService;
 import com.rabbiter.market.sale.service.IDetailSaleRecordsService;
 import com.rabbiter.market.sale.service.ISaleRecordsService;
@@ -33,7 +33,7 @@ public class SaleRecordsServiceImpl extends ServiceImpl<SaleRecordsMapper, SaleR
     @Autowired
     private IDetailSaleRecordsService detailSaleRecordsService;
     @Autowired
-    private IGoodsStoreService goodsStoreService;
+    private IGoodsStockService goodsStoreService;
     @Autowired
     private IMemberService memberService;
 

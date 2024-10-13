@@ -20,7 +20,7 @@ import java.util.Map;
  */
 @RestController
 @Validated
-@RequestMapping("/sale_management/sale_record")
+@RequestMapping("/sale/saleRecord")
 public class SaleRecordController {
     @Autowired
     private ISaleRecordsService saleRecordsService;
@@ -42,7 +42,7 @@ public class SaleRecordController {
         return JsonResult.success(saleRecords);
     }
 
-    @HasPermission("sale_management:sale_records:list")
+    @HasPermission("sale:saleRecordsList")
     @PostMapping("/queryPageByQoSaleRecords")
     public JsonResult queryPageByQoSaleRecords(QuerySaleRecords qo) {
         Page<SaleRecords> page = saleRecordsService.queryPageByQoSaleRecords(qo);

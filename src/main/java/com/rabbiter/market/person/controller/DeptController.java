@@ -14,20 +14,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Validated
-@RequestMapping("/personnel_management/dept")
+@RequestMapping("/person/dept")
 public class DeptController {
     @Autowired
     private IDeptService deptService;
 
     /*保存信息接口*/
-    @HasPermission("personnel_management:dept:save")
+    @HasPermission("person:dept:save")
     @PostMapping("/save")
     public JsonResult saveDept(Dept dept) {
         deptService.saveDept(dept);
         return JsonResult.success();
     }
 
-    @HasPermission("personnel_management:dept:update")
+    @HasPermission("person:dept:update")
     /*修改接口*/
     @PostMapping("/update")
     public JsonResult updateDept(Dept dept) {
@@ -36,7 +36,7 @@ public class DeptController {
     }
 
     /*停用*/
-    @HasPermission("personnel_management:dept:deactivate")
+    @HasPermission("person:dept:deactivate")
     @PostMapping("/deactivate")
     public JsonResult deactivate(Long id) {
         deptService.forbiddenRole(id);

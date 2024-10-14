@@ -39,7 +39,7 @@ public interface RoleMapper extends BaseMapper<Role> {
      *
      * @param roleMenu
      */
-    void saveRolePermissons(List<Map<String, Object>> roleMenu);
+    void saveRolePermissions(List<Map<String, Object>> roleMenu);
 
     List<Long> queryRoleIdsByEid(Long eid);
 

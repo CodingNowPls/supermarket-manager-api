@@ -54,7 +54,7 @@ public interface IRoleService extends IService<Role> {
      * @param rid
      * @param menuIds
      */
-    void saveRolePermissons(Long rid, Long[] menuIds);
+    void saveRolePermissions(Long rid, Long[] menuIds);
 
     List<Map<String, Object>> getRoleAll();
 

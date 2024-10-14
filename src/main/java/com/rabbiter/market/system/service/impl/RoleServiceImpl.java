@@ -166,7 +166,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 
     @Transactional
     @Override
-    public void saveRolePermissons(Long rid, Long[] menuIds) {
+    public void saveRolePermissions(Long rid, Long[] menuIds) {
         //判断是否是系统管理员
         if (rid.equals(Role.SYS_ID) || rid == 2L) {
             //系统管理员
@@ -214,7 +214,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
                     map.put("mid", id);
                     list.add(map);
                 }
-                roleMapper.saveRolePermissons(list);
+                roleMapper.saveRolePermissions(list);
             }
         }
 

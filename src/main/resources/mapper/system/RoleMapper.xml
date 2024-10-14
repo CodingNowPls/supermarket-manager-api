@@ -7,7 +7,7 @@
         <result property="state" column="state"/>
         <result property="name" column="name"/>
     </resultMap>
-    <insert id="saveRolePermissons">
+    <insert id="saveRolePermissions">
         insert into t_role_menu (rid,mid) values
         <foreach collection="list" separator="," item="item">
             (#{item.rid},#{item.mid})

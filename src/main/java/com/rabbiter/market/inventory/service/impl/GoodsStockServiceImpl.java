@@ -134,10 +134,14 @@ public class GoodsStockServiceImpl extends ServiceImpl<GoodsStockMapper, GoodsSt
         }
         map.put("optionsStoreGoods", optionsStoreGoods);//选择框
         Page<GoodsStock> goodsStorePage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        LambdaQueryWrapper<GoodsStock> goodsStoreQueryWrapper = Wrappers.lambdaQuery(GoodsStock.class)
-                .eq(GoodsStock::getStoreId, qo.getStoreId())
-                .gt(GoodsStock::getResidueNum, 0)
-                .eq(qo.getId() != null, GoodsStock::getGoodsId, qo.getId());
+        LambdaQueryWrapper<GoodsStock> goodsStoreQueryWrapper = Wrappers.lambdaQuery(GoodsStock.class);
+        goodsStoreQueryWrapper.eq(GoodsStock::getStoreId, qo.getStoreId())
+                .gt(GoodsStock::getResidueNum, 0);
+
+        if (qo.getId() != null) {
+            goodsStoreQueryWrapper.eq(GoodsStock::getGoodsId, qo.getId());
+        }
+
         super.page(goodsStorePage, goodsStoreQueryWrapper);
 
 

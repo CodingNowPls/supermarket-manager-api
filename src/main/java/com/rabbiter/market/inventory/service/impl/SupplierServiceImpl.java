@@ -44,7 +44,8 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
             throw new BusinessException("该供货商正在被入库订单使用，请解除关系之后在停用");
         }
         LambdaUpdateWrapper<Supplier> updateWrapper = Wrappers.lambdaUpdate();
-        updateWrapper.set(Supplier::getState, Supplier.STATE_BAN)
+        updateWrapper
+                .set(Supplier::getState, Supplier.STATE_BAN)
                 .eq(Supplier::getCn, cn);
         super.update(updateWrapper);
     }

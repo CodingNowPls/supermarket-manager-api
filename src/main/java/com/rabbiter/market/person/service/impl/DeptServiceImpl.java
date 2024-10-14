@@ -27,9 +27,15 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
 
     @Override
     public List<Dept> listByQo(QueryDept qo) {
-        LambdaQueryWrapper<Dept> wrapper = new LambdaQueryWrapper<Dept>()
-                .like(StringUtils.hasText(qo.getName()), Dept::getName, qo.getName())
-                .eq(StringUtils.hasText(qo.getState()), Dept::getState, qo.getState());
+        LambdaQueryWrapper<Dept> wrapper = Wrappers.lambdaQuery(Dept.class);
+        if (StringUtils.hasText(qo.getName())) {
+            wrapper.like(Dept::getName, qo.getName());
+        }
+
+        if (StringUtils.hasText(qo.getState())) {
+            wrapper.eq(Dept::getState, qo.getState());
+        }
+
         return super.list(wrapper);
     }
 
@@ -52,8 +58,10 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
     @Override
     public void saveDept(Dept dept) {
         //判断是否有被创建
-        LambdaQueryWrapper<Dept> wrapper = Wrappers.lambdaQuery(Dept.class)
-                .eq(StringUtils.hasText(dept.getName()), Dept::getName, dept.getName());
+        LambdaQueryWrapper<Dept> wrapper = Wrappers.lambdaQuery(Dept.class);
+        if (StringUtils.hasText(dept.getName())) {
+            wrapper.eq(Dept::getName, dept.getName());
+        }
         if (super.getOne(wrapper) != null) {
             throw new BusinessException("操作失败，该部门已存在");
         }
@@ -66,7 +74,10 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
     @Override
     public void updateDept(Dept dept) {
         if (Dept.STATE_BAN.equals(dept.getState())) {
-            QueryWrapper<Employee> empWrapper = new QueryWrapper<Employee>().eq(dept.getId() != null, "deptId", dept.getId());
+            LambdaQueryWrapper<Employee> empWrapper = Wrappers.lambdaQuery();
+            if (dept.getId() != null) {
+                empWrapper.eq(Employee::getDeptId, dept.getId());
+            }
             List<Employee> list = employeeService.list(empWrapper);
             if (list != null && list.size() > 0) {
                 throw new BusinessException("操作失败，该部门正在使用");

@@ -78,15 +78,26 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
     @Override
     public Page<Employee> pageByQo(QueryEmp qo) {
         Page<Employee> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        LambdaQueryWrapper<Employee> wrapper = Wrappers.lambdaQuery(Employee.class)
-                .like(StringUtils.hasText(qo.getUsername()), Employee::getUsername, qo.getUsername())
-                .eq(StringUtils.hasText(qo.getAge()), Employee::getAge, qo.getAge())
-                .like(StringUtils.hasText(qo.getNickName()), Employee::getNickName, qo.getNickName())
-                .like(StringUtils.hasText(qo.getAddress()), Employee::getAddress, qo.getAddress())
-                .eq(StringUtils.hasText(qo.getSex()), Employee::getSex, qo.getSex())
-                .ne(Employee::getId, 1L)
-                .eq(qo.getDeptId() != null, Employee::getDeptId, qo.getDeptId());
-
+        LambdaQueryWrapper<Employee> wrapper = Wrappers.lambdaQuery(Employee.class);
+        if (StringUtils.hasText(qo.getUsername())) {
+            wrapper.like(Employee::getUsername, qo.getUsername());
+        }
+        if (StringUtils.hasText(qo.getAge())) {
+            wrapper.eq(Employee::getAge, qo.getAge());
+        }
+        if (StringUtils.hasText(qo.getNickName())) {
+            wrapper.like(Employee::getNickName, qo.getNickName());
+        }
+        if (StringUtils.hasText(qo.getAddress())) {
+            wrapper.like(Employee::getAddress, qo.getAddress());
+        }
+        if (StringUtils.hasText(qo.getSex())) {
+            wrapper.eq(Employee::getSex, qo.getSex());
+        }
+        wrapper.ne(Employee::getId, 1L);
+        if (qo.getDeptId() != null) {
+            wrapper.eq(Employee::getDeptId, qo.getDeptId());
+        }
         super.page(page, wrapper);
         //补全部门信息
         List<Dept> depts = deptService.listByQo(new QueryDept());
@@ -187,12 +198,14 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
                 throw new BusinessException("不可以给系统管理者办理离职");
             }
         }
-        LambdaQueryWrapper<Employee> wrapper = Wrappers.lambdaQuery(Employee.class)
-                .ne(Employee::getId, employee.getId())
-                .eq(StringUtils.hasText(employee.getUsername()), Employee::getUsername, employee.getUsername())
-                .or()
-                .eq(StringUtils.hasText(employee.getIdCard()), Employee::getIdCard, employee.getIdCard());
-
+        LambdaQueryWrapper<Employee> wrapper = Wrappers.lambdaQuery(Employee.class);
+        wrapper.ne(Employee::getId, employee.getId());
+        if (StringUtils.hasText(employee.getUsername())) {
+            wrapper.eq(Employee::getUsername, employee.getUsername());
+        }
+        if (StringUtils.hasText(employee.getIdCard())) {
+            wrapper.or().eq(Employee::getIdCard, employee.getIdCard());
+        }
         List<Employee> list = super.list(wrapper);
         if (list != null && list.size() > 0) {
             throw new BusinessException("系统已存在相同的用户名或身份证号");

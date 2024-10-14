@@ -23,10 +23,18 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
     @Override
     public Page<Member> queryPageByQo(QueryMember qo) {
         Page<Member> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        LambdaQueryWrapper<Member> wrapper = Wrappers.lambdaQuery(Member.class)
-                .like(StringUtils.hasText(qo.getPhone()), Member::getPhone, qo.getPhone())
-                .like(StringUtils.hasText(qo.getName()), Member::getName, qo.getName())
-                .eq(StringUtils.hasText(qo.getState()), Member::getState, qo.getState());
+        LambdaQueryWrapper<Member> wrapper = Wrappers.lambdaQuery(Member.class);
+
+        if (StringUtils.hasText(qo.getPhone())) {
+            wrapper.like(Member::getPhone, qo.getPhone());
+        }
+        if (StringUtils.hasText(qo.getName())) {
+            wrapper.like(Member::getName, qo.getName());
+        }
+        if (StringUtils.hasText(qo.getState())) {
+            wrapper.eq(Member::getState, qo.getState());
+        }
+
         super.page(page, wrapper);
         return page;
     }

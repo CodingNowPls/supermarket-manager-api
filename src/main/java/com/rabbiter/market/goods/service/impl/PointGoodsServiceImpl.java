@@ -2,6 +2,7 @@ package com.rabbiter.market.goods.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.rabbiter.market.common.exception.BusinessException;
 import com.rabbiter.market.common.redis.service.RedisTemplateService;
@@ -34,24 +35,26 @@ public class PointGoodsServiceImpl extends ServiceImpl<PointProductsMapper, Poin
     @Override
     public Page<PointGoods> queryPageByQo(QueryPointProducts qo) {
         Page<PointGoods> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        LambdaQueryWrapper<PointGoods> wrapper = Wrappers.lambdaQuery(PointGoods.class)
-                .like(StringUtils.hasText(qo.getName()), PointGoods::getGoodsName, qo.getName());
+        LambdaQueryWrapper<PointGoods> wrapper = Wrappers.lambdaQuery(PointGoods.class);
+        if (StringUtils.hasText(qo.getName())) {
+            wrapper.like(PointGoods::getGoodsName, qo.getName());
+        }
         super.page(page, wrapper);
         return page;
     }
 
     @Override
     public List<Map<String, Object>> queryOptionGoods() {
-        //LambdaQueryWrapper<PointGoods> pointProductsQueryWrapper = Wrappers.lambdaQuery(PointGoods.class)
-        //        .select(PointGoods::getGoodsId);
         List<PointGoods> list = super.list();
+        LambdaQueryWrapper<Goods> goodsQueryWrapper = Wrappers.lambdaQuery(Goods.class);
+        goodsQueryWrapper.eq(Goods::getState, Goods.STATE_UP);
         Set<Long> productGoodsIds = new HashSet<>();
-        list.forEach(item -> {
-            productGoodsIds.add(item.getGoodsId());
-        });
-        LambdaQueryWrapper<Goods> goodsQueryWrapper = Wrappers.lambdaQuery(Goods.class)
-                .notIn(productGoodsIds.size() > 0, Goods::getId, productGoodsIds)
-                .eq(Goods::getState, Goods.STATE_UP);
+        if (CollectionUtils.isNotEmpty(list)) {
+            list.forEach(item -> productGoodsIds.add(item.getGoodsId()));
+            if (productGoodsIds.size() > 0) {
+                goodsQueryWrapper.notIn(Goods::getId, productGoodsIds);
+            }
+        }
 
         List<Goods> goods = goodsService.list(goodsQueryWrapper);
         ArrayList<Map<String, Object>> options = new ArrayList<>();
@@ -98,7 +101,9 @@ public class PointGoodsServiceImpl extends ServiceImpl<PointProductsMapper, Poin
     @Override
     public void del(Long id) {
         // 直接物理删除
-        this.baseMapper.delete(Wrappers.lambdaQuery(PointGoods.class).eq(PointGoods::getGoodsId, id));
+        LambdaQueryWrapper<PointGoods> lqw = Wrappers.lambdaQuery(PointGoods.class);
+        lqw.eq(PointGoods::getGoodsId, id);
+        this.baseMapper.delete(lqw);
 //        UpdateWrapper<PointProducts> updateWrapper = new UpdateWrapper<PointProducts>()
 //                .set("state", PointProducts.STATE_DEL)
 //                .eq("goods_id", id);

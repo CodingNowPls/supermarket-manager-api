@@ -274,17 +274,17 @@ public class StockGoodsDetailServiceImpl extends ServiceImpl<StockGoodsDetailMap
 
             if (num >= 0) {
                 goodsStoreUpdateWrapper.set(GoodsStock::getResidueNum, num);
-                goodsUpdateWrapper.set(Goods::getResidueNum, goods.getResidueNum() == null ? goodsStockDetail.getGoodsNum() : goods.getResidueNum() + goodsStockDetail.getGoodsNum());
+                goodsUpdateWrapper.set(Goods::getResidueNum, goods.getResidueNum() == null ? goodsStockDetail.getGoodsNum()
+                        : goods.getResidueNum() + goodsStockDetail.getGoodsNum());
             } else {
                 goodsStoreUpdateWrapper.set(GoodsStock::getResidueNum, 0L);
-                goodsUpdateWrapper.set(Goods::getResidueNum, goods.getResidueNum() == null ? goodsStock.getResidueNum() : goods.getResidueNum() + goodsStock.getResidueNum());
+                goodsUpdateWrapper.set(Goods::getResidueNum, goods.getResidueNum() == null ? goodsStock.getResidueNum()
+                        : goods.getResidueNum() + goodsStock.getResidueNum());
                 goodsStockDetail.setGoodsNum(goodsStock.getResidueNum());
             }
             goodsService.update(goodsUpdateWrapper);
         }
-
         goodsStoreService.update(goodsStoreUpdateWrapper);
-
         super.save(goodsStockDetail);
     }
 }

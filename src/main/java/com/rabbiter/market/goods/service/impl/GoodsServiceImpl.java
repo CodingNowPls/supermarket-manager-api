@@ -63,15 +63,28 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         Page<GoodsListVo> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         ArrayList<GoodsListVo> volists = new ArrayList<>();
         Page<Goods> goodsPage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        LambdaQueryWrapper<Goods> wrapper = Wrappers.lambdaQuery(Goods.class)
-                .eq(qo.getId() != null, Goods::getId, qo.getId())
-                .eq(qo.getSellPrice() != null, Goods::getSellPrice, qo.getSellPrice())
-                .like(StringUtils.hasText(qo.getName()), Goods::getName, qo.getName())
-                .eq(qo.getCategoryId() != null, Goods::getCategoryId, qo.getCategoryId())
-                .eq(StringUtils.hasText(qo.getState()), Goods::getState, qo.getState())
-                .ge(StringUtils.hasText(qo.getOperateStartTime()), Goods::getUpdateTime, qo.getOperateStartTime())
-                .le(StringUtils.hasText(qo.getOperateEndTime()), Goods::getUpdateTime, qo.getOperateEndTime());
-
+        LambdaQueryWrapper<Goods> wrapper = Wrappers.lambdaQuery(Goods.class);
+        if (qo.getId() != null) {
+            wrapper.eq(Goods::getId, qo.getId());
+        }
+        if (qo.getSellPrice() != null) {
+            wrapper.eq(Goods::getSellPrice, qo.getSellPrice());
+        }
+        if (StringUtils.hasText(qo.getName())) {
+            wrapper.like(Goods::getName, qo.getName());
+        }
+        if (qo.getCategoryId() != null) {
+            wrapper.eq(Goods::getCategoryId, qo.getCategoryId());
+        }
+        if (StringUtils.hasText(qo.getState())) {
+            wrapper.eq(Goods::getState, qo.getState());
+        }
+        if (StringUtils.hasText(qo.getOperateStartTime())) {
+            wrapper.ge(Goods::getUpdateTime, qo.getOperateStartTime());
+        }
+        if (StringUtils.hasText(qo.getOperateEndTime())) {
+            wrapper.le(Goods::getUpdateTime, qo.getOperateEndTime());
+        }
         super.page(goodsPage, wrapper);
         for (Goods record : goodsPage.getRecords()) {
             GoodsListVo vo = new GoodsListVo();
@@ -124,8 +137,8 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
             wrapper.set(Goods::getState, Goods.STATE_DOWN);
             Goods goods = super.getById(gid);
 
-            LambdaQueryWrapper<GoodsStock> goodsStoreQueryWrapper = Wrappers.lambdaQuery(GoodsStock.class)
-                    .eq(GoodsStock::getGoodsId, gid);
+            LambdaQueryWrapper<GoodsStock> goodsStoreQueryWrapper = Wrappers.lambdaQuery(GoodsStock.class;
+            goodsStoreQueryWrapper.eq(GoodsStock::getGoodsId, gid);
             List<GoodsStock> list = goodsStoreService.list(goodsStoreQueryWrapper);
 
             for (GoodsStock goodsStock : list) {
@@ -150,11 +163,10 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
             wrapper.set(Goods::getResidueNum, 0);
             wrapper.set(Goods::getState, Goods.STATE_UP);
 
-            LambdaQueryWrapper<GoodsStockDetail> queryWrapper = Wrappers.lambdaQuery(GoodsStockDetail.class)
-                    .eq(GoodsStockDetail::getGoodsId, gid)
-                    .eq(GoodsStockDetail::getState, GoodsStockDetail.STATE_DOWN)
-                    .eq(GoodsStockDetail::getState1, GoodsStockDetail.STATE1_UNTREATED);
-
+            LambdaQueryWrapper<GoodsStockDetail> queryWrapper = Wrappers.lambdaQuery(GoodsStockDetail.class);
+            queryWrapper.eq(GoodsStockDetail::getGoodsId, gid);
+            queryWrapper.eq(GoodsStockDetail::getState, GoodsStockDetail.STATE_DOWN);
+            queryWrapper.eq(GoodsStockDetail::getState1, GoodsStockDetail.STATE1_UNTREATED);
             detailStoreGoodsService.remove(queryWrapper);
         }
 
@@ -189,8 +201,8 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 
     @Override
     public List<Map<String, Object>> selected_goodsAll() {
-        LambdaQueryWrapper<Goods> wrapper = Wrappers.lambdaQuery(Goods.class)
-                .eq(Goods::getState, Goods.STATE_UP);
+        LambdaQueryWrapper<Goods> wrapper = Wrappers.lambdaQuery(Goods.class);
+        wrapper.eq(Goods::getState, Goods.STATE_UP);
         List<Goods> list = super.list(wrapper);
         if (list == null && list.size() == 0) {
             return null;
@@ -209,8 +221,8 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     @Override
     public List<Map<String, Object>> selected_storeAll() {
         List<Map<String, Object>> list = new ArrayList<>();
-        LambdaQueryWrapper<Warehouse> wrapper = Wrappers.lambdaQuery(Warehouse.class)
-                .eq(Warehouse::getState, Warehouse.STATE_NORMAL);
+        LambdaQueryWrapper<Warehouse> wrapper = Wrappers.lambdaQuery(Warehouse.class);
+        wrapper.eq(Warehouse::getState, Warehouse.STATE_NORMAL);
         List<Warehouse> list1 = storeService.list(wrapper);
         if (list1 != null && list1.size() > 0) {
             for (Warehouse warehouse : list1) {
@@ -243,9 +255,9 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 
 
         /*获取仓库的信息*/
-        LambdaQueryWrapper<GoodsStock> goodsStoreQueryWrapper = Wrappers.lambdaQuery(GoodsStock.class)
-                .eq(GoodsStock::getGoodsId, goodsStockDetail.getGoodsId())
-                .eq(GoodsStock::getStoreId, goodsStockDetail.getStoreId());
+        LambdaQueryWrapper<GoodsStock> goodsStoreQueryWrapper = Wrappers.lambdaQuery(GoodsStock.class);
+        goodsStoreQueryWrapper.eq(GoodsStock::getGoodsId, goodsStockDetail.getGoodsId());
+        goodsStoreQueryWrapper.eq(GoodsStock::getStoreId, goodsStockDetail.getStoreId());
 
         GoodsStock goodsStock = goodsStoreService.getOne(goodsStoreQueryWrapper);
         if (goodsStock == null) {
@@ -262,16 +274,16 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         if (num >= 0) {
             //货架还有商品数量
             /*更改商品信息*/
-            LambdaUpdateWrapper<Goods> goodsUpdateWrapper = Wrappers.lambdaUpdate(Goods.class)
-                    .set(Goods::getResidueNum, num)
-                    .eq(Goods::getId, goodsStockDetail.getGoodsId());
+            LambdaUpdateWrapper<Goods> goodsUpdateWrapper = Wrappers.lambdaUpdate(Goods.class);
+            goodsUpdateWrapper.set(Goods::getResidueNum, num);
+            goodsUpdateWrapper.eq(Goods::getId, goodsStockDetail.getGoodsId());
             super.update(goodsUpdateWrapper);
 
             /* 更改商品库存信息 */
-            LambdaUpdateWrapper<GoodsStock> goodsStoreUpdateWrapper = Wrappers.lambdaUpdate(GoodsStock.class)
-                    .set(GoodsStock::getResidueNum, goodsStock.getResidueNum() + goodsStockDetail.getGoodsNum())
-                    .eq(GoodsStock::getGoodsId, goodsStockDetail.getGoodsId())
-                    .eq(GoodsStock::getStoreId, goodsStockDetail.getStoreId());
+            LambdaUpdateWrapper<GoodsStock> goodsStoreUpdateWrapper = Wrappers.lambdaUpdate(GoodsStock.class);
+            goodsStoreUpdateWrapper.set(GoodsStock::getResidueNum, goodsStock.getResidueNum() + goodsStockDetail.getGoodsNum());
+            goodsStoreUpdateWrapper.eq(GoodsStock::getGoodsId, goodsStockDetail.getGoodsId());
+            goodsStoreUpdateWrapper.eq(GoodsStock::getStoreId, goodsStockDetail.getStoreId());
             goodsStoreService.update(goodsStoreUpdateWrapper);
 
             goodsStockDetail.setUntreatedNum(goodsStockDetail.getGoodsNum());
@@ -279,16 +291,16 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         } else {
             //货架没有商品数量
             /*更改商品信息*/
-            LambdaUpdateWrapper<Goods> goodsUpdateWrapper = Wrappers.lambdaUpdate(Goods.class)
-                    .set(Goods::getResidueNum, 0)
-                    .eq(Goods::getId, goodsStockDetail.getGoodsId());
+            LambdaUpdateWrapper<Goods> goodsUpdateWrapper = Wrappers.lambdaUpdate(Goods.class);
+            goodsUpdateWrapper.set(Goods::getResidueNum, 0);
+            goodsUpdateWrapper.eq(Goods::getId, goodsStockDetail.getGoodsId());
             super.update(goodsUpdateWrapper);
 
             /* 更改商品库存信息 */
-            LambdaUpdateWrapper<GoodsStock> goodsStoreUpdateWrapper = Wrappers.lambdaUpdate(GoodsStock.class)
-                    .set(GoodsStock::getResidueNum, goodsStock.getResidueNum() + goods.getResidueNum())
-                    .eq(GoodsStock::getGoodsId, goodsStockDetail.getGoodsId())
-                    .eq(GoodsStock::getStoreId, goodsStockDetail.getStoreId());
+            LambdaUpdateWrapper<GoodsStock> goodsStoreUpdateWrapper = Wrappers.lambdaUpdate(GoodsStock.class);
+            goodsStoreUpdateWrapper.set(GoodsStock::getResidueNum, goodsStock.getResidueNum() + goods.getResidueNum());
+            goodsStoreUpdateWrapper.eq(GoodsStock::getGoodsId, goodsStockDetail.getGoodsId());
+            goodsStoreUpdateWrapper.eq(GoodsStock::getStoreId, goodsStockDetail.getStoreId());
             goodsStoreService.update(goodsStoreUpdateWrapper);
 
             // 设置 goodsStockDetail 的数量
@@ -303,11 +315,12 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     public Page<GoodsStockVo> queryPageGoodsStore(QueryGoodsStore qo) {
         Page<GoodsStockVo> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         Page<Goods> goodsPage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        LambdaQueryWrapper<Goods> wrapper = Wrappers.lambdaQuery(Goods.class)
-                .eq(Goods::getState, Goods.STATE_UP)
-                .like(StringUtils.hasText(qo.getName()), Goods::getName, qo.getName());
+        LambdaQueryWrapper<Goods> wrapper = Wrappers.lambdaQuery(Goods.class);
+        wrapper.eq(Goods::getState, Goods.STATE_UP);
+        if (StringUtils.hasText(qo.getName())) {
+            wrapper.like(Goods::getName, qo.getName());
+        }
         super.page(goodsPage, wrapper);
-
         if (goodsPage.getTotal() <= 0) {
             page.setRecords(new ArrayList<>());
             page.setTotal(0);
@@ -340,10 +353,10 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         if (vo.getShelves() == null) {
             vo.setShelves(0L);
         }
-        LambdaUpdateWrapper<Goods> updateWrapper = Wrappers.lambdaUpdate(Goods.class)
-                .set(Goods::getInventory, vo.getInventory())
-                .set(Goods::getShelves, vo.getShelves())
-                .eq(Goods::getId, vo.getId());
+        LambdaUpdateWrapper<Goods> updateWrapper = Wrappers.lambdaUpdate(Goods.class);
+        updateWrapper.set(Goods::getInventory, vo.getInventory());
+        updateWrapper.set(Goods::getShelves, vo.getShelves());
+        updateWrapper.eq(Goods::getId, vo.getId());
         super.update(updateWrapper);
 
     }
@@ -369,7 +382,6 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     @Override
     public Page<NoticeOut> queryPageNoticeOut_shelves(QueryNoticeOut qo) {
         Page<NoticeOut> noticeOutPage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        List<NoticeOut> list = new ArrayList<>();
         int start = (qo.getCurrentPage() - 1) * qo.getPageSize();
         Map<String, Object> map = new HashMap<>();
         map.put("start", start);
@@ -378,7 +390,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
             map.put("name", qo.getName());
         }
         int totalCount = goodsMapper.getNoticeOutShelvesTotalCount(map);
-        list = goodsMapper.getNoticeShelvesPageList(map);
+        List<NoticeOut> list = goodsMapper.getNoticeShelvesPageList(map);
         noticeOutPage.setTotal(totalCount);
         noticeOutPage.setRecords(list);
         return noticeOutPage;
@@ -388,9 +400,9 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     public void saveOut_shelves(GoodsStockDetail goodsStockDetail) {
         String token = HttpRequestUtil.getToken();
         Employee employee = JSONObject.parseObject(redisTemplateService.getCacheObject(token), Employee.class);
-        LambdaQueryWrapper<GoodsStock> detailStoreGoodsQueryWrapper = Wrappers.lambdaQuery(GoodsStock.class)
-                .eq(GoodsStock::getGoodsId, goodsStockDetail.getGoodsId())
-                .eq(GoodsStock::getStoreId, goodsStockDetail.getStoreId());
+        LambdaQueryWrapper<GoodsStock> detailStoreGoodsQueryWrapper = Wrappers.lambdaQuery(GoodsStock.class);
+        detailStoreGoodsQueryWrapper.eq(GoodsStock::getGoodsId, goodsStockDetail.getGoodsId());
+        detailStoreGoodsQueryWrapper.eq(GoodsStock::getStoreId, goodsStockDetail.getStoreId());
         GoodsStock goodsStock = goodsStoreService.getOne(detailStoreGoodsQueryWrapper);
         if (goodsStock == null || goodsStock.getResidueNum() == null || goodsStock.getResidueNum() == 0) {
             throw new BusinessException("出库失败，库存中没有该商品的库存");
@@ -405,33 +417,34 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         Goods goods = super.getById(goodsStockDetail.getGoodsId());
         if (num >= 0) {
             /*修改货架商品数量*/
-            LambdaUpdateWrapper<Goods> goodsUpdateWrapper = Wrappers.lambdaUpdate(Goods.class)
-                    .set(Goods::getResidueNum, goods.getResidueNum() == null ? goodsStockDetail.getGoodsNum() : goods.getResidueNum() + goodsStockDetail.getGoodsNum())
-                    .eq(Goods::getId, goodsStockDetail.getGoodsId());
+            LambdaUpdateWrapper<Goods> goodsUpdateWrapper = Wrappers.lambdaUpdate(Goods.class);
+            goodsUpdateWrapper.set(Goods::getResidueNum, goods.getResidueNum() == null ? goodsStockDetail.getGoodsNum()
+                    : goods.getResidueNum() + goodsStockDetail.getGoodsNum());
+            goodsUpdateWrapper.eq(Goods::getId, goodsStockDetail.getGoodsId());
             super.update(goodsUpdateWrapper);
 
             /*修改商品库存数量*/
-            LambdaUpdateWrapper<GoodsStock> goodsStoreUpdateWrapper = Wrappers.lambdaUpdate(GoodsStock.class)
-                    .set(GoodsStock::getResidueNum, goodsStock.getResidueNum() - goodsStockDetail.getGoodsNum())
-                    .eq(GoodsStock::getGoodsId, goodsStockDetail.getGoodsId())
-                    .eq(GoodsStock::getStoreId, goodsStockDetail.getStoreId());
+            LambdaUpdateWrapper<GoodsStock> goodsStoreUpdateWrapper = Wrappers.lambdaUpdate(GoodsStock.class);
+            goodsStoreUpdateWrapper.set(GoodsStock::getResidueNum, goodsStock.getResidueNum() - goodsStockDetail.getGoodsNum());
+            goodsStoreUpdateWrapper.eq(GoodsStock::getGoodsId, goodsStockDetail.getGoodsId());
+            goodsStoreUpdateWrapper.eq(GoodsStock::getStoreId, goodsStockDetail.getStoreId());
 
             goodsStoreService.update(goodsStoreUpdateWrapper);
             /*添加出库记录*/
             detailStoreGoodsService.save(goodsStockDetail);
         } else {
             /*修改货架商品数量*/
-            LambdaUpdateWrapper<Goods> goodsUpdateWrapper = Wrappers.lambdaUpdate(Goods.class)
-                    .set(Goods::getResidueNum, goods.getResidueNum() == null ? goodsStock.getResidueNum() : goods.getResidueNum() + goodsStock.getResidueNum())
-                    .eq(Goods::getId, goodsStockDetail.getGoodsId());
+            LambdaUpdateWrapper<Goods> goodsUpdateWrapper = Wrappers.lambdaUpdate(Goods.class);
+            goodsUpdateWrapper.set(Goods::getResidueNum, goods.getResidueNum() == null ? goodsStock.getResidueNum()
+                    : goods.getResidueNum() + goodsStock.getResidueNum());
+            goodsUpdateWrapper.eq(Goods::getId, goodsStockDetail.getGoodsId());
 
             super.update(goodsUpdateWrapper);
             /*修改商品库存数量*/
-            LambdaUpdateWrapper<GoodsStock> goodsStoreUpdateWrapper = Wrappers.lambdaUpdate(GoodsStock.class)
-                    .set(GoodsStock::getResidueNum, 0L)
-                    .eq(GoodsStock::getGoodsId, goodsStockDetail.getGoodsId())
-                    .eq(GoodsStock::getStoreId, goodsStockDetail.getStoreId());
-
+            LambdaUpdateWrapper<GoodsStock> goodsStoreUpdateWrapper = Wrappers.lambdaUpdate(GoodsStock.class);
+            goodsStoreUpdateWrapper.set(GoodsStock::getResidueNum, 0L);
+            goodsStoreUpdateWrapper.eq(GoodsStock::getGoodsId, goodsStockDetail.getGoodsId());
+            goodsStoreUpdateWrapper.eq(GoodsStock::getStoreId, goodsStockDetail.getStoreId());
             goodsStoreService.update(goodsStoreUpdateWrapper);
             /*添加出库记录*/
             goodsStockDetail.setGoodsNum(goodsStock.getResidueNum());
@@ -446,10 +459,9 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         Long total = goodsMapper.queryPageStatisticSaleByQo(qo.getName());
         SalesStatisticsVo vo = new SalesStatisticsVo();
         vo.setTotal(total);
-        LambdaQueryWrapper<Goods> wrapper = Wrappers.lambdaQuery(Goods.class)
-                .eq(Goods::getState, Goods.STATE_UP)
-                .like(StringUtils.hasText(qo.getName()), Goods::getName, qo.getName());
-
+        LambdaQueryWrapper<Goods> wrapper = Wrappers.lambdaQuery(Goods.class);
+        wrapper.eq(Goods::getState, Goods.STATE_UP);
+        wrapper.like(StringUtils.hasText(qo.getName()), Goods::getName, qo.getName());
         Page<Goods> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         super.page(page, wrapper);
         Page<SaleGoodsVo> saleGoodsVoPage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
@@ -473,12 +485,18 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     public Page<NoticeInNotNormalVo> queryPageNoticeOut_untreated(QueryNoticeOut qo) {
         Page<NoticeInNotNormalVo> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         List<NoticeInNotNormalVo> vos = new ArrayList<>();
-        LambdaQueryWrapper<GoodsStockDetail> queryWrapper = Wrappers.lambdaQuery(GoodsStockDetail.class)
-                .eq(GoodsStockDetail::getState1, GoodsStockDetail.STATE1_UNTREATED)
-                .eq(StringUtils.hasText(qo.getState()), GoodsStockDetail::getState, qo.getState())
-                .like(StringUtils.hasText(qo.getName()), GoodsStockDetail::getGoodsName, qo.getName())
-                .eq(GoodsStockDetail::getType, GoodsStockDetail.TYPE_IN)
-                .orderByDesc(GoodsStockDetail::getCreateTime);
+        LambdaQueryWrapper<GoodsStockDetail> queryWrapper = Wrappers.lambdaQuery(GoodsStockDetail.class);
+        queryWrapper.eq(GoodsStockDetail::getState1, GoodsStockDetail.STATE1_UNTREATED);
+        queryWrapper.eq(GoodsStockDetail::getType, GoodsStockDetail.TYPE_IN);
+        queryWrapper.orderByDesc(GoodsStockDetail::getCreateTime);
+
+        if (StringUtils.hasText(qo.getState())) {
+            queryWrapper.eq(GoodsStockDetail::getState, qo.getState());
+        }
+
+        if (StringUtils.hasText(qo.getName())) {
+            queryWrapper.like(GoodsStockDetail::getGoodsName, qo.getName());
+        }
 
         List<GoodsStockDetail> list = detailStoreGoodsService.list(queryWrapper);
         for (GoodsStockDetail goodsStockDetail : list) {
@@ -495,7 +513,6 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
             Goods goods = super.getById(goodsStockDetail.getGoodsId());
             vo.setCoverUrl(goods.getCoverUrl());
             vos.add(vo);
-
         }
         page.setRecords(vos);
         return page;
@@ -515,43 +532,40 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         }
 
         long num = goodsStockDetail.getUntreatedNum() - vo.getUntreatedNum();
-        LambdaQueryWrapper<GoodsStock> goodsStoreQueryWrapper = Wrappers.lambdaQuery(GoodsStock.class)
-                .eq(GoodsStock::getGoodsId, vo.getGoodsId())
-                .eq(GoodsStock::getStoreId, vo.getStoreId());
+        LambdaQueryWrapper<GoodsStock> goodsStoreQueryWrapper = Wrappers.lambdaQuery(GoodsStock.class);
+        goodsStoreQueryWrapper.eq(GoodsStock::getGoodsId, vo.getGoodsId());
+        goodsStoreQueryWrapper.eq(GoodsStock::getStoreId, vo.getStoreId());
 
         GoodsStock goodsStock = goodsStoreService.getOne(goodsStoreQueryWrapper);
         if (num > 0) {
             //未处理完毕
-            LambdaUpdateWrapper<GoodsStockDetail> updateWrapper = Wrappers.lambdaUpdate(GoodsStockDetail.class)
-                    .eq(GoodsStockDetail::getCn, goodsStockDetail.getCn())
-                    .set(GoodsStockDetail::getUntreatedNum, num);
+            LambdaUpdateWrapper<GoodsStockDetail> updateWrapper = Wrappers.lambdaUpdate(GoodsStockDetail.class);
+            updateWrapper.eq(GoodsStockDetail::getCn, goodsStockDetail.getCn());
+            updateWrapper.set(GoodsStockDetail::getUntreatedNum, num);
 
             detailStoreGoodsService.update(updateWrapper);
             //改变库存
-            LambdaUpdateWrapper<GoodsStock> goodsStoreUpdateWrapper = Wrappers.lambdaUpdate(GoodsStock.class)
-                    .eq(GoodsStock::getGoodsId, vo.getGoodsId())
-                    .eq(GoodsStock::getStoreId, vo.getStoreId())
-                    .set(GoodsStock::getResidueNum, goodsStock.getResidueNum() - vo.getUntreatedNum());
-
+            LambdaUpdateWrapper<GoodsStock> goodsStoreUpdateWrapper = Wrappers.lambdaUpdate(GoodsStock.class);
+            goodsStoreUpdateWrapper.eq(GoodsStock::getGoodsId, vo.getGoodsId());
+            goodsStoreUpdateWrapper.eq(GoodsStock::getStoreId, vo.getStoreId());
+            goodsStoreUpdateWrapper.set(GoodsStock::getResidueNum, goodsStock.getResidueNum() - vo.getUntreatedNum());
             goodsStoreService.update(goodsStoreUpdateWrapper);
         } else {
             //处理完毕
-            LambdaUpdateWrapper<GoodsStockDetail> updateWrapper = Wrappers.lambdaUpdate(GoodsStockDetail.class)
-                    .eq(GoodsStockDetail::getCn, goodsStockDetail.getCn())
-                    .set(GoodsStockDetail::getUntreatedNum, 0L)
-                    .set(GoodsStockDetail::getState1, GoodsStockDetail.STATE1_NORMAL)
-                    .set(GoodsStockDetail::getCreateid, employee.getId())
-                    .set(GoodsStockDetail::getCreateby, employee.getNickName())
-                    .set(GoodsStockDetail::getCreateTime, new Date())
-                    .set(GoodsStockDetail::getType, GoodsStockDetail.TYPE_OUT);
-
+            LambdaUpdateWrapper<GoodsStockDetail> updateWrapper = Wrappers.lambdaUpdate(GoodsStockDetail.class);
+            updateWrapper.eq(GoodsStockDetail::getCn, goodsStockDetail.getCn());
+            updateWrapper.set(GoodsStockDetail::getUntreatedNum, 0L);
+            updateWrapper.set(GoodsStockDetail::getState1, GoodsStockDetail.STATE1_NORMAL);
+            updateWrapper.set(GoodsStockDetail::getCreateid, employee.getId());
+            updateWrapper.set(GoodsStockDetail::getCreateby, employee.getNickName());
+            updateWrapper.set(GoodsStockDetail::getCreateTime, new Date());
+            updateWrapper.set(GoodsStockDetail::getType, GoodsStockDetail.TYPE_OUT);
             detailStoreGoodsService.update(updateWrapper);
             //改变库存
-            LambdaUpdateWrapper<GoodsStock> goodsStoreUpdateWrapper = Wrappers.lambdaUpdate(GoodsStock.class)
-                    .eq(GoodsStock::getGoodsId, vo.getGoodsId())
-                    .eq(GoodsStock::getStoreId, vo.getStoreId())
-                    .set(GoodsStock::getResidueNum, 0L);
-
+            LambdaUpdateWrapper<GoodsStock> goodsStoreUpdateWrapper = Wrappers.lambdaUpdate(GoodsStock.class);
+            goodsStoreUpdateWrapper.eq(GoodsStock::getGoodsId, vo.getGoodsId());
+            goodsStoreUpdateWrapper.eq(GoodsStock::getStoreId, vo.getStoreId());
+            goodsStoreUpdateWrapper.set(GoodsStock::getResidueNum, 0L);
             goodsStoreService.update(goodsStoreUpdateWrapper);
         }
 

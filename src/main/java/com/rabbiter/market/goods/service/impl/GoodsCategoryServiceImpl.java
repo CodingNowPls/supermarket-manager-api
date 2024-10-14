@@ -87,19 +87,24 @@ public class GoodsCategoryServiceImpl extends ServiceImpl<GoodsCategoryMapper, G
     @Override
     public Page<GoodsCategory> queryPageByQo(QueryGoodsCategory qo) {
         Page<GoodsCategory> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        LambdaQueryWrapper<GoodsCategory> wrapper = Wrappers.lambdaQuery(GoodsCategory.class)
-                .like(StringUtils.hasText(qo.getName()), GoodsCategory::getName, qo.getName())
-                .eq(StringUtils.hasText(qo.getState()), GoodsCategory::getState, qo.getState());
+        LambdaQueryWrapper<GoodsCategory> wrapper = Wrappers.lambdaQuery(GoodsCategory.class);
+        if (StringUtils.hasText(qo.getName())) {
+            wrapper.like(GoodsCategory::getName, qo.getName());
+        }
+        if (StringUtils.hasText(qo.getState())) {
+            wrapper.eq(GoodsCategory::getState, qo.getState());
+        }
         return super.page(page, wrapper);
     }
 
     @Override
     public void saveGoodsCategory(GoodsCategory category) {
         //判断数据库是否保存过这个分类信息
-        LambdaQueryWrapper<GoodsCategory> wrapper = Wrappers.lambdaQuery(GoodsCategory.class)
-                .eq(StringUtils.hasText(category.getName()), GoodsCategory::getName, category.getName())
-                .eq(GoodsCategory::getState, GoodsCategory.STATE_NORMAL);
-
+        LambdaQueryWrapper<GoodsCategory> wrapper = Wrappers.lambdaQuery(GoodsCategory.class);
+        if (StringUtils.hasText(category.getName())) {
+            wrapper.eq(GoodsCategory::getName, category.getName());
+        }
+        wrapper.eq(GoodsCategory::getState, GoodsCategory.STATE_NORMAL);
         GoodsCategory category1 = super.getOne(wrapper);
         if (category1 != null) {
             throw new BusinessException("该分类已被创建");
@@ -112,10 +117,9 @@ public class GoodsCategoryServiceImpl extends ServiceImpl<GoodsCategoryMapper, G
     @Override
     public List<Map<String, Object>> getNormalCategoryAll() {
         List<Map<String, Object>> list = new ArrayList<>();
-        List<GoodsCategory> categories = super.list(
-                Wrappers.lambdaQuery(GoodsCategory.class)
-                        .eq(GoodsCategory::getState, GoodsCategory.STATE_NORMAL)
-        );
+        LambdaQueryWrapper<GoodsCategory> lqw = Wrappers.lambdaQuery(GoodsCategory.class)
+                .eq(GoodsCategory::getState, GoodsCategory.STATE_NORMAL);
+        List<GoodsCategory> categories = super.list(lqw);
         for (GoodsCategory category : categories) {
             Map<String, Object> map = new HashMap<>();
             map.put("id", category.getId());

@@ -1,5 +1,8 @@
 package com.rabbiter.market.inventory.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.rabbiter.market.common.exception.BusinessException;
 import com.rabbiter.market.inventory.domain.GoodsStockDetail;
 import com.rabbiter.market.inventory.domain.Supplier;
@@ -30,27 +33,36 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
 
     @Override
     public void deactivate(Long cn) {
-        QueryWrapper<GoodsStockDetail> detailStoreGoodsQueryWrapper = new QueryWrapper<GoodsStockDetail>()
-                .eq("state1", GoodsStockDetail.STATE1_NORMAL)
-                .eq("type", GoodsStockDetail.TYPE_IN)
-                .eq("state", GoodsStockDetail.STATE_NORMAL)
-                .eq("supplier_id", cn);
+        LambdaQueryWrapper<GoodsStockDetail> detailStoreGoodsQueryWrapper = Wrappers.lambdaQuery();
+        detailStoreGoodsQueryWrapper.eq(GoodsStockDetail::getState1, GoodsStockDetail.STATE1_NORMAL)
+                .eq(GoodsStockDetail::getType, GoodsStockDetail.TYPE_IN)
+                .eq(GoodsStockDetail::getState, GoodsStockDetail.STATE_NORMAL)
+                .eq(GoodsStockDetail::getSupplierId, cn);
+
         List<GoodsStockDetail> list = detailStoreGoodsService.list(detailStoreGoodsQueryWrapper);
         if (list != null && list.size() > 0) {
             throw new BusinessException("该供货商正在被入库订单使用，请解除关系之后在停用");
         }
-        UpdateWrapper<Supplier> updateWrapper = new UpdateWrapper<Supplier>().set("state", Supplier.STATE_BAN).eq("cn", cn);
+        LambdaUpdateWrapper<Supplier> updateWrapper = Wrappers.lambdaUpdate();
+        updateWrapper.set(Supplier::getState, Supplier.STATE_BAN)
+                .eq(Supplier::getCn, cn);
         super.update(updateWrapper);
     }
 
     @Override
     public Page<Supplier> queryPageByQo(QuerySupplier qo) {
         Page<Supplier> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        QueryWrapper<Supplier> wrapper = new QueryWrapper<Supplier>()
-                .like(StringUtils.hasText(qo.getName()), "name", qo.getName())
-                .like(StringUtils.hasText(qo.getAddress()), "address", qo.getAddress())
-                .like(StringUtils.hasText(qo.getInfo()), "info", qo.getInfo())
-                .eq("state", Supplier.STATE_NORMAL);
+        LambdaQueryWrapper<Supplier> wrapper = Wrappers.lambdaQuery();
+        if (StringUtils.hasText(qo.getName())) {
+            wrapper.like(Supplier::getName, qo.getName());
+        }
+        if (StringUtils.hasText(qo.getAddress())) {
+            wrapper.like(Supplier::getAddress, qo.getAddress());
+        }
+        if (StringUtils.hasText(qo.getInfo())) {
+            wrapper.like(Supplier::getInfo, qo.getInfo());
+        }
+        wrapper.eq(Supplier::getState, Supplier.STATE_NORMAL);
         super.page(page, wrapper);
         return page;
     }
@@ -58,7 +70,8 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
     @Override
     public List<Map<String, Object>> queryOptionsSuppliers() {
         List<Map<String, Object>> list = new ArrayList<>();
-        QueryWrapper<Supplier> wrapper = new QueryWrapper<Supplier>().eq("state", Supplier.STATE_NORMAL);
+        LambdaQueryWrapper<Supplier> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Supplier::getState, Supplier.STATE_NORMAL);
         List<Supplier> suppliers = super.list(wrapper);
         if (suppliers == null || suppliers.size() <= 0) {
             return new ArrayList<>();
@@ -76,9 +89,10 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
     @Override
     public void saveSupplier(Supplier supplier) {
         supplier.setState(Supplier.STATE_NORMAL);
-        QueryWrapper<Supplier> queryWrapper = new QueryWrapper<Supplier>()
-                .eq("name", supplier.getName())
-                .eq("state", Supplier.STATE_NORMAL);
+        LambdaQueryWrapper<Supplier> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(Supplier::getName, supplier.getName())
+                .eq(Supplier::getState, Supplier.STATE_NORMAL);
+
         Supplier one = super.getOne(queryWrapper);
         if (one != null) {
             throw new BusinessException("已存在供货商的联系方式");
@@ -89,10 +103,11 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
     @Override
     public void updateSupplier(Supplier supplier) {
         if (Supplier.STATE_NORMAL.equals(supplier.getState())) {
-            QueryWrapper<Supplier> queryWrapper = new QueryWrapper<Supplier>()
-                    .eq("name", supplier.getName())
-                    .eq("state", Supplier.STATE_NORMAL)
-                    .ne("cn", supplier.getCn());
+            LambdaQueryWrapper<Supplier> queryWrapper = Wrappers.lambdaQuery();
+            queryWrapper.eq(Supplier::getName, supplier.getName())
+                    .eq(Supplier::getState, Supplier.STATE_NORMAL)
+                    .ne(Supplier::getCn, supplier.getCn());
+
             Supplier one = super.getOne(queryWrapper);
             if (one != null) {
                 throw new BusinessException("该供货商已存在");

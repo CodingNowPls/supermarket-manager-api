@@ -1,5 +1,8 @@
 package com.rabbiter.market.inventory.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.rabbiter.market.common.exception.BusinessException;
 import com.rabbiter.market.common.redis.service.RedisTemplateService;
 import com.rabbiter.market.goods.doamin.Goods;
@@ -67,13 +70,13 @@ public class StockGoodsDetailServiceImpl extends ServiceImpl<StockGoodsDetailMap
     public Page<StockGoodsDetailVo> queryPageByQoIn(QueryDetailStoreGoods qo) {
         Page<GoodsStockDetail> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         Page<StockGoodsDetailVo> page1 = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        QueryWrapper<GoodsStockDetail> wrapper = new QueryWrapper<>();
-        wrapper.likeRight(StringUtils.hasText(qo.getCn()), "cn", qo.getCn());
-        wrapper.like(StringUtils.hasText(qo.getGoodsName()), "goods_name", qo.getGoodsName());
-        wrapper.eq(StringUtils.hasText(qo.getState1()), "state1", qo.getState1());
-        wrapper.ge(StringUtils.hasText(qo.getStartCreateTime()), "create_time", qo.getStartCreateTime());
-        wrapper.le(StringUtils.hasText(qo.getEndCreateTime()), "create_time", qo.getEndCreateTime());
-        wrapper.eq("type", GoodsStockDetail.TYPE_IN);
+        LambdaQueryWrapper<GoodsStockDetail> wrapper = Wrappers.lambdaQuery(GoodsStockDetail.class)
+                .likeRight(StringUtils.hasText(qo.getCn()), GoodsStockDetail::getCn, qo.getCn())
+                .like(StringUtils.hasText(qo.getGoodsName()), GoodsStockDetail::getGoodsName, qo.getGoodsName())
+                .eq(StringUtils.hasText(qo.getState1()), GoodsStockDetail::getState1, qo.getState1())
+                .ge(StringUtils.hasText(qo.getStartCreateTime()), GoodsStockDetail::getCreateTime, qo.getStartCreateTime())
+                .le(StringUtils.hasText(qo.getEndCreateTime()), GoodsStockDetail::getCreateTime, qo.getEndCreateTime())
+                .eq(GoodsStockDetail::getType, GoodsStockDetail.TYPE_IN);
         super.page(page, wrapper);
         List<GoodsStockDetail> records = page.getRecords();
         if (records == null || records.size() <= 0) {
@@ -96,9 +99,9 @@ public class StockGoodsDetailServiceImpl extends ServiceImpl<StockGoodsDetailMap
 
     @Override
     public void delIn(String cn) {
-        UpdateWrapper<GoodsStockDetail> wrapper = new UpdateWrapper<>();
-        wrapper.set("state1", GoodsStockDetail.STATE1_DEL);
-        wrapper.eq("cn", cn);
+        LambdaUpdateWrapper<GoodsStockDetail> wrapper = Wrappers.lambdaUpdate(GoodsStockDetail.class)
+                .set(GoodsStockDetail::getState1, GoodsStockDetail.STATE1_DEL)
+                .eq(GoodsStockDetail::getCn, cn);
         super.update(wrapper);
     }
 
@@ -106,14 +109,15 @@ public class StockGoodsDetailServiceImpl extends ServiceImpl<StockGoodsDetailMap
     public Page<StockGoodsOutDetailVo> queryPageByQoOut(QueryDetailStoreGoodsOut qo) {
         Page<GoodsStockDetail> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         Page<StockGoodsOutDetailVo> page1 = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        QueryWrapper<GoodsStockDetail> wrapper = new QueryWrapper<>();
-        wrapper.likeRight(StringUtils.hasText(qo.getCn()), "cn", qo.getCn());
-        wrapper.like(StringUtils.hasText(qo.getGoodsName()), "goods_name", qo.getGoodsName());
-        wrapper.ge(StringUtils.hasText(qo.getStartCreateTime()), "create_time", qo.getStartCreateTime());
-        wrapper.le(StringUtils.hasText(qo.getEndCreateTime()), "create_time", qo.getEndCreateTime());
-        wrapper.eq("type", GoodsStockDetail.TYPE_OUT);
-        wrapper.eq(StringUtils.hasText(qo.getState()), "state", qo.getState());
-        wrapper.eq(StringUtils.hasText(qo.getState1()), "state1", qo.getState1());
+        LambdaQueryWrapper<GoodsStockDetail> wrapper = Wrappers.lambdaQuery(GoodsStockDetail.class)
+                .likeRight(StringUtils.hasText(qo.getCn()), GoodsStockDetail::getCn, qo.getCn())
+                .like(StringUtils.hasText(qo.getGoodsName()), GoodsStockDetail::getGoodsName, qo.getGoodsName())
+                .ge(StringUtils.hasText(qo.getStartCreateTime()), GoodsStockDetail::getCreateTime, qo.getStartCreateTime())
+                .le(StringUtils.hasText(qo.getEndCreateTime()), GoodsStockDetail::getCreateTime, qo.getEndCreateTime())
+                .eq(GoodsStockDetail::getType, GoodsStockDetail.TYPE_OUT)
+                .eq(StringUtils.hasText(qo.getState()), GoodsStockDetail::getState, qo.getState())
+                .eq(StringUtils.hasText(qo.getState1()), GoodsStockDetail::getState1, qo.getState1());
+
         super.page(page, wrapper);
         List<GoodsStockDetail> records = page.getRecords();
         if (records == null || records.size() <= 0) {
@@ -138,8 +142,9 @@ public class StockGoodsDetailServiceImpl extends ServiceImpl<StockGoodsDetailMap
     public Map<String, Object> initOutOptions() {
         Set<Long> goodsIds = new HashSet<>();
         Set<Long> storeIds = new HashSet<>();
-        QueryWrapper<GoodsStock> wrapper = new QueryWrapper<>();
-        wrapper.gt("residue_num", 0L);
+        LambdaQueryWrapper<GoodsStock> wrapper = Wrappers.lambdaQuery(GoodsStock.class)
+                .gt(GoodsStock::getResidueNum, 0L);
+
         List<GoodsStock> list = goodsStoreService.list(wrapper);
         if (list == null || list.size() == 0) {
             throw new BusinessException("库存中没有存放商品");
@@ -172,9 +177,10 @@ public class StockGoodsDetailServiceImpl extends ServiceImpl<StockGoodsDetailMap
 
     @Override
     public List<Map<String, Object>> changeOutGoods(Long gid) {
-        QueryWrapper<GoodsStock> wrapper = new QueryWrapper<>();
-        wrapper.eq("goods_id", gid);
-        wrapper.gt("residue_num", 0L);
+        LambdaQueryWrapper<GoodsStock> wrapper = Wrappers.lambdaQuery(GoodsStock.class)
+                .eq(GoodsStock::getGoodsId, gid)
+                .gt(GoodsStock::getResidueNum, 0L);
+
         List<GoodsStock> list = goodsStoreService.list(wrapper);
         Set<Long> storeIds = new HashSet<>();
         for (GoodsStock goodsStock : list) {
@@ -193,9 +199,9 @@ public class StockGoodsDetailServiceImpl extends ServiceImpl<StockGoodsDetailMap
 
     @Override
     public List<Map<String, Object>> changeOutStore(Long storeId) {
-        QueryWrapper<GoodsStock> wrapper = new QueryWrapper<>();
-        wrapper.eq("store_id", storeId);
-        wrapper.gt("residue_num", 0L);
+        LambdaQueryWrapper<GoodsStock> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(GoodsStock::getStoreId, storeId)
+                .gt(GoodsStock::getResidueNum, 0L);
         List<GoodsStock> list = goodsStoreService.list(wrapper);
         Set<Long> goodsIds = new HashSet<>();
         for (GoodsStock goodsStock : list) {
@@ -214,9 +220,10 @@ public class StockGoodsDetailServiceImpl extends ServiceImpl<StockGoodsDetailMap
 
     @Override
     public StockGoodsOutDetailVo queryOutGoods(Long goodsId, Long storeId) {
-        QueryWrapper<GoodsStock> wrapper = new QueryWrapper<>();
-        wrapper.eq("goods_id", goodsId);
-        wrapper.eq("store_id", storeId);
+        LambdaQueryWrapper<GoodsStock> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(GoodsStock::getGoodsId, goodsId)
+                .eq(GoodsStock::getStoreId, storeId);
+
         GoodsStock goodsStock = goodsStoreService.getOne(wrapper);
         StockGoodsOutDetailVo vo = new StockGoodsOutDetailVo();
         BeanUtils.copyProperties(goodsStock, vo);
@@ -237,42 +244,47 @@ public class StockGoodsDetailServiceImpl extends ServiceImpl<StockGoodsDetailMap
         goodsStockDetail.setCn(IdWorker.getIdStr());
         goodsStockDetail.setCreateTime(new Date());
 
-        QueryWrapper<GoodsStock> goodsStoreQueryWrapper = new QueryWrapper<GoodsStock>()
-                .eq("goods_id", goodsStockDetail.getGoodsId())
-                .eq("store_id", goodsStockDetail.getStoreId());
+        LambdaQueryWrapper<GoodsStock> goodsStoreQueryWrapper = Wrappers.lambdaQuery();
+        goodsStoreQueryWrapper.eq(GoodsStock::getGoodsId, goodsStockDetail.getGoodsId())
+                .eq(GoodsStock::getStoreId, goodsStockDetail.getStoreId());
 
         GoodsStock goodsStock = goodsStoreService.getOne(goodsStoreQueryWrapper);
         long num = goodsStock.getResidueNum() - goodsStockDetail.getGoodsNum();
 
-        UpdateWrapper<GoodsStock> goodsStoreUpdateWrapper = new UpdateWrapper<GoodsStock>()
-                .eq("goods_id", goodsStockDetail.getGoodsId())
-                .eq("store_id", goodsStockDetail.getStoreId());
+        LambdaUpdateWrapper<GoodsStock> goodsStoreUpdateWrapper = Wrappers.lambdaUpdate();
+        goodsStoreUpdateWrapper.eq(GoodsStock::getGoodsId, goodsStockDetail.getGoodsId())
+                .eq(GoodsStock::getStoreId, goodsStockDetail.getStoreId());
+
         if (GoodsStockDetail.STATE_EXPIRY.equals(goodsStockDetail.getState())) {
-            //过期处理
+            // 过期处理
             goodsStockDetail.setState(GoodsStockDetail.STATE_EXPIRY);
             if (num >= 0) {
-                goodsStoreUpdateWrapper.set("residue_num", num);
-
+                goodsStoreUpdateWrapper.set(GoodsStock::getResidueNum, num);
             } else {
-                goodsStoreUpdateWrapper.set("residue_num", 0L);
+                goodsStoreUpdateWrapper.set(GoodsStock::getResidueNum, 0L);
                 goodsStockDetail.setGoodsNum(goodsStock.getResidueNum());
             }
         } else {
-            //出库到货架上
+            // 出库到货架上
             goodsStockDetail.setState(GoodsStockDetail.STATE_NORMAL);
             Goods goods = goodsService.getById(goodsStockDetail.getGoodsId());
-            UpdateWrapper<Goods> goodsUpdateWrapper = new UpdateWrapper<Goods>().eq("id", goods.getId());
+
+            LambdaUpdateWrapper<Goods> goodsUpdateWrapper = Wrappers.lambdaUpdate();
+            goodsUpdateWrapper.eq(Goods::getId, goods.getId());
+
             if (num >= 0) {
-                goodsStoreUpdateWrapper.set("residue_num", num);
-                goodsUpdateWrapper.set("residue_num", goods.getResidueNum() == null ? goodsStockDetail.getGoodsNum() : goods.getResidueNum() + goodsStockDetail.getGoodsNum());
+                goodsStoreUpdateWrapper.set(GoodsStock::getResidueNum, num);
+                goodsUpdateWrapper.set(Goods::getResidueNum, goods.getResidueNum() == null ? goodsStockDetail.getGoodsNum() : goods.getResidueNum() + goodsStockDetail.getGoodsNum());
             } else {
-                goodsStoreUpdateWrapper.set("residue_num", 0L);
-                goodsUpdateWrapper.set("residue_num", goods.getResidueNum() == null ? goodsStock.getResidueNum() : goods.getResidueNum() + goodsStock.getResidueNum());
+                goodsStoreUpdateWrapper.set(GoodsStock::getResidueNum, 0L);
+                goodsUpdateWrapper.set(Goods::getResidueNum, goods.getResidueNum() == null ? goodsStock.getResidueNum() : goods.getResidueNum() + goodsStock.getResidueNum());
                 goodsStockDetail.setGoodsNum(goodsStock.getResidueNum());
             }
             goodsService.update(goodsUpdateWrapper);
         }
+
         goodsStoreService.update(goodsStoreUpdateWrapper);
+
         super.save(goodsStockDetail);
     }
 }

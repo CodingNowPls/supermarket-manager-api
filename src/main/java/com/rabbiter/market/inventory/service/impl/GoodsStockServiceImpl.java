@@ -85,10 +85,14 @@ public class GoodsStockServiceImpl extends ServiceImpl<GoodsStockMapper, GoodsSt
         Long totalStoreNum = goodsStockMapper.totalStoreNum();
         map.put("totalStoreNum", totalStoreNum != null ? totalStoreNum : 0L);
         Page<GoodsStock> goodsStorePage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        QueryWrapper<GoodsStock> goodsStoreQueryWrapper = new QueryWrapper<GoodsStock>().select("store_id,store_name,SUM(residue_num) residue_num")
-                .like(StringUtils.hasText(qo.getName()), "store_name", qo.getName())
-                .groupBy("store_id", "store_name");
+        LambdaQueryWrapper<GoodsStock> goodsStoreQueryWrapper = Wrappers.lambdaQuery(GoodsStock.class)
+                .select(GoodsStock::getStoreId, GoodsStock::getStoreName,
+                        wrapper -> "SUM(residue_num) as residue_num")
+                .like(StringUtils.hasText(qo.getName()), GoodsStock::getStoreName, qo.getName())
+                .groupBy(GoodsStock::getStoreId, GoodsStock::getStoreName);
+
         super.page(goodsStorePage, goodsStoreQueryWrapper);
+
         Page<StorageSituationVo> situationVoPage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         List<StorageSituationVo> vos = new ArrayList<>();
         for (GoodsStock record : goodsStorePage.getRecords()) {
@@ -110,10 +114,11 @@ public class GoodsStockServiceImpl extends ServiceImpl<GoodsStockMapper, GoodsSt
         Long totalStoreNum1 = goodsStockMapper.getTotalStoreNum1(qo.getStoreId());
         map.put("totalStoreNum1", totalStoreNum1);//该仓库的存储量
 
-        QueryWrapper<GoodsStock> wrapper = new QueryWrapper<GoodsStock>()
-                .gt("residue_num", 0)
-                .eq("store_id", qo.getStoreId());
+        LambdaQueryWrapper<GoodsStock> wrapper = Wrappers.lambdaQuery(GoodsStock.class)
+                .gt(GoodsStock::getResidueNum, 0)
+                .eq(GoodsStock::getStoreId, qo.getStoreId());
         List<GoodsStock> list = super.list(wrapper);
+
         Set<Long> goodsIds = new HashSet<>();
         for (GoodsStock goodsStock : list) {
             goodsIds.add(goodsStock.getGoodsId());
@@ -131,11 +136,12 @@ public class GoodsStockServiceImpl extends ServiceImpl<GoodsStockMapper, GoodsSt
         }
         map.put("optionsStoreGoods", optionsStoreGoods);//选择框
         Page<GoodsStock> goodsStorePage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        QueryWrapper<GoodsStock> goodsStoreQueryWrapper = new QueryWrapper<GoodsStock>()
-                .eq("store_id", qo.getStoreId())
-                .gt("residue_num", 0)
-                .eq(qo.getId() != null, "goods_id", qo.getId());
+        LambdaQueryWrapper<GoodsStock> goodsStoreQueryWrapper = Wrappers.lambdaQuery(GoodsStock.class)
+                .eq(GoodsStock::getStoreId, qo.getStoreId())
+                .gt(GoodsStock::getResidueNum, 0)
+                .eq(qo.getId() != null, GoodsStock::getGoodsId, qo.getId());
         super.page(goodsStorePage, goodsStoreQueryWrapper);
+
 
         Page<DetailStorageSituationVo> voPage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
         voPage.setTotal(goodsStorePage.getTotal());

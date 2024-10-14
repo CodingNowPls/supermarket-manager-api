@@ -1,5 +1,8 @@
 package com.rabbiter.market.inventory.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.rabbiter.market.common.exception.BusinessException;
 import com.rabbiter.market.inventory.domain.Warehouse;
 import com.rabbiter.market.inventory.mapper.WarehouseMapper;
@@ -23,10 +26,11 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
     @Override
     public void updateStore(Warehouse warehouse) {
         //判断是否要将状态修改为停用状态
-        QueryWrapper<Warehouse> storeQueryWrapper = new QueryWrapper<Warehouse>()
-                .eq("name", warehouse.getName())
-                .eq("address", warehouse.getAddress())
-                .eq("state", warehouse.getState());
+        LambdaQueryWrapper<Warehouse> storeQueryWrapper = Wrappers.lambdaQuery();
+        storeQueryWrapper.eq(Warehouse::getName, warehouse.getName())
+                .eq(Warehouse::getAddress, warehouse.getAddress())
+                .eq(Warehouse::getState, warehouse.getState());
+
         Warehouse one = super.getOne(storeQueryWrapper);
         if (Warehouse.STATE_BAN.equals(warehouse.getState())) {
             Long redisueNum = goodsStoreService.storeUsed(warehouse.getId());
@@ -50,9 +54,10 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
         if (redisueNum != null && redisueNum != 0) {
             throw new BusinessException("仓库中存在商品，不能停用仓库");
         } else {
-            UpdateWrapper<Warehouse> wrapper = new UpdateWrapper<Warehouse>()
-                    .set("state", Warehouse.STATE_BAN)
-                    .eq("id", sid);
+            LambdaUpdateWrapper<Warehouse> wrapper = Wrappers.lambdaUpdate();
+            wrapper.set(Warehouse::getState, Warehouse.STATE_BAN)
+                    .eq(Warehouse::getId, sid);
+
             super.update(wrapper);
         }
     }
@@ -65,9 +70,10 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
     @Override
     public void saveStore(Warehouse warehouse) {
         warehouse.setState(Warehouse.STATE_NORMAL);
-        QueryWrapper<Warehouse> queryWrapper = new QueryWrapper<Warehouse>().eq("state", Warehouse.STATE_NORMAL)
-                .eq("name", warehouse.getName())
-                .eq("address", warehouse.getAddress());
+        LambdaQueryWrapper<Warehouse> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(Warehouse::getState, Warehouse.STATE_NORMAL)
+                .eq(Warehouse::getName, warehouse.getName())
+                .eq(Warehouse::getAddress, warehouse.getAddress());
         Warehouse one = super.getOne(queryWrapper);
         if (one != null) {
             throw new BusinessException("创建失败，已有相同的仓库");

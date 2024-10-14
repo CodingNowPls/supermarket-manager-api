@@ -30,7 +30,6 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
         storeQueryWrapper.eq(Warehouse::getName, warehouse.getName())
                 .eq(Warehouse::getAddress, warehouse.getAddress())
                 .eq(Warehouse::getState, warehouse.getState());
-
         Warehouse one = super.getOne(storeQueryWrapper);
         if (Warehouse.STATE_BAN.equals(warehouse.getState())) {
             Long redisueNum = goodsStoreService.storeUsed(warehouse.getId());
@@ -57,7 +56,6 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
             LambdaUpdateWrapper<Warehouse> wrapper = Wrappers.lambdaUpdate();
             wrapper.set(Warehouse::getState, Warehouse.STATE_BAN)
                     .eq(Warehouse::getId, sid);
-
             super.update(wrapper);
         }
     }

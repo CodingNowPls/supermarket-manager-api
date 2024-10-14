@@ -137,7 +137,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
             wrapper.set(Goods::getState, Goods.STATE_DOWN);
             Goods goods = super.getById(gid);
 
-            LambdaQueryWrapper<GoodsStock> goodsStoreQueryWrapper = Wrappers.lambdaQuery(GoodsStock.class;
+            LambdaQueryWrapper<GoodsStock> goodsStoreQueryWrapper = Wrappers.lambdaQuery(GoodsStock.class);
             goodsStoreQueryWrapper.eq(GoodsStock::getGoodsId, gid);
             List<GoodsStock> list = goodsStoreService.list(goodsStoreQueryWrapper);
 

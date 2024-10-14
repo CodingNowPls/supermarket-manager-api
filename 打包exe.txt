@@ -1,4 +1,4 @@
-pake http://sun.ipyingshe.com --name supermarket --hide-title-bar
+pake http://127.0.0.1:9291  --name supermarket --hide-title-bar
 https://www.ajihuo.com/soft/5796.html
 
 https://gitee.com/w_rabbiter

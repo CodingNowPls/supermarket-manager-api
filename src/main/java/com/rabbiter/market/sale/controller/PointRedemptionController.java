@@ -27,7 +27,7 @@ public class PointRedemptionController {
     private IPointRedemptionService exchangePointProductsService;
 
 
-    @GetMapping("/queryPointProductBymemberId")
+    @GetMapping("/queryPointProductByMemberId")
     public JsonResult queryPointProductByMemberId(@RequestParam Long memberId) {
         List<Map<String, Object>> list = exchangePointProductsService.queryPointProductByMemberId(memberId);
         return JsonResult.success(list);

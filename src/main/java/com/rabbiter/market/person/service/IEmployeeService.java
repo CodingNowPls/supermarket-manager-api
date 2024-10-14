@@ -17,7 +17,7 @@ public interface IEmployeeService extends IService<Employee> {
      *
      * @param editPwd
      */
-    void edit_pwd(QueryEditPwd editPwd);
+    void editPwd(QueryEditPwd editPwd);
 
     /**
      * 分页显示数据
@@ -31,7 +31,7 @@ public interface IEmployeeService extends IService<Employee> {
 
     void saveEmp(Employee employee);
 
-    EditEmpVo editbtn(Long uid);
+    EditEmpVo editBtn(Long uid);
 
     void updateEmp(Employee employee);
 

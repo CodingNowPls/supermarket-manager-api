@@ -29,10 +29,10 @@ public class PersonController {
      * @param editPwd
      * @return
      */
-    @HasPermission("person:edit_pwd")
+    @HasPermission("person:editPwd")
     @PostMapping("/edit_pwd")
-    public JsonResult edit_pwd(@RequestBody QueryEditPwd editPwd) {
-        employeeService.edit_pwd(editPwd);
+    public JsonResult editPwd(@RequestBody QueryEditPwd editPwd) {
+        employeeService.editPwd(editPwd);
         return JsonResult.success();
     }
 

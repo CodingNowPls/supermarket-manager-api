@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface IPointRedemptionService extends IService<PointRedemption> {
-    List<Map<String, Object>> queryPointProductBymemberId(Long memberId);
+    List<Map<String, Object>> queryPointProductByMemberId(Long memberId);
 
     PointGoods queryPointProductByGoodsId(Long goodsId);
 

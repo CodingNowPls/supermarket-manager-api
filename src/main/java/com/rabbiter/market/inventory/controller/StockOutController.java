@@ -27,32 +27,32 @@ public class StockOutController {
     @Autowired
     private IStockGoodsDetailService detailStoreGoodsService;
 
-    @HasPermission("inventory:detail_store_goods_out:list")
+    @HasPermission("inventory:stockOut:list")
     @PostMapping("/queryPageByQoOut")
     public JsonResult queryPageByQoOut(@RequestBody QueryDetailStoreGoodsOut qo) {
         Page<StockGoodsOutDetailVo> page = detailStoreGoodsService.queryPageByQoOut(qo);
         return JsonResult.success(page);
     }
 
-    @HasPermission("inventory:detail_store_goods_out:save")
+    @HasPermission("inventory:stockOut:save")
     @GetMapping("/initOutOptions")
     public JsonResult<Map<String, Object>> initOutOptions() {
         return JsonResult.success(detailStoreGoodsService.initOutOptions());
     }
 
-    @HasPermission("inventory:detail_store_goods_out:save")
+    @HasPermission("inventory:stockOut:save")
     @GetMapping("/changeOutGoods")
-    public JsonResult changeOutGoods(Long gid) {
+    public JsonResult changeOutGoods(@RequestParam Long gid) {
         return JsonResult.success(detailStoreGoodsService.changeOutGoods(gid));
     }
 
-    @HasPermission("inventory:detail_store_goods_out:save")
+    @HasPermission("inventory:stockOut:save")
     @GetMapping("/changeOutStore")
-    public JsonResult changeOutStore(Long storeId) {
+    public JsonResult changeOutStore(@RequestParam Long storeId) {
         return JsonResult.success(detailStoreGoodsService.changeOutStore(storeId));
     }
 
-    @HasPermission("inventory:detail_store_goods_out:save")
+    @HasPermission("inventory:stockOut:save")
     @PostMapping("/queryOutGoods")
     public JsonResult queryOutGoods(@RequestParam("goodsId") Long goodsId,
                                     @RequestParam("storeId") Long storeId) {
@@ -60,16 +60,16 @@ public class StockOutController {
         return JsonResult.success(vo);
     }
 
-    @HasPermission("inventory:detail_store_goods_out:save")
+    @HasPermission("inventory:stockOut:save")
     @PostMapping("/save")
     public JsonResult saveOut(@RequestBody GoodsStockDetail goodsStockDetail) {
         detailStoreGoodsService.saveOut(goodsStockDetail);
         return JsonResult.success();
     }
 
-    @HasPermission("inventory:detail_store_goods_out:delOut")
+    @HasPermission("inventory:stockOut:delOut")
     @PostMapping("/delOut")
-    public JsonResult delOut(@NotEmpty(message = "系统编号不能为空") String cn) {
+    public JsonResult delOut(@RequestParam @NotEmpty(message = "系统编号不能为空") String cn) {
         detailStoreGoodsService.delIn(cn);
         return JsonResult.success();
     }

@@ -48,7 +48,7 @@ public class RoleController {
      */
     @HasPermission("system:role:forbiddenRole")
     @PostMapping("/forbiddenRole")
-    public JsonResult forbiddenRole(Long rid) {
+    public JsonResult forbiddenRole(@RequestParam Long rid) {
         roleService.forbiddenRole(rid);
         return JsonResult.success();
     }
@@ -92,7 +92,7 @@ public class RoleController {
      */
     @HasPermission("system:role:saveRolePermissions")
     @GetMapping("/checkPermissions")
-    public JsonResult checkPermissions(@NotNull(message = "角色不能为空") Long rid) {
+    public JsonResult checkPermissions(@RequestParam @NotNull(message = "角色不能为空") Long rid) {
         RolePermissionVo vo = roleService.checkPermissons(rid);
         return JsonResult.success(vo);
     }
@@ -108,7 +108,6 @@ public class RoleController {
     @PostMapping("/saveRolePermissions")
     public JsonResult saveRolePermissions(@NotNull(message = "角色不能为空") @RequestParam("rid") Long rid, @RequestParam("menuIds") Long[] menuIds) {
         roleService.saveRolePermissions(rid, menuIds);
-
         return JsonResult.success();
 
     }
@@ -121,7 +120,7 @@ public class RoleController {
 
     @HasPermission("person:employee:queryRoleIdsByEid")
     @GetMapping("/queryRoleIdsByEid")
-    public JsonResult queryRoleIdsByEid(Long eid) {
+    public JsonResult queryRoleIdsByEid(@RequestParam Long eid) {
         List<Long> list = roleService.queryRoleIdsByEid(eid);
         return JsonResult.success(list);
     }

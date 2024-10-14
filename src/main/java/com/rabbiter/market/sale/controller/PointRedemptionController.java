@@ -28,20 +28,20 @@ public class PointRedemptionController {
 
 
     @GetMapping("/queryPointProductBymemberId")
-    public JsonResult queryPointProductBymemberId(Long memberId) {
-        List<Map<String, Object>> list = exchangePointProductsService.queryPointProductBymemberId(memberId);
+    public JsonResult queryPointProductByMemberId(@RequestParam Long memberId) {
+        List<Map<String, Object>> list = exchangePointProductsService.queryPointProductByMemberId(memberId);
         return JsonResult.success(list);
     }
 
 
     @GetMapping("/queryMemberByGoodsId")
-    public JsonResult queryMemberByGoodsId(Long goodsId) {
+    public JsonResult queryMemberByGoodsId(@RequestParam Long goodsId) {
         List<Map<String, Object>> list = exchangePointProductsService.queryMemberByGoodsId(goodsId);
         return JsonResult.success(list);
     }
 
     @GetMapping("/queryPointProductByGoodsId")
-    public JsonResult queryPointProductByGoodsId(Long goodsId) {
+    public JsonResult queryPointProductByGoodsId(@RequestParam Long goodsId) {
         PointGoods pointGoods = exchangePointProductsService.queryPointProductByGoodsId(goodsId);
         return JsonResult.success(pointGoods);
     }
@@ -71,7 +71,7 @@ public class PointRedemptionController {
      * @return
      */
     @GetMapping("/delExchangePointProducts")
-    public JsonResult delExchangePointProducts(String cn) {
+    public JsonResult delExchangePointProducts(@RequestParam String cn) {
         exchangePointProductsService.delExchangePointProducts(cn);
         return JsonResult.success();
     }

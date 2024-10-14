@@ -80,13 +80,13 @@ public class GoodsController {
     /*上/下架*/
 
     @PostMapping("/upOrdown")
-    public JsonResult upOrdown(@NotNull(message = "商品编号不能为空") Long gid, String state) {
+    public JsonResult upOrdown(@RequestParam @NotNull(message = "商品编号不能为空") Long gid, String state) {
         goodsService.upOrdown(gid, state);
         return JsonResult.success();
     }
 
     @GetMapping("/queryGoodsById")
-    public JsonResult queryGoodsById(@NotNull(message = "商品编号不能为空") Long id) {
+    public JsonResult queryGoodsById(@RequestParam @NotNull(message = "商品编号不能为空") Long id) {
         return JsonResult.success(goodsService.getById(id));
     }
 

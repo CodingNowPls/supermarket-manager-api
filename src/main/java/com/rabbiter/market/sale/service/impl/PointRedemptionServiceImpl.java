@@ -39,7 +39,7 @@ public class PointRedemptionServiceImpl extends ServiceImpl<PointRedemptionHisto
     private IGoodsService goodsService;
 
     @Override
-    public List<Map<String, Object>> queryPointProductBymemberId(Long memberId) {
+    public List<Map<String, Object>> queryPointProductByMemberId(Long memberId) {
         Member member = memberService.getById(memberId);
         LambdaQueryWrapper<PointGoods> pointProductsQueryWrapper = Wrappers.lambdaQuery(PointGoods.class);
         if (memberId == null) {
@@ -62,7 +62,9 @@ public class PointRedemptionServiceImpl extends ServiceImpl<PointRedemptionHisto
     @Override
     public PointGoods queryPointProductByGoodsId(Long goodsId) {
         LambdaQueryWrapper<PointGoods> lqw = Wrappers.lambdaQuery(PointGoods.class);
-        lqw.eq(goodsId != null, PointGoods::getGoodsId, goodsId);
+        if (Objects.nonNull(goodsId)) {
+            lqw.eq(PointGoods::getGoodsId, goodsId);
+        }
         PointGoods pointGoods = pointProductsService.getOne(lqw);
         return pointGoods;
     }

@@ -46,13 +46,13 @@ public class SupplierController {
 
     @HasPermission("inventory:supplier:update")
     @GetMapping("/queryByCn")
-    public JsonResult queryByCn(Long cn) {
+    public JsonResult queryByCn(@RequestParam Long cn) {
         return JsonResult.success(supplierService.getById(cn));
     }
 
     @HasPermission("inventory:supplier:deactivate")
     @PostMapping("/deactivate")
-    public JsonResult deactivate(Long cn) {
+    public JsonResult deactivate(@RequestParam Long cn) {
         supplierService.deactivate(cn);
         return JsonResult.success();
     }

@@ -47,7 +47,7 @@ public class StockInController {
 
     @HasPermission("inventory:detail_store_goods_in:delIn")
     @PostMapping("/delIn")
-    public JsonResult delIn(@NotEmpty(message = "系统编号不能为空") String cn) {
+    public JsonResult delIn(@RequestParam @NotEmpty(message = "系统编号不能为空") String cn) {
         detailStoreGoodsService.delIn(cn);
         return JsonResult.success();
     }

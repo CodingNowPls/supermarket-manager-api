@@ -40,7 +40,7 @@ public class EmployeeController {
 
     @HasPermission("person:employee:list")
     @GetMapping("/detail")
-    public JsonResult detail(Long uid) {
+    public JsonResult detail(@RequestParam Long uid) {
         DetailEmpVo vo = employeeService.detail(uid);
         return JsonResult.success(vo);
     }
@@ -89,8 +89,8 @@ public class EmployeeController {
     /*修改按钮*/
     @HasPermission("person:employee:update")
     @GetMapping("/editbtn")
-    public JsonResult editbtn(Long uid) {
-        EditEmpVo vo = employeeService.editbtn(uid);
+    public JsonResult editBtn(@RequestParam Long uid) {
+        EditEmpVo vo = employeeService.editBtn(uid);
         return JsonResult.success(vo);
     }
 
@@ -105,7 +105,7 @@ public class EmployeeController {
     /*离职业务*/
     @HasPermission("person:employee:update")
     @PostMapping("/deactivate")
-    public JsonResult deactivate(Long id) {
+    public JsonResult deactivate(@RequestParam Long id) {
         employeeService.deactivate(id);
         return JsonResult.success();
     }
@@ -113,7 +113,7 @@ public class EmployeeController {
     /*更改密码*/
     @HasPermission("person:employee:resetPwd")
     @PostMapping("/resetPwd")
-    public JsonResult resetPwd(Long eid, String code) {
+    public JsonResult resetPwd(@RequestParam Long eid, @RequestParam String code) {
         employeeService.resetPwd(eid, code);
         return JsonResult.success();
     }

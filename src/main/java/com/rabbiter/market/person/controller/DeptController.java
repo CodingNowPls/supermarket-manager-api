@@ -40,7 +40,7 @@ public class DeptController {
     /*停用*/
     @HasPermission("person:dept:deactivate")
     @PostMapping("/deactivate")
-    public JsonResult deactivate(Long id) {
+    public JsonResult deactivate(@RequestParam Long id) {
         deptService.forbiddenRole(id);
         return JsonResult.success();
     }

@@ -53,7 +53,7 @@ public class PointGoodsController {
     }
 
     @GetMapping("/queryPointGoodsById")
-    public JsonResult queryPointGoodsById(Long goodsId) {
+    public JsonResult queryPointGoodsById(@RequestParam Long goodsId) {
         PointGoods pointGoods = pointProductsService.getOne(new QueryWrapper<PointGoods>().eq("goods_id", goodsId));
         return JsonResult.success(pointGoods);
     }

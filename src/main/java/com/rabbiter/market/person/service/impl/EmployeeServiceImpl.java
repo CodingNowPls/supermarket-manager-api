@@ -46,7 +46,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
     private IRoleService roleService;
 
     @Override
-    public void edit_pwd(QueryEditPwd editPwd) {
+    public void editPwd(QueryEditPwd editPwd) {
         //获取缓存中的登录员工信息
         String token = HttpRequestUtil.getToken();
         String str = redisTemplateService.getCacheObject(token);
@@ -183,7 +183,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
     }
 
     @Override
-    public EditEmpVo editbtn(Long uid) {
+    public EditEmpVo editBtn(Long uid) {
         EditEmpVo vo = new EditEmpVo();
         Employee employee = super.getById(uid);
         BeanUtils.copyProperties(employee, vo);

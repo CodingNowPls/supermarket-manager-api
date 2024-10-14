@@ -51,7 +51,7 @@ public class SaleRecordController {
     }
 
     @GetMapping("/delSaleRecords")
-    public JsonResult delSaleRecords(String cn) {
+    public JsonResult delSaleRecords(@RequestParam String cn) {
         saleRecordsService.delSaleRecords(cn);
         return JsonResult.success();
     }

@@ -9,10 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 仓库管理
@@ -43,7 +40,7 @@ public class WarehouseController {
     /*停用仓库*/
     @HasPermission("inventory:warehouse:deactivate")
     @PostMapping("/deactivate")
-    public JsonResult deactivate(Long sid) {
+    public JsonResult deactivate(@RequestParam Long sid) {
         storeService.deactivate(sid);
         return JsonResult.success();
     }

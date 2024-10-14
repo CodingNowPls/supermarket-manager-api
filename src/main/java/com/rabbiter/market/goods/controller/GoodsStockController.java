@@ -30,7 +30,7 @@ public class GoodsStockController {
     }
 
     @GetMapping("/queryGoodsStoreById")
-    public JsonResult queryGoodsStoreById(Long id) {
+    public JsonResult queryGoodsStoreById(@RequestParam Long id) {
         GoodsStockVo vo = goodsService.queryGoodsStoreById(id);
         return JsonResult.success(vo);
     }

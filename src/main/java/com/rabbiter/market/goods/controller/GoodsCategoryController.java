@@ -43,7 +43,7 @@ public class GoodsCategoryController {
     /*停用*/
     @HasPermission("goods:category:deactivate")
     @PostMapping("/deactivate")
-    public JsonResult deactivate(Long cid) {
+    public JsonResult deactivate(@RequestParam Long cid) {
         goodsCategoryService.deactivate(cid);
         return JsonResult.success();
     }

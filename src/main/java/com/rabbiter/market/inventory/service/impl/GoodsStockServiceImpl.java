@@ -85,12 +85,10 @@ public class GoodsStockServiceImpl extends ServiceImpl<GoodsStockMapper, GoodsSt
         Long totalStoreNum = goodsStockMapper.totalStoreNum();
         map.put("totalStoreNum", totalStoreNum != null ? totalStoreNum : 0L);
         Page<GoodsStock> goodsStorePage = new Page<>(qo.getCurrentPage(), qo.getPageSize());
-        LambdaQueryWrapper<GoodsStock> goodsStoreQueryWrapper = Wrappers.lambdaQuery(GoodsStock.class)
-                .select(GoodsStock::getStoreId, GoodsStock::getStoreName,
-                        wrapper -> "SUM(residue_num) as residue_num")
-                .like(StringUtils.hasText(qo.getName()), GoodsStock::getStoreName, qo.getName())
-                .groupBy(GoodsStock::getStoreId, GoodsStock::getStoreName);
-
+        QueryWrapper<GoodsStock> goodsStoreQueryWrapper = new QueryWrapper<GoodsStock>()
+                .select("store_id,store_name,SUM(residue_num) residue_num")
+                .like(StringUtils.hasText(qo.getName()), "store_name", qo.getName())
+                .groupBy("store_id", "store_name");
         super.page(goodsStorePage, goodsStoreQueryWrapper);
 
         Page<StorageSituationVo> situationVoPage = new Page<>(qo.getCurrentPage(), qo.getPageSize());

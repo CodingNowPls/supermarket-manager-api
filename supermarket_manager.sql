@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50719
 File Encoding         : 65001
 
-Date: 2024-10-13 12:12:29
+Date: 2024-10-14 10:30:23
 */
 
 SET
@@ -67,7 +67,7 @@ CREATE TABLE `t_employee`
 INSERT INTO `t_employee`
 VALUES ('1', '13333333333', '123@qq.com', '北京市海淀区', '0', '123456', '张三',
         0x2F66696C65732F313639343332343237383239335F66696C652E6A7067, '0', '', '系统管理员', '张三',
-        '2024-10-12 03:56:22', '999', null, '411111199905089999', null);
+        '2024-10-13 09:51:05', '999', null, '411111199905089999', null);
 INSERT INTO `t_employee`
 VALUES ('15', '14788888888', null, '北京市海淀区', '1', '123456', '李四',
         0x2F66696C65732F313639343433343136323435375F30372E6A7067, '0', '\0', '销售人员', '张三', '2023-09-11 12:10:04',
@@ -439,8 +439,7 @@ VALUES ('57', '商品过期/下架处理', null, '2', '40', '出库通知', null
 INSERT INTO `t_menu`
 VALUES ('58', '创建', null, '2', '31', '会员信息管理', null, '0', 'membe:member:save', null, null);
 INSERT INTO `t_menu`
-VALUES ('59', '兑换商品', null, '2', '31', '会员信息管理', null, '0',
-        'sale:exchange_point_products_records:saveExchangePointProductRecords', null, null);
+VALUES ('59', '兑换商品', null, '2', '31', '会员信息管理', null, '0', 'sale:pointRedemption:save', null, null);
 INSERT INTO `t_menu`
 VALUES ('60', '修改', null, '2', '31', '会员信息管理', null, '0', 'member:member:update', null, null);
 INSERT INTO `t_menu`

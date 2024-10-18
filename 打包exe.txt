@@ -1,4 +1,4 @@
-pake http://127.0.0.1:9291  --name supermarket --hide-title-bar
-https://www.ajihuo.com/soft/5796.html
+pake http://127.0.0.1:9291  --name supermarket --hide-title-bar ,如果不熟悉命令行，可以使用GitHub Actions在线编译包，使用教程[https://github.com/tw93/Pake/wiki/Online-Compilation-(used-by-ordinary-users)]，fork [https://github.com/tw93/Pake]项目，
+在这里找到的：https://www.ajihuo.com/soft/5796.html
 
-https://gitee.com/w_rabbiter
+应该是这个大佬写的：https://gitee.com/w_rabbiter

@@ -21,6 +21,3 @@ spring:
     static-path-pattern: /**
 mybatis-plus:
   mapper-locations: classpath:mapper/*/*Mapper.xml
-logging:
-  level:
-    cn.dingli.market.mapper: debug

@@ -8,3 +8,5 @@ fork[Pake](https://github.com/tw93/Pake) 项目，
 运行截图![](/image/1729251012042.jpg)]
 
 exe运行后的截图![](/image/img.png)
+
+打包后大小截图 ![](/image/img_1.png)

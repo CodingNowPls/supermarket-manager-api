@@ -1,0 +1,7 @@
+#home_bg {
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    height: 80vh;
+    background: url(../../static/img/13.7c1ef6b5.jpg) top/cover no-repeat
+}

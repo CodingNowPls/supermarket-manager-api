@@ -57,7 +57,7 @@ public class BaseWebConfig implements WebMvcConfigurer {
         String winPath = PathUtils.getClassLoadRootPath() + "/src/main/resources/static/files/";
 
         //第一个方法设置访问路径前缀，第二个方法设置资源路径
-        registry.addResourceHandler("/files/**").
+        registry.addResourceHandler("/dev-api/files/**").
                 addResourceLocations("file:" + winPath);
         WebMvcConfigurer.super.addResourceHandlers(registry);
     }

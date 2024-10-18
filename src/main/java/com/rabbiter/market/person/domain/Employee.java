@@ -25,7 +25,7 @@ public class Employee implements Serializable {
     public static final String DEFAULT_PWD = "123456";
     public static final String SEX_MEN = "1";
     public static final String SEX_WOWEN = "0";
-    public static final String DEFAULT_HEAD_IMG = "/files/1694434162457_07.jpg";
+    public static final String DEFAULT_HEAD_IMG = "/dev-api/files/1694434162457_07.jpg";
     /**
      *
      */

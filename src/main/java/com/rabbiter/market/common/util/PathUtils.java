@@ -57,7 +57,7 @@ public class PathUtils {
 
             // 加个时间戳防止重名
             String newFileName = System.currentTimeMillis() + "_" + multipartFile.getOriginalFilename();
-            res = "/files/" + newFileName;
+            res = "/dev-api/files/" + newFileName;
             // 写文件
             File file = new File(staticDir + newFileName);
 
